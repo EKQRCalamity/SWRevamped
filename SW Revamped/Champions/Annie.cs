@@ -59,17 +59,13 @@ namespace SWRevamped.Champions
 
         internal override float GetValue(GameObjectBase target)
         {
-            float damage = 0;
+            float shield = 0;
             if (Getter.ELevel > 0)
             {
-                damage = BaseShield[Getter.ELevel];
-                Logger.Log(BaseShield[Getter.ELevel]);
-                damage = damage + (Getter.TotalAP * APScaling);
-                Logger.Log(Getter.TotalAP * APScaling);
-                Logger.Log(Getter.TotalAP);
-                Logger.Log(damage);
+                shield = BaseShield[Getter.ELevel];
+                shield +=(Getter.TotalAP * APScaling);
             }
-            return damage;
+            return shield;
         }
     }
     internal sealed class AnnieRCalc : EffectCalc

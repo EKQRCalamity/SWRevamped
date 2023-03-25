@@ -1,5 +1,6 @@
 ﻿using Oasys.Common.GameObject;
 using Oasys.Common.Menu;
+using Oasys.Common.Menu.ItemComponents;
 using Oasys.SDK;
 using SharpDX;
 using SWRevamped.Base;
@@ -27,6 +28,23 @@ namespace SWRevamped.Champions
                 damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, damage, 0);
             }
             return damage;
+        }
+    }
+
+    internal sealed class LuxWCalc : EffectCalc
+    {
+        internal static int[] BaseShield = { 0, 40, 55, 70, 85, 100 };
+        internal static float APScaling = 0.35F;
+
+        internal override float GetValue(GameObjectBase target)
+        {
+            float shield = 0;
+            if (Getter.WLevel > 0)
+            {
+                shield = BaseShield[Getter.ELevel];
+                shield += (Getter.TotalAP * APScaling);
+            }
+            return shield;
         }
     }
 
@@ -70,11 +88,17 @@ namespace SWRevamped.Champions
     internal class Lux : ChampionModule
     {
         internal Tab MainTab = new Tab("SW - Lux");
+        internal Counter HealthCounter = new Counter("Health %", 80, 0, 100);
 
         internal const int QRange = 1240;
         internal const int QSpeed = 1200;
         internal const int QWidth = 140;
         internal const float QCastTime = 0.25F;
+
+        internal const int WRange = 1175;
+        internal const int WWidth = 220;
+        internal const int WSpeed = 2400;
+        internal const float WCastTime = 0.25F;
 
         internal const int ERange = 1100;
         internal const int ERadius = 310;
@@ -87,6 +111,7 @@ namespace SWRevamped.Champions
         internal const float RCastTime = 1;
 
         LuxQCalc QCalc = new LuxQCalc();
+        LuxWCalc WCalc = new LuxWCalc();
         LuxECalc ECalc = new LuxECalc();
         LuxRCalc RCalc = new LuxRCalc();
 
@@ -115,6 +140,29 @@ namespace SWRevamped.Champions
                 new CollisionCheck(true, 1, 0),
                 7
                 );
+            LineSpell wSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.W,
+                Oasys.Common.Enums.GameEnums.SpellSlot.W,
+                WCalc,
+                WWidth,
+                WRange,
+                WSpeed,
+                WRange,
+                WCastTime,
+                false,
+                x => x.IsAlive,
+                x => x.IsAlive && x.HealthPercent < HealthCounter.Value,
+                x => Getter.Me().Position,
+                Color.Green,
+                80,
+                Prediction.MenuSelected.HitChance.VeryHigh,
+                false,
+                false,
+                false,
+                new CollisionCheck(true, 999999, 0),
+                5,
+                (Getter.Me().Team == Oasys.Common.Enums.GameEnums.TeamFlag.Order) ? Oasys.Common.Enums.GameEnums.TeamFlag.Order : Oasys.Common.Enums.GameEnums.TeamFlag.Chaos
+                );
+            wSpell.SpellGroup.AddItem(HealthCounter); 
             CircleSpell eSpell = new CircleSpell(Oasys.SDK.SpellCasting.CastSlot.E,
                 Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
@@ -135,6 +183,7 @@ namespace SWRevamped.Champions
                 false,
                 new CollisionCheck(true, 10000, 0),
                 6);
+            
             LineSpell rSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.R,
                 Oasys.Common.Enums.GameEnums.SpellSlot.R,
                 RCalc,
