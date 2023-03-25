@@ -83,13 +83,7 @@ namespace SWRevamped.Base
         internal string ColorToName(Color color)
         {
             string name = "";
-            foreach (string c in ColorConverter.GetColors())
-            {
-                name = $"{c}, ";
-            }
-            name = name.Substring(0, name.Length - 3);
-            Logger.Log(name);
-            name = "";
+            // Blue, Red, OrangeRed, White, Black, Orange, Green, LightGreen, Yellow
             switch (color)
             {
                 case var value when ColorEquals(color, Color.Red):
@@ -101,23 +95,20 @@ namespace SWRevamped.Base
                 case var value when ColorEquals(color, Color.Green):
                     name = "Green";
                     break;
-                case var value when ColorEquals(color, Color.Pink):
-                    name = "Pink";
-                    break;
                 case var value when ColorEquals(color, Color.Blue):
                     name = "Blue";
                     break;
-                case var value when ColorEquals(color, Color.Brown):
-                    name = "Brown";
+                case var value when ColorEquals(color, Color.Black):
+                    name = "Black";
                     break;
                 case var value when ColorEquals(color, Color.Yellow):
                     name = "Yellow";
                     break;
-                case var value when ColorEquals(color, Color.Magenta):
-                    name = "Megenta";
+                case var value when ColorEquals(color, Color.LightGreen):
+                    name = "LightGreen";
                     break;
-                case var value when ColorEquals(color, Color.Cyan):
-                    name = "Cyan";
+                case var value when ColorEquals(color, Color.White):
+                    name = "White";
                     break;
                 case var value when ColorEquals(color, Color.OrangeRed):
                     name = "OrangeRed";

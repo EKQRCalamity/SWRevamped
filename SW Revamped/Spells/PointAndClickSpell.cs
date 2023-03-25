@@ -22,7 +22,8 @@ namespace SWRevamped.Spells
     {
         internal bool UseCanKill = false;
         internal Counter MinMana;
-        
+        internal TeamFlag flag;
+
         internal Switch HarassIsOn;
         internal Switch LaneclearIsOn;
         internal Switch LasthitIsOn;
@@ -34,7 +35,8 @@ namespace SWRevamped.Spells
 
             if (drawflag == TeamFlag.Unknown)
                 drawflag = (Getter.Me().Team == TeamFlag.Chaos) ? TeamFlag.Order : TeamFlag.Chaos;
-            
+            flag = drawflag;
+
             MainTab = Getter.MainTab;
             Slot = spellSlot;
             SpellCastSlot = castSlot;
@@ -124,7 +126,7 @@ namespace SWRevamped.Spells
 
         private Task HarassInput()
         {
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x)));
+            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x))) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x));
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value)
@@ -161,7 +163,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x)));
+            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x))) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x));
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value)

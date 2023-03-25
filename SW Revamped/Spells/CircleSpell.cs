@@ -24,6 +24,7 @@ namespace SWRevamped.Spells
 
         internal ModeDisplay _HitChance;
         internal Counter MinMana;
+        internal TeamFlag flag;
 
         internal static CollisionCheck defaultCollisionCheck = new CollisionCheck(true, 999);
 
@@ -44,7 +45,7 @@ namespace SWRevamped.Spells
 
             if (drawflag == TeamFlag.Unknown)
                 drawflag = (Getter.Me().Team == TeamFlag.Chaos) ? TeamFlag.Order : TeamFlag.Chaos;
-
+            flag = drawflag;
             Color drawcolor = (Color)drawColor;
             MainTab = Getter.MainTab;
             Slot = spellSlot;
@@ -143,7 +144,7 @@ namespace SWRevamped.Spells
 
         private Task HarassInput()
         {
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.Distance < CastRange));
+            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.Distance < CastRange);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
@@ -195,7 +196,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.Distance < CastRange));
+            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.Distance < CastRange)
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
