@@ -59,7 +59,7 @@ namespace SWRevamped
 
         internal static UnitStats Stats => Me().UnitStats;
 
-        internal static float TotalAP => Stats.TotalAttackDamage;
+        internal static float TotalAP => Stats.TotalAbilityPower;
 
         internal static float BaseAP => Stats.BaseAbilityDamage;
 

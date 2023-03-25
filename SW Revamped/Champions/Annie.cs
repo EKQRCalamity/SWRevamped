@@ -52,7 +52,26 @@ namespace SWRevamped.Champions
         }
     }
 
+    internal sealed class AnnieECalc : EffectCalc
+    {
+        internal readonly int[] BaseShield = { 0, 60, 100, 140, 180, 220 };
+        internal readonly float APScaling = 0.4F;
 
+        internal override float GetValue(GameObjectBase target)
+        {
+            float damage = 0;
+            if (Getter.ELevel > 0)
+            {
+                damage = BaseShield[Getter.ELevel];
+                Logger.Log(BaseShield[Getter.ELevel]);
+                damage = damage + (Getter.TotalAP * APScaling);
+                Logger.Log(Getter.TotalAP * APScaling);
+                Logger.Log(Getter.TotalAP);
+                Logger.Log(damage);
+            }
+            return damage;
+        }
+    }
     internal sealed class AnnieRCalc : EffectCalc
     {
         internal readonly int[] BaseDamage = new int[] { 0, 150, 275, 400 };
@@ -83,12 +102,15 @@ namespace SWRevamped.Champions
         internal static readonly int WAngle = 49;
         internal static readonly float WCastTime = 0.25F;
 
+        internal static readonly int ERange = 800;
+
         internal static readonly int RRange = 600;
         internal static readonly int RRadius = 250;
         internal static readonly float RCastTime = 0.25F;
 
         AnnieQCalc QCalc = new();
         AnnieWCalc WCalc = new();
+        AnnieECalc ECalc = new();
         AnnieRCalc RCalc = new();
 
         internal override void Init()
@@ -132,6 +154,18 @@ namespace SWRevamped.Champions
                 false,
                 new CollisionCheck(true, 10000, 0),
                 4
+                );
+            BuffSpell eSpell = new(Oasys.SDK.SpellCasting.CastSlot.E,
+                Oasys.Common.Enums.GameEnums.SpellSlot.E,
+                ECalc,
+                ERange,
+                0,
+                x => x.IsAlive,
+                x => x.IsAlive && x.Distance < ERange,
+                x => Getter.Me().Position,
+                Color.Green,
+                50
+
                 );
             CircleSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
                 Oasys.Common.Enums.GameEnums.SpellSlot.R,
