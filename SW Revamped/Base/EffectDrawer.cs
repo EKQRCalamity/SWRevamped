@@ -221,7 +221,7 @@ namespace SWRevamped.Base
             RenderFactory.D3D9BoxLine.End();
         }
 
-        internal static void DrawMultiEffects(GameObjectBase target, List<Effect> effectList, bool onHPBar = false)
+        internal static void DrawMultiEffects(GameObjectBase target, List<Effect> effectList, bool onHPBar = false, int alpha = 255)
         {
             if (target == null)
                 throw new Exception("Null target given. Specify a target thats not null.");
@@ -250,7 +250,7 @@ namespace SWRevamped.Base
                 {
                     actualEffects.Add(effect);
                     EffectAffections.Add(effect.GetHealthAffect(target));
-                    EffectColors.Add(effect.Color);
+                    EffectColors.Add(ColorConverter.GetColorWithAlpha(effect.Color, alpha));
                     EffectNames.Add(effect.Name);
                 }
                 else
@@ -434,6 +434,7 @@ namespace SWRevamped.Base
         private static bool showOnHPBar => showOnHP.IsOn;
 
         internal static Counter ThresholdCounter = new Counter("Draw Threshold", 5, 0, 100);
+        internal static Counter TransparencyCounter = new Counter("Transparency", 155, 0, 255);
 
         private static bool Initialized = false;
 
@@ -464,6 +465,7 @@ namespace SWRevamped.Base
             Group group = new Group("SW - Drawings");
             group.AddItem(showOnHP);
             group.AddItem(ThresholdCounter);
+            group.AddItem(TransparencyCounter);
             MenuManagerProvider.GetTab("Drawings").AddGroup(group);
             if (Initialized) return;
             CoreEvents.OnCoreRender += Render;
@@ -476,14 +478,13 @@ namespace SWRevamped.Base
             List<Hero> allyTargets = UnitManager.AllyChampions.Where(x => x != null && x.IsAlive && x.Position.IsOnScreen()).ToList();
             List<Effect> damages = otherEffects.Where(x => x.IsOn).ToList();
             List<Effect> buffs = friendlyEffects.Where(x => x.IsOn).ToList();
-
             foreach (Hero target in enemyTargets)
             {
-                DrawingsExtended.DrawMultiEffects(target, damages, showOnHPBar);
+                DrawingsExtended.DrawMultiEffects(target, damages, showOnHPBar, TransparencyCounter.Value);
             }
             foreach (Hero target in allyTargets)
             {
-                DrawingsExtended.DrawMultiEffects(target, buffs, showOnHPBar);
+                DrawingsExtended.DrawMultiEffects(target, buffs, showOnHPBar, TransparencyCounter.Value);
             }
         }
     }

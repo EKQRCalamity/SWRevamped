@@ -33,7 +33,7 @@ namespace SWRevamped.Base
         internal Tab MainTab;
         internal Group SpellGroup;
 
-        internal Switch IsOnSwitch = new Switch("Enabled", false);
+        internal Switch IsOnSwitch = new Switch("Enabled", true);
         internal bool IsOn => IsOnSwitch.IsOn;
 
         internal SpellSlot Slot;

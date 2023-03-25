@@ -17,6 +17,7 @@ namespace SWRevamped.Base
                 return null;
             var type = Type.GetType($"SWRevamped.Champions.{char.ToUpper(name[0]) + name.ToLower().Substring(1)}");
             Logger.Log($"Type: {type.ToString()} found!");
+            Champion.SupportedChampions.Where(x => x.Name == name).FirstOrDefault()?.Log();
             ChampionModule? m = (ChampionModule?)Activator.CreateInstance(type);
             return m;
 
