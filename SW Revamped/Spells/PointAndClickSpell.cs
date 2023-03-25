@@ -126,7 +126,7 @@ namespace SWRevamped.Spells
 
         private Task HarassInput()
         {
-            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x))) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x));
+            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value)
@@ -163,7 +163,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x))) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x));
+            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value)
