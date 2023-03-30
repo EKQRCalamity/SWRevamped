@@ -27,13 +27,14 @@ namespace SWRevamped.Base
         internal void Log()
         {
             Logger.Log($"{Name} version {VersionNumber} loaded!");
-            Logger.Log($"{{{((Stable == true)? "This is a stable release!" : "Not a stable release! Beware.")}}}");
+            Logger.Log($"{{{((Stable == true)? "This is a stable release!" : "Not a stable release! Beware.")}}}".Replace("{", "").Replace("}", ""));
         }
 
         internal static List<Champion> ConstructSupported()
         {
             List<Champion> supportedChampions = new List<Champion>()
             {
+                new Champion("Ahri", "1.0.0.0", false),
                 new Champion("Annie", "1.0.0.0", false),
                 new Champion("Blitzcrank", "1.0.0.0", false),
                 new Champion("Brand", "1.0.0.0", false),
