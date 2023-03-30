@@ -68,5 +68,13 @@ namespace SWRevamped
         internal static float BaseAD => Stats.BaseAttackDamage;
 
         internal static float BonusAD => Stats.BonusAttackDamage;
+
+        internal static float Armor => Stats.Armor;
+
+        internal static float MagicResist => Stats.MagicResist;
+
+        internal static float MoveSpeed => Stats.MoveSpeed;
+
+        internal static float AARange => Stats.AttackRange;
     }
 }

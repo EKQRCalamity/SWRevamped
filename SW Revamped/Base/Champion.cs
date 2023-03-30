@@ -34,14 +34,15 @@ namespace SWRevamped.Base
         {
             List<Champion> supportedChampions = new List<Champion>()
             {
-                new Champion("Kalista", "1.0.0.0", true),
-                new Champion("KogMaw", "1.0.0.0", false),
-                new Champion("Cassiopeia", "1.0.0.0", false),
-                new Champion("Brand", "1.0.0.0", false),
-                new Champion("Ezreal", "1.0.0.0", false),
                 new Champion("Annie", "1.0.0.0", false),
                 new Champion("Blitzcrank", "1.0.0.0", false),
-                new Champion("Lux", "1.0.0.0", false)
+                new Champion("Brand", "1.0.0.0", false),
+                new Champion("Cassiopeia", "1.0.0.0", false),
+                new Champion("Ezreal", "1.0.0.0", false),
+                new Champion("Kalista", "1.0.0.0", true),
+                new Champion("KogMaw", "1.0.0.0", false),
+                new Champion("Lux", "1.0.0.0", false),
+                new Champion("Veigar", "1.0.0.0", false)
             };
             return supportedChampions;            
         }

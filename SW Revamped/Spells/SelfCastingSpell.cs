@@ -102,7 +102,7 @@ namespace SWRevamped.Spells
 
             if (target == null || !IsOn)
                 return Task.CompletedTask;
-            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value)
+            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();
@@ -118,7 +118,7 @@ namespace SWRevamped.Spells
             GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x)));
             if (target == null || !IsOn)
                 return Task.CompletedTask;
-            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value)
+            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();
@@ -140,7 +140,7 @@ namespace SWRevamped.Spells
 
             if (target == null || !IsOn)
                 return Task.CompletedTask;
-            if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value)
+            if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();
@@ -156,7 +156,7 @@ namespace SWRevamped.Spells
             GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x)));
             if (target == null || !IsOn)
                 return Task.CompletedTask;
-            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value)
+            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();
