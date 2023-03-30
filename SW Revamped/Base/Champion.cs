@@ -42,7 +42,8 @@ namespace SWRevamped.Base
                 new Champion("Ezreal", "1.0.0.0", false),
                 new Champion("Kalista", "1.0.0.0", true),
                 new Champion("KogMaw", "1.0.0.0", false),
-                new Champion("Lux", "1.0.0.0", false),
+                new Champion("Lux", "1.0.0.1", false),
+                new Champion("Malphite", "1.0.0.0", false),
                 new Champion("Veigar", "1.0.0.0", false)
             };
             return supportedChampions;            
