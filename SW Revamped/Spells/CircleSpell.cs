@@ -122,7 +122,7 @@ namespace SWRevamped.Spells
 
             GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.Distance < CastRange).FirstOrDefault();
 
-            if (target == null || !IsOn)
+            if (target == null || !IsOn || !LaneclearIsOn.IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision && pred.Collision)
@@ -145,7 +145,7 @@ namespace SWRevamped.Spells
         private Task HarassInput()
         {
             GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.Distance < CastRange);
-            if (target == null || !IsOn)
+            if (target == null || !IsOn || HarassIsOn.IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision && pred.Collision)
@@ -174,7 +174,7 @@ namespace SWRevamped.Spells
 
             GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.Distance < CastRange).FirstOrDefault();
 
-            if (target == null || !IsOn)
+            if (target == null || !IsOn || !LasthitIsOn.IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision && pred.Collision)

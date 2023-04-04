@@ -71,6 +71,84 @@ namespace SWRevamped.Champions
 
     internal sealed class Caitlyn : ChampionModule
     {
+        internal Tab MainTab = new Tab("SW - Caitlyn");
 
+        internal const int QRange = 1300;
+        internal const int QWidth = 180;
+        internal const int QSpeed = 2200;
+        internal const float QCastTime = 0.625F;
+
+        internal const int ERange = 800;
+        internal const int EWidth = 140;
+        internal const int ESpeed = 1600;
+        internal const float ECastTime = 0.15F;
+
+        internal const int RRange = 3500;
+        internal const int RWidth = 80;
+        internal const float RCastTime = 0.375F;
+
+        CaitQCalc QCalc = new();
+        CaitECalc ECalc = new();
+        CaitRCalc RCalc = new();
+
+        internal override void Init()
+        {
+            MenuManagerProvider.AddTab(MainTab);
+            EffectDrawer.Init();
+            new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
+                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
+                QCalc,
+                QWidth,
+                QRange,
+                QSpeed,
+                QRange,
+                QCastTime,
+                false,
+                x => x.IsAlive,
+                x => x.IsAlive,
+                x => Getter.Me().Position,
+                Color.Red,
+                75,
+                Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
+                false, false, false,
+                new CollisionCheck(true, 99999, 0));
+            new LineSpell(Oasys.SDK.SpellCasting.CastSlot.E,
+                Oasys.Common.Enums.GameEnums.SpellSlot.E,
+                ECalc,
+                EWidth,
+                ERange,
+                ESpeed,
+                ERange,
+                ECastTime,
+                false,
+                x => x.IsAlive,
+                x => x.IsAlive,
+                x => Getter.Me().Position,
+                Color.Blue,
+                80,
+                Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
+                false,
+                false,
+                false,
+                new CollisionCheck(true, 0, 0),
+                7);
+            new PointAndClickSpell(Oasys.SDK.SpellCasting.CastSlot.R,
+                Oasys.Common.Enums.GameEnums.SpellSlot.R,
+                RCalc,
+                RRange,
+                10000,
+                RRange,
+                RCastTime,
+                true,
+                x => x.IsAlive,
+                x => x.IsAlive,
+                x => Getter.Me().Position,
+                Color.Black,
+                100,
+                false,
+                true,
+                false,
+                9);
+        }
     }
 }

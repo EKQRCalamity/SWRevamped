@@ -38,6 +38,7 @@ namespace SWRevamped.Base
                 new Champion("Annie", "1.0.0.0", false),
                 new Champion("Blitzcrank", "1.0.0.0", false),
                 new Champion("Brand", "1.0.0.0", false),
+                new Champion("Caitlyn", "1.0.0.0", false),
                 new Champion("Cassiopeia", "1.0.0.0", false),
                 new Champion("Ezreal", "1.0.0.0", false),
                 new Champion("Kalista", "1.0.0.0", true),
