@@ -126,7 +126,7 @@ namespace SWRevamped.Champions
                 Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
                 WCalc,
-                Getter.AARange,
+                (int)Getter.AARange,
                 WCastTime,
                 x => x.IsAlive,
                 x => x.IsAlive,
