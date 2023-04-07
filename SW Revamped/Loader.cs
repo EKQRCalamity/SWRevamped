@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SWRevamped
 {
-    public static class Loader
+    public static class Loader 
     {
         internal static int Tick = 0;
 
