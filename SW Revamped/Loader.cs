@@ -1,6 +1,7 @@
 ﻿using Oasys.Common.EventsProvider;
 using Oasys.SDK;
 using Oasys.SDK.Tools;
+using SWRevamped.Base;
 using System;
 using System.Threading.Tasks;
 
@@ -33,6 +34,7 @@ namespace SWRevamped
                 Logger.Log(champion.GetType() + " loaded!");
                 champion.Init();
             }
+            UtilityManager.InitAll();
             return Task.CompletedTask;
         }
     }

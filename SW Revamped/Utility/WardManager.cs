@@ -133,5 +133,10 @@ namespace SWRevamped.Utility
         {
             return GetClosestWard(position)?.MovePosition.Distance(position) < range;
         }
+
+        internal bool StandsOnWard(GameObjectBase target, Ward ward) 
+        {
+            return target.DistanceTo(ward.MovePosition) < 25;
+        }
     }
 }
