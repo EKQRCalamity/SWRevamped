@@ -13,9 +13,7 @@ namespace SWRevamped.Base
         public abstract string Version { get; }
         public abstract string Description { get; }
         public abstract string Author { get; }
-
         internal WardManager WardManager { get; } = new WardManager();
-
         internal abstract void Init();
 
     }
