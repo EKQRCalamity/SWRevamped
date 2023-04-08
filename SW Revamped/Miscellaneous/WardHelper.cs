@@ -1,10 +1,12 @@
 ﻿using Microsoft.VisualBasic.Devices;
 using Oasys.Common.Extensions;
+using Oasys.Common.Logic;
 using Oasys.Common.Menu;
 using Oasys.Common.Menu.ItemComponents;
 using Oasys.SDK.Events;
 using Oasys.SDK.InputProviders;
 using Oasys.SDK.Rendering;
+using Oasys.SDK.SpellCasting;
 using SharpDX;
 using SWRevamped.Base;
 using SWRevamped.Utility;
@@ -27,6 +29,8 @@ namespace SWRevamped.Miscellaneous
         internal Group WardLocations = new Group("Locations");
         internal KeyBinding AutoWardKey = new KeyBinding() { Title = "Auto Ward Key", SelectedKey = System.Windows.Forms.Keys.CapsLock };
 
+        internal bool Warding = false;
+
         public override string Name => "WardHelper";
         public override string Author => "EKQR Kotlin";
         public override string Version => "1.0.0.0";
@@ -46,6 +50,22 @@ namespace SWRevamped.Miscellaneous
 
             CoreEvents.OnCoreRender += Draw;
             KeyboardProvider.OnKeyPress += KeypressFunction;
+            CoreEvents.OnCoreMainTick += MainFunc;
+        }
+
+        private Task MainFunc()
+        {
+            if (Warding)
+            {
+                Ward? ward = WardManager.GetClosestWard(Getter.Me());
+                if (ward.MovePosition.DistanceToPlayer() < 25)
+                {
+                    SpellCastProvider.CastSpell(CastSlot.Item7, ward.ClickPosition);
+                    Warding = false;
+                    Oasys.SDK.Orbwalker.ForceMovePosition = Vector2.Zero;
+                }
+            }
+            return Task.CompletedTask;
         }
 
         private void Draw()
@@ -88,10 +108,16 @@ namespace SWRevamped.Miscellaneous
 
         private void KeypressFunction(Keys keyBeingPressed, Oasys.Common.Tools.Devices.Keyboard.KeyPressState pressState)
         {
-            if (pressState == Oasys.Common.Tools.Devices.Keyboard.KeyPressState.Down && keyBeingPressed == AutoWardKey.SelectedKey)
+            if (IsOnSwitch.IsOn && pressState == Oasys.Common.Tools.Devices.Keyboard.KeyPressState.Down && keyBeingPressed == AutoWardKey.SelectedKey)
             {
-                // Todo move to ward position
-                // -> Click
+                Ward? close = WardManager.GetClosestWard(Getter.Me());
+                if (close == null)
+                    return;
+                if (close.MovePosition.IsOnScreen() && close.MovePosition.DistanceToPlayer() < 750)
+                {
+                    Warding = true;
+                    Oasys.SDK.Orbwalker.ForceMovePosition = close.MovePosition.ToW2S();
+                }
             }
         }
     }
