@@ -7,6 +7,7 @@ using Oasys.SDK.Events;
 using Oasys.SDK.InputProviders;
 using Oasys.SDK.Rendering;
 using Oasys.SDK.SpellCasting;
+using Oasys.SDK.Tools;
 using SharpDX;
 using SWRevamped.Base;
 using SWRevamped.Utility;
@@ -60,9 +61,8 @@ namespace SWRevamped.Miscellaneous
                 Ward? ward = WardManager.GetClosestWard(Getter.Me());
                 if (ward.MovePosition.DistanceToPlayer() < 25)
                 {
-                    SpellCastProvider.CastSpell(CastSlot.Item7, ward.ClickPosition);
+                    SpellCastProvider.CastSpell(CastSlot.Item4, ward.ClickPosition);
                     Warding = false;
-                    Oasys.SDK.Orbwalker.ForceMovePosition = Vector2.Zero;
                 }
             }
             return Task.CompletedTask;
@@ -74,8 +74,9 @@ namespace SWRevamped.Miscellaneous
             {
                 foreach (Ward ward in WardManager.GetKnownWards())
                 {
-                    if (!ward.MovePosition.IsOnScreen())
+                    if (ward.MovePosition.IsOnScreen())
                     {
+                        Logger.Log(ward.Name);
                         if (WardManager.StandsOnWard(Getter.Me(), ward))
                         {
                                 RenderFactory.DrawNativeCircle(ward.MovePosition, 50, Color.Red, 2);
@@ -94,14 +95,12 @@ namespace SWRevamped.Miscellaneous
                                         RenderFactory.DrawNativeCircle(ward.ClickPosition, 15, Color.White, 2);
                                     }
                                 }
-
-                            
                         }
                         else
                         {
                             RenderFactory.DrawNativeCircle(ward.MovePosition, 50, Color.White, 2);
                         }
-                }
+                    }
                 }
             }
         }
@@ -116,7 +115,7 @@ namespace SWRevamped.Miscellaneous
                 if (close.MovePosition.IsOnScreen() && close.MovePosition.DistanceToPlayer() < 750)
                 {
                     Warding = true;
-                    Oasys.SDK.Orbwalker.ForceMovePosition = close.MovePosition.ToW2S();
+                    Oasys.Common.Tools.Devices.Mouse.ClickAndBounce(close.MovePosition.ToW2S(), 200, false);
                 }
             }
         }

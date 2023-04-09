@@ -36,12 +36,6 @@ namespace SWRevamped.Utility
         {
             KnownWards = new List<Ward>()
             {
-                new Ward(
-                "Sidebrush Blue",
-                new Vector3(1774, 52.84F, 10856),
-                new Vector3(2380.09F, -71.24F, 11004.69F),
-                new Vector3(2826.47F, -71.02F, 11221.34F)
-                ),
             new Ward(
                 "Wolvesbush Mid Blue",
                 new Vector3(5749.25F, 51.65F, 7282.75F),
@@ -100,7 +94,18 @@ namespace SWRevamped.Utility
                 "Baron-Tribush",
                 new Vector3(4824, -71.24F, 10906),
                 new Vector3(4633.83F, 50.51F, 11354.40F),
-                new Vector3(4524.69F, 53.25F, 11515.21F))
+                new Vector3(4524.69F, 53.25F, 11515.21F)),
+            new Ward(
+                "Dragon-Redbush",
+                new Vector3(9322, -71.2406F, 4408),
+                new Vector3(8710.373F, 53.111084F, 4524.969F),
+                new Vector3(8691.065F, 52.784424F, 4530.796F)),
+            new Ward(
+                "Baron-Redbush",
+                new Vector3(5490, -72.75593F, 10506),
+                new Vector3(6099.6284F, 55.38684F, 10474.643F),
+                new Vector3(6099.6284F, 55.50769F,10474.643F))
+
             };
         }
 

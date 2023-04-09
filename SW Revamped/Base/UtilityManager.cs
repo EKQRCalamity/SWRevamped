@@ -1,4 +1,5 @@
 ﻿using Oasys.Common.Menu;
+using Oasys.SDK.Tools;
 using SWRevamped.Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,14 @@ namespace SWRevamped.Base
 
         internal static List<UtilityModule> utilityModules = new List<UtilityModule>()
         {
-            new WardHelper()
+            new CSHelper(),
+            new WardHelper(),
+            new PositionDebugger()
         };
         internal static void InitAll()
         {
             MenuManagerProvider.AddTab(MainTab);
+            Logger.Log("MainTab for Utils added!");
             foreach (UtilityModule module in utilityModules)
             {
                 module.Init();

@@ -29,7 +29,7 @@ namespace SWRevamped
 
         internal static int QLevel => QSpell.Level;
 
-        internal static bool QReady => QSpell.IsSpellReady && !QSpell.IsToggled && !QSpell.IsActivated;
+        internal static bool QReady => QSpell.IsSpellReady;
 
         internal static bool QLooseReady => QSpell.IsSpellReady;
 
@@ -37,7 +37,7 @@ namespace SWRevamped
 
         internal static int WLevel => WSpell.Level;
 
-        internal static bool WReady => WSpell.IsSpellReady && !WSpell.IsToggled && !WSpell.IsActivated;
+        internal static bool WReady => WSpell.IsSpellReady;
 
         internal static bool WLooseReady => WSpell.IsSpellReady;
 
@@ -45,7 +45,7 @@ namespace SWRevamped
 
         internal static int ELevel => ESpell.Level;
 
-        internal static bool EReady => ESpell.IsSpellReady && !ESpell.IsToggled && !ESpell.IsActivated;
+        internal static bool EReady => ESpell.IsSpellReady;
 
         internal static bool ELooseReady => ESpell.IsSpellReady;
 
@@ -53,15 +53,13 @@ namespace SWRevamped
 
         internal static int RLevel => RSpell.Level;
 
-        internal static bool RReady => RSpell.IsSpellReady && !RSpell.IsToggled && !RSpell.IsActivated;
+        internal static bool RReady => RSpell.IsSpellReady;
 
         internal static bool RLooseReady => RSpell.IsSpellReady;
 
         internal static UnitStats Stats => Me().UnitStats;
 
         internal static float TotalAP => Stats.TotalAbilityPower;
-
-        internal static float BaseAP => Stats.BaseAbilityDamage;
 
         internal static float TotalAD => Stats.TotalAttackDamage;
 
@@ -76,5 +74,6 @@ namespace SWRevamped
         internal static float MoveSpeed => Stats.MoveSpeed;
 
         internal static float AARange => Stats.AttackRange;
+        internal static float AAsLeft(GameObjectBase target) => TargetSelector.AttacksLeftToKill(target);
     }
 }

@@ -108,7 +108,11 @@ namespace SWRevamped.Champions
 
         internal bool QActive()
         {
-            return Getter.Me().GetSpellBook().GetSpellClass(Oasys.Common.Enums.GameEnums.SpellSlot.Q).IsActivated;
+            foreach (BuffEntry buff in Getter.Me().BuffManager.GetBuffList())
+            {
+                Logger.Log(buff);
+            }
+            return false;
         }
 
         internal int CalculateRangeWithQ()
