@@ -106,11 +106,15 @@ namespace SWRevamped.Champions
         JinxWCalc WCalc = new JinxWCalc();
         JinxECalc ECalc = new JinxECalc();
         JinxRCalc RCalc = new JinxRCalc();
-
+        ActivateSpell qSpell;
         internal bool QActive()
         {
-            //Logger.Log($"QActive: {Getter.Me().BuffManager.GetBuffList().Any(x => x.IsActive && !x.Name.Contains("Icon", StringComparison.OrdinalIgnoreCase) && x.Name.Contains("JinxQ", StringComparison.OrdinalIgnoreCase))}");
             return Getter.Me().BuffManager.GetBuffList().Any(x => x.IsActive && x.Name == "JinxQ");
+        }
+
+        internal float CalculateCurrentNormalRange()
+        {
+            return QActive() ? (int)Getter.Me().TrueAttackRange - QExtraRange[Getter.QLevel] : (int)Getter.Me().TrueAttackRange;
         }
 
         internal int CalculateRangeWithQ()
@@ -122,7 +126,18 @@ namespace SWRevamped.Champions
         {
             MenuManagerProvider.AddTab(MainTab);
             EffectDrawer.Init();
-            //SelfCastingSpell() Need new spell for Q logic
+            qSpell = new ActivateSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
+                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
+                QCalc,
+                1100,
+                0,
+                x => x.IsAlive,
+                x => x.IsAlive && x.Distance > CalculateCurrentNormalRange() && x.Distance < CalculateRangeWithQ(),
+                x => x.Distance > CalculateRangeWithQ() + 100,
+                x => Getter.Me().Position,
+                Color.Red,
+                40,
+                7);
             LineSpell wSpell = new LineSpell(
                 Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
@@ -187,6 +202,13 @@ namespace SWRevamped.Champions
 
         private void Draw()
         {
+            if (qSpell.IsOn)
+            {
+                if (qSpell.IsActivated != QActive())
+                {
+                    qSpell.IsActivated = QActive();
+                }
+            }
             if (DrawRangeCircle.IsOn)
             {
                 //Logger.Log(CalculateRangeWithQ());
