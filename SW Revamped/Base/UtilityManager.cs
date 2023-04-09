@@ -12,11 +12,17 @@ namespace SWRevamped.Base
     internal static class UtilityManager
     {
         internal static Tab MainTab = new Tab("SW - Utility");
+        private static bool LoadDebugger = true;
+        internal static Group DebuggerGroup = new Group("Debuggers");
 
         internal static List<UtilityModule> utilityModules = new List<UtilityModule>()
         {
             new CSHelper(),
-            new WardHelper(),
+            new WardHelper()
+        };
+        internal static List<UtilityModule> debuggerModules = new List<UtilityModule>()
+        {
+            new BuffDebugger(),
             new PositionDebugger()
         };
         internal static void InitAll()
@@ -26,6 +32,14 @@ namespace SWRevamped.Base
             foreach (UtilityModule module in utilityModules)
             {
                 module.Init();
+            }
+            if (LoadDebugger)
+            {
+                MainTab.AddGroup(DebuggerGroup);
+                foreach (UtilityModule module in debuggerModules)
+                {
+                    module.Init();
+                }
             }
         }
     }

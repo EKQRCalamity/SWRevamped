@@ -24,6 +24,8 @@ namespace SWRevamped.Miscellaneous
         internal Counter InRange = new Counter("Range", 2600, 0, 10000);
 
         internal Group DrawingOptions = new Group("Drawings");
+        //internal Switch DrawHPBar = new Switch("Health Bar", false);
+        internal Switch DrawCircle = new Switch("Circle", true);
         internal Counter Alpha = new Counter("Alpha", 150, 0, 255);
 
         public override string Name => "CSHelper";
@@ -65,7 +67,8 @@ namespace SWRevamped.Miscellaneous
                 {
                     if (Getter.AAsLeft(minion) < 1 && minion.IsAlive && minion.Position.IsOnScreen())
                     {
-                        RenderFactory.DrawNativeCircle(minion.Position, minion.BoundingRadius, new Color(Color.Red.R, Color.Red.G, Color.Red.G, Alpha.Value), 2);
+                        if (DrawCircle.IsOn)
+                            RenderFactory.DrawNativeCircle(minion.Position, minion.BoundingRadius, new Color(Color.Red.R, Color.Red.G, Color.Red.G, Alpha.Value), 2);
                     }
                 }
             }
