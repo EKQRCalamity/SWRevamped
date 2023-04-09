@@ -76,7 +76,6 @@ namespace SWRevamped.Miscellaneous
                 {
                     if (ward.MovePosition.IsOnScreen())
                     {
-                        Logger.Log(ward.Name);
                         if (WardManager.StandsOnWard(Getter.Me(), ward))
                         {
                                 RenderFactory.DrawNativeCircle(ward.MovePosition, 50, Color.Red, 2);

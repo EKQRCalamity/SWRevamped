@@ -76,6 +76,7 @@ namespace SWRevamped.Champions
                 damage = BaseDamage[Getter.RLevel];
                 damage += ADScaling * Getter.TotalAD;
                 damage += MissHPScaling[Getter.RLevel] * target.MissingHealth;
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage);
             }
             return damage;
         }
@@ -108,16 +109,13 @@ namespace SWRevamped.Champions
 
         internal bool QActive()
         {
-            foreach (BuffEntry buff in Getter.Me().BuffManager.GetBuffList())
-            {
-                Logger.Log(buff);
-            }
-            return false;
+            //Logger.Log($"QActive: {Getter.Me().BuffManager.GetBuffList().Any(x => x.IsActive && !x.Name.Contains("Icon", StringComparison.OrdinalIgnoreCase) && x.Name.Contains("JinxQ", StringComparison.OrdinalIgnoreCase))}");
+            return Getter.Me().BuffManager.GetBuffList().Any(x => x.IsActive && x.Name == "JinxQ");
         }
 
         internal int CalculateRangeWithQ()
         {
-            return (QActive()) ? (int)Getter.Me().TrueAttackRange : (int)Getter.Me().TrueAttackRange + QExtraRange[Getter.WLevel];
+            return QActive()? (int)Getter.Me().TrueAttackRange : (int)Getter.Me().TrueAttackRange + QExtraRange[Getter.QLevel];
         }
 
         internal override void Init()
@@ -184,7 +182,16 @@ namespace SWRevamped.Champions
                 false,
                 new CollisionCheck(true, 99999, 0), 6);
 
-                
+            CoreEvents.OnCoreRender += Draw;
+        }
+
+        private void Draw()
+        {
+            if (DrawRangeCircle.IsOn)
+            {
+                //Logger.Log(CalculateRangeWithQ());
+                RenderFactory.DrawNativeCircle(Getter.Me().Position, CalculateRangeWithQ(), new Color(Color.Red.R, Color.Red.G, Color.Red.B, 0.3F), 2, false);
+            }
         }
     }
 }

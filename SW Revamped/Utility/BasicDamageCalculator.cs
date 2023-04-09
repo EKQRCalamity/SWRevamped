@@ -32,5 +32,14 @@ namespace SWRevamped.Utility
             return DamageCalculator.CalculateActualDamage(caster, target, 0, damage, 0);
         }
 
+        internal static float Collector(GameObjectBase target)
+        {
+            float damage = 0;
+            if (target.IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIHeroClient))
+            {
+                damage = target.MaxHealth * 0.05F;
+            }
+            return damage;
+        }
     }
 }

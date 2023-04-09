@@ -41,7 +41,7 @@ namespace SWRevamped.Base
                 new Champion("Caitlyn", "1.0.0.0", false),
                 new Champion("Cassiopeia", "1.0.0.0", false),
                 new Champion("Ezreal", "1.0.0.0", false),
-                new Champion("Jinx", "1.0.0.0", false),
+                new Champion("Jinx", "1.0.0.0", true), // Tested only Q usage missing
                 new Champion("Kalista", "1.0.0.0", true),
                 new Champion("KogMaw", "1.0.0.0", false),
                 new Champion("Lux", "1.0.0.1", false),
