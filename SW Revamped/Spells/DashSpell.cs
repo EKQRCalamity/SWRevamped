@@ -81,7 +81,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            if (EnemyInRange() && IsOn && SelfCheck(Getter.Me()) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
+            if (EnemyInRange() && IsOn && SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && SpellIsReady())
             {
                 SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }

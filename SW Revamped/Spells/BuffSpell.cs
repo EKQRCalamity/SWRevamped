@@ -65,7 +65,7 @@ namespace SWRevamped.Spells
             GameObjectBase target = AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
-            if (SelfCheck(Getter.Me()) && Getter.Me().Mana > MinMana.Value && target.HealthPercent < HealthCounter.Value)
+            if (SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && target.HealthPercent < HealthCounter.Value)
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();

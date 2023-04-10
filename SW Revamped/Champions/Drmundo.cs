@@ -16,7 +16,7 @@ namespace SWRevamped.Champions
     internal sealed class MundoQCalc : EffectCalc
     {
         internal static int[] MinDamage = { 0, 80, 130, 180, 230, 280 };
-        internal static float[] DefaultDamage = { 0.2F, 0.225F, 0.25F, 0.275F, 0.3F };
+        internal static float[] DefaultDamage = { 0, 0.2F, 0.225F, 0.25F, 0.275F, 0.3F };
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -101,7 +101,7 @@ namespace SWRevamped.Champions
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Red,
-                80,
+                0,
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
@@ -118,7 +118,7 @@ namespace SWRevamped.Champions
                 x => x.Distance > ERange,
                 x => Getter.Me().Position,
                 Color.Blue,
-                50,
+                0,
                 7);
             SelfCastingSpell eSpell = new SelfCastingSpell(Oasys.SDK.SpellCasting.CastSlot.E,
                 Oasys.Common.Enums.GameEnums.SpellSlot.E,
@@ -126,10 +126,10 @@ namespace SWRevamped.Champions
                 ERange,
                 0,
                 x => x.IsAlive,
-                x => x.IsAlive,
+                x => x.IsAlive && Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, x => x.Distance < ERange) != null,
                 x => Getter.Me().Position,
                 Color.Yellow,
-                50,
+                0,
                 false,
                 false,
                 false,
@@ -140,7 +140,7 @@ namespace SWRevamped.Champions
                 RRange,
                 0,
                 x => x.IsAlive,
-                x => x.IsMe,
+                x => x.IsMe && Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, x => x.Distance < RRange - 200) != null,
                 x => Getter.Me().Position,
                 Color.Red,
                 0,

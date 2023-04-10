@@ -63,7 +63,7 @@ namespace SWRevamped.Spells
             GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.IsAlive && x.Distance < Range));
             if (target == null || !IsOn)
                 return Task.CompletedTask;
-            if (!IsActivated && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
+            if (!IsActivated && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value && SpellIsReady())
             {
                 IsActivated = true;
                 SpellCastProvider.CastSpell(SpellCastSlot, CastTime);

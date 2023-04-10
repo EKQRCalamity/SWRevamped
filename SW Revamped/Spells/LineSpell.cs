@@ -132,7 +132,7 @@ namespace SWRevamped.Spells
                 if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             }
-            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
+            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {
                 if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
                 {
@@ -157,7 +157,7 @@ namespace SWRevamped.Spells
                 if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             }
-            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
+            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {
                 if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
                 {
@@ -188,7 +188,7 @@ namespace SWRevamped.Spells
                 if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             }
-            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
+            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {
                 if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target))
                 {
@@ -213,7 +213,7 @@ namespace SWRevamped.Spells
                 if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             }
-            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
+            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {
                 if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
                 {

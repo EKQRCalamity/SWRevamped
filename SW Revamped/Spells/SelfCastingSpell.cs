@@ -102,7 +102,7 @@ namespace SWRevamped.Spells
 
             if (target == null || !IsOn || !LaneclearIsOn.IsOn)
                 return Task.CompletedTask;
-            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
+            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value && SpellIsReady())
             {
                 SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }
@@ -114,7 +114,7 @@ namespace SWRevamped.Spells
             GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x)));
             if (target == null || !IsOn || !HarassIsOn.IsOn)
                 return Task.CompletedTask;
-            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
+            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value && SpellIsReady())
             {
                 SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }
@@ -132,7 +132,7 @@ namespace SWRevamped.Spells
 
             if (target == null || !IsOn || !LasthitIsOn.IsOn)
                 return Task.CompletedTask;
-            if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
+            if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value && SpellIsReady())
             {
                 SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }
@@ -144,7 +144,7 @@ namespace SWRevamped.Spells
             GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x)));
             if (target == null || !IsOn)
                 return Task.CompletedTask;
-            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
+            if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value && SpellIsReady())
             {
                 SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }
