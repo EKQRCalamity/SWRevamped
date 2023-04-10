@@ -104,11 +104,7 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
             {
-                Vector3 pos = target.Position;
-                Vector2 v2Pos = pos.ToW2S();
-                if (!pos.IsOnScreen() && target.DistanceTo(SourcePosition(Getter.Me())) < Range)
-                    v2Pos = pos.ToWorldToMap();
-                SpellCastProvider.CastSpell(SpellCastSlot, v2Pos, CastTime);
+                SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }
             return Task.CompletedTask;
         }
@@ -120,11 +116,7 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
             {
-                Vector3 pos = target.Position;
-                Vector2 v2Pos = pos.ToW2S();
-                if (!pos.IsOnScreen() && target.DistanceTo(SourcePosition(Getter.Me())) < Range)
-                    v2Pos = pos.ToWorldToMap();
-                SpellCastProvider.CastSpell(SpellCastSlot, v2Pos, CastTime);
+                SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }
             return Task.CompletedTask;
         }
@@ -142,11 +134,7 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
             {
-                Vector3 pos = target.Position;
-                Vector2 v2Pos = pos.ToW2S();
-                if (!pos.IsOnScreen() && target.DistanceTo(SourcePosition(Getter.Me())) < Range)
-                    v2Pos = pos.ToWorldToMap();
-                SpellCastProvider.CastSpell(SpellCastSlot, v2Pos, CastTime);
+                SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }
             return Task.CompletedTask;
         }
@@ -158,11 +146,7 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             if (SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana > MinMana.Value && SpellIsReady())
             {
-                Vector3 pos = target.Position;
-                Vector2 v2Pos = pos.ToW2S();
-                if (!pos.IsOnScreen() && target.DistanceTo(SourcePosition(Getter.Me())) < Range)
-                    v2Pos = pos.ToWorldToMap();
-                SpellCastProvider.CastSpell(SpellCastSlot, v2Pos, CastTime);
+                SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
             }
             return Task.CompletedTask;
         }

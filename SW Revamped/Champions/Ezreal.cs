@@ -1,7 +1,7 @@
 ﻿using Oasys.Common.GameObject;
 using Oasys.Common.GameObject.Clients.ExtendedInstances;
-using Oasys.Common.Logic;
 using Oasys.Common.Menu;
+using Oasys.SDK;
 using Oasys.SDK.Tools;
 using SharpDX;
 using SWRevamped.Base;
@@ -64,9 +64,21 @@ namespace SWRevamped.Champions
 
     internal sealed class EzrealECalc : EffectCalc
     {
+        internal static int[] BaseDamage = { 0, 80, 130, 180, 230, 280 };
+        internal static float APScaling = 0.75F;
+        internal static float BonusADScaling = 0.5F;
+
         internal override float GetValue(GameObjectBase target)
         {
-            return 0;
+            float damage = 0;
+            if (Getter.ELevel > 0)
+            {
+                damage = BaseDamage[Getter.ELevel];
+                damage += Getter.BonusAD * BonusADScaling;
+                damage += Getter.TotalAP * APScaling;
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, damage, 0);
+            }
+            return damage;
         }
     }
 
@@ -105,6 +117,7 @@ namespace SWRevamped.Champions
         internal const float WCastTime = 0.25F;
 
         internal const int ERange = 475;
+        internal const int EEffectRange = 750;
         internal const float ECastTime = 0.25F;
 
         internal const int RRange = 100000;
@@ -112,10 +125,10 @@ namespace SWRevamped.Champions
         internal const int RSpeed = 2000;
         internal const float RCastTime = 1;
 
-        EzrealQCalc qCalc = new EzrealQCalc();
-        EzrealWCalc wCalc = new EzrealWCalc();
-        EzrealECalc eCalc = new EzrealECalc();
-        EzrealRCalc rCalc = new EzrealRCalc();
+        EzrealQCalc QCalc = new EzrealQCalc();
+        EzrealWCalc WCalc = new EzrealWCalc();
+        EzrealECalc ECalc = new EzrealECalc();
+        EzrealRCalc RCalc = new EzrealRCalc();
 
         internal override void Init()
         {
@@ -123,7 +136,7 @@ namespace SWRevamped.Champions
             EffectDrawer.Init();
             LineSpell qSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
                 Oasys.Common.Enums.GameEnums.SpellSlot.Q,
-                qCalc,
+                QCalc,
                 QWidth,
                 QRange,
                 QSpeed,
@@ -143,7 +156,7 @@ namespace SWRevamped.Champions
                 7);
             LineSpell wSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
-                wCalc,
+                WCalc,
                 WWidth,
                 WRange,
                 WSpeed,
@@ -161,9 +174,36 @@ namespace SWRevamped.Champions
                 false,
                 new CollisionCheck(true, 9999, 0),
                 9);
+            DashSpell eSpell = new DashSpell(Oasys.SDK.SpellCasting.CastSlot.E,
+                Oasys.Common.Enums.GameEnums.SpellSlot.E,
+                ECalc,
+                EEffectRange,
+                ECastTime,
+                false,
+                x => x.IsAlive,
+                x => x.IsAlive,
+                x => Getter.Me().Position, 
+                Color.OrangeRed,
+                8
+                );
+
+            // Other approach
+            //DashSpell eSpell = new DashSpell(Oasys.SDK.SpellCasting.CastSlot.E,
+            //Oasys.Common.Enums.GameEnums.SpellSlot.E,
+            //    ECalc,
+            //    ERange,
+            //    ECastTime,
+            //    false,
+            //    x => x.IsAlive,
+            //    x => x.IsAlive,
+            //    x => GameEngine.WorldMousePosition,
+            //    Color.OrangeRed,
+            //    8
+            //   );
+
             LineSpell rSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.R,
                 Oasys.Common.Enums.GameEnums.SpellSlot.R,
-                rCalc,
+                RCalc,
                 RWidth,
                 RRange,
                 RSpeed,

@@ -147,7 +147,7 @@ namespace SWRevamped.Champions
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 9999999, 0),
+                new CollisionCheck(true, 9999, 0),
                 4);
             CircleSpell eSpell = new CircleSpell(Oasys.SDK.SpellCasting.CastSlot.E,
                 Oasys.Common.Enums.GameEnums.SpellSlot.E,
@@ -167,7 +167,7 @@ namespace SWRevamped.Champions
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 9999999, 0)
+                new CollisionCheck(true, 9999, 0)
                 );
             PointAndClickSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
                 Oasys.Common.Enums.GameEnums.SpellSlot.R,

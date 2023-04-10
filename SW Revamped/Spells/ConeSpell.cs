@@ -59,6 +59,8 @@ namespace SWRevamped.Spells
             SpellGroup.AddItem(_HitChance);
             MinMana = new Counter("Min Mana", minMana, 0, 10000);
             SpellGroup.AddItem(MinMana);
+            if (useMinCollisions)
+                SpellGroup.AddItem(defaultCollisionCheck.MinCollisionObjectsCounter);
             HarassIsOn = new Switch() { Title = "Harass", IsOn = false };
             LaneclearIsOn = new Switch() { Title = "Laneclear", IsOn = false };
             LasthitIsOn = new Switch() { Title = "Lasthit", IsOn = false };
@@ -125,8 +127,8 @@ namespace SWRevamped.Spells
             if (target == null || !IsOn || !LaneclearIsOn.IsOn )
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Cone, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
-            if (defaultCollisionCheck.Collision && pred.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count > defaultCollisionCheck.MinCollisionObjects : true)
+            if (defaultCollisionCheck.Collision)
+                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
             {
@@ -148,8 +150,8 @@ namespace SWRevamped.Spells
             if (target == null || !IsOn || HarassIsOn.IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Cone, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
-            if (defaultCollisionCheck.Collision && pred.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count > defaultCollisionCheck.MinCollisionObjects : true)
+            if (defaultCollisionCheck.Collision)
+                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
             {
@@ -177,8 +179,8 @@ namespace SWRevamped.Spells
             if (target == null || !IsOn || !LasthitIsOn.IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Cone, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
-            if (defaultCollisionCheck.Collision && pred.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count > defaultCollisionCheck.MinCollisionObjects : true)
+            if (defaultCollisionCheck.Collision)
+                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
             {
@@ -200,8 +202,8 @@ namespace SWRevamped.Spells
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Cone, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
-            if (defaultCollisionCheck.Collision && pred.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count > defaultCollisionCheck.MinCollisionObjects : true)
+            if (defaultCollisionCheck.Collision)
+                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
             {

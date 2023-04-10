@@ -95,8 +95,8 @@ namespace SWRevamped.Champions
         internal int RSpeed => 1500 + (int)Getter.MoveSpeed;
 
         MalphQCalc QCalc = new MalphQCalc();
-        MalphECalc ECalc = new MalphECalc();
         MalphWCalc WCalc = new MalphWCalc();
+        MalphECalc ECalc = new MalphECalc();
         MalphRCalc RCalc = new MalphRCalc();
 
         internal override void Init()
@@ -129,7 +129,7 @@ namespace SWRevamped.Champions
                 (int)Getter.AARange,
                 WCastTime,
                 x => x.IsAlive,
-                x => x.IsAlive,
+                x => x.IsAlive && x.Distance < Getter.Me().TrueAttackRange,
                 x => Getter.Me().Position,
                 Color.White,
                 80,
@@ -176,7 +176,7 @@ namespace SWRevamped.Champions
                 false,
                 false,
                 false,
-                new(true, 100000, 2),
+                new(true, 100000, 3),
                 6);
         }
     }

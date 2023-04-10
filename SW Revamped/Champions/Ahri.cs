@@ -133,7 +133,7 @@ namespace SWRevamped.Champions
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 999, 0),
+                new CollisionCheck(false, 0, 0),
                 7
                 );
             SelfCastingSpell wSpell = new(
