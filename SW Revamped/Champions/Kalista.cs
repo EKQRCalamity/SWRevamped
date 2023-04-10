@@ -113,7 +113,9 @@ namespace SWRevamped.Champions
                 80,
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
-                true);
+                true,
+                false,
+                new CollisionCheck(true, 1, 0));
 
             WGroup.AddItem(WEnabled);
             MainTab.AddGroup(WGroup);

@@ -149,7 +149,7 @@ namespace SWRevamped.Champions
                 false,
                 true,
                 false,
-                new CollisionCheck(true, 0),
+                new CollisionCheck(true, 0, 0),
                 7);
             SelfCastingSpell wSpell = new SelfCastingSpell(Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,

@@ -7,6 +7,7 @@ using Oasys.Common.Menu.ItemComponents;
 using Oasys.SDK;
 using Oasys.SDK.Events;
 using Oasys.SDK.SpellCasting;
+using Oasys.SDK.Tools;
 using SharpDX;
 using SWRevamped.Base;
 using System;
@@ -27,16 +28,15 @@ namespace SWRevamped.Spells
         internal Counter MinMana;
         internal TeamFlag flag;
 
-        internal static CollisionCheck defaultCollisionCheck = new CollisionCheck(true, 0);
+        internal CollisionCheck defaultCollisionCheck = new CollisionCheck(true, 0, 0);
 
         internal Switch HarassIsOn;
         internal Switch LaneclearIsOn;
         internal Switch LasthitIsOn;
         internal Func<GameObjectBase, Vector3> SourcePosition;
 
-        internal LineSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int width, int range, int speed, int castrange, float casttime, bool useCanKill, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, HitChance minHitChance = HitChance.VeryHigh, bool laneclear = false, bool harass = false, bool lasthit = false, CollisionCheck collisionCheck = null, int drawprio = 5, TeamFlag drawflag = TeamFlag.Unknown)
+        internal LineSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int width, int range, int speed, int castrange, float casttime, bool useCanKill, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana, HitChance minHitChance, bool laneclear, bool harass, bool lasthit, CollisionCheck collisionCheck, int drawprio = 5, TeamFlag drawflag = TeamFlag.Unknown)
         {
-            if (collisionCheck == null) collisionCheck = defaultCollisionCheck;
             defaultCollisionCheck = collisionCheck;
 
             if (defaultCollisionCheck.MinCollisionObjects > 0) 
@@ -128,8 +128,10 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Line, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
+            {
+                if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
+            }
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
             {
                 if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
@@ -151,8 +153,10 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Line, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
+            {
+                if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
+            }
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
             {
                 if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
@@ -180,8 +184,10 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Line, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
+            {
+                if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
+            }
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
             {
                 if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target))
@@ -203,8 +209,10 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Line, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
+            {
+                if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
+            }
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana > MinMana.Value)
             {
                 if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))

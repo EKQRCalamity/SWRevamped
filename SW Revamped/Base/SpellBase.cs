@@ -16,7 +16,7 @@ namespace SWRevamped.Base
     internal class CollisionCheck
     {
         internal bool Collision { get; private set; }
-        internal int MaxCollisionObjects { get; private set; }
+        internal int MaxCollisionObjects { get; set; }
         internal int MinCollisionObjects => (MinCollisionObjectsCounter != null) ? MinCollisionObjectsCounter.Value : 0;
         internal Counter MinCollisionObjectsCounter { get; private set; }
 

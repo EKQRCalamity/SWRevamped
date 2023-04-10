@@ -95,7 +95,7 @@ namespace SWRevamped.Champions
         {
             MenuManagerProvider.AddTab(MainTab);
             EffectDrawer.Init();
-            new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
+            LineSpell qSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
                 Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 QCalc,
                 QWidth,
@@ -111,7 +111,8 @@ namespace SWRevamped.Champions
                 75,
                 Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
                 false, false, false,
-                new CollisionCheck(true, 99999, 0));
+                new CollisionCheck(true, 999, 0));
+           
             new LineSpell(Oasys.SDK.SpellCasting.CastSlot.E,
                 Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
