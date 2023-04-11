@@ -47,6 +47,7 @@ namespace SWRevamped.Base
                 new Champion("KogMaw", "1.0.0.0", true), // Have to take a look at R... (Prediction)
                 new Champion("Lux", "1.0.0.1", true),
                 new Champion("Malphite", "1.0.0.2", true),
+                new Champion("Morgana", "1.0.0.0", false),
                 new Champion("Veigar", "1.0.0.0", true)
             };
             return supportedChampions;            
