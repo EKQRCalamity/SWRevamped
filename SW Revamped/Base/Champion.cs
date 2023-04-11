@@ -40,14 +40,15 @@ namespace SWRevamped.Base
                 new Champion("Brand", "1.0.0.0", true), // Have to take a look at R...  (Implementation)
                 new Champion("Caitlyn", "1.0.0.0", true),
                 new Champion("Cassiopeia", "1.0.0.0", true),
-                new Champion("DrMundo", "1.0.0.0", false),
+                new Champion("DrMundo", "1.0.0.0", true),
                 new Champion("Ezreal", "1.0.1.0", true),
                 new Champion("Jinx", "1.0.2.0", true),
                 new Champion("Kalista", "1.0.0.0", true),
                 new Champion("KogMaw", "1.0.0.0", true), // Have to take a look at R... (Prediction)
                 new Champion("Lux", "1.0.0.1", true),
                 new Champion("Malphite", "1.0.0.2", true),
-                new Champion("Morgana", "1.0.0.0", false),
+                new Champion("Morgana", "1.0.0.0", true),
+                new Champion("Soraka", "1.0.0.0", true),
                 new Champion("Veigar", "1.0.0.0", true)
             };
             return supportedChampions;            

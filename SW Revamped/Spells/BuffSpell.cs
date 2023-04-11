@@ -22,7 +22,7 @@ namespace SWRevamped.Spells
 
         internal Func<GameObjectBase, Vector3> SourcePosition;
 
-        internal BuffSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int range, float casttime, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, int drawprio = 5)
+        internal BuffSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int range, float casttime, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, int drawprio = 5, int health = 80)
         {
             Color color = drawColor;
 
@@ -30,7 +30,7 @@ namespace SWRevamped.Spells
             Slot = spellSlot;
             SpellCastSlot = castSlot;
             SpellGroup = new Group($"{SpellSlotToString()} Settings");
-            HealthCounter = new Counter("Health %", 80, 0, 100);
+            HealthCounter = new Counter("Health %", health, 0, 100);
             MinMana = new Counter("Min Mana", minMana, 0, 10000);
 
             SourcePosition = sourcePosition;
