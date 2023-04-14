@@ -1,7 +1,6 @@
 ﻿using Oasys.Common.Menu;
 using Oasys.SDK.Tools;
 using SWRevamped.Miscellaneous;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +16,9 @@ namespace SWRevamped.Base
 
         internal static List<UtilityModule> utilityModules = new List<UtilityModule>()
         {
+            new Activator(),
             new CSHelper(),
+            new MoveViewer(),
             new WardHelper()
         };
         internal static List<UtilityModule> debuggerModules = new List<UtilityModule>()
