@@ -92,7 +92,7 @@ namespace SWRevamped.Miscellaneous
             Cleanse.AddItem(CleanseSlow);
             //Cleanse.AddItem(ItemCleanse);
 
-            CoreEvents.OnCoreInputRegister += ComboKey;
+            CoreEvents.OnCoreMainInputAsync += ComboKey;
             CoreEvents.OnCoreMainTick += Tick;
         }
 
@@ -178,7 +178,7 @@ namespace SWRevamped.Miscellaneous
             return Task.CompletedTask;
         }
 
-        private Task ComboKey(Keys keyBeingPressed, Keyboard.KeyPressState pressState)
+        private Task ComboKey()
         {
             if (!UseOnTick.IsOn)
                 HandleActivation();
@@ -193,8 +193,8 @@ namespace SWRevamped.Miscellaneous
                 ActivateIgnite();
             if (UseShield.IsOn)
                 ActivateShield();
-            //if (UseHeal.IsOn)
-                //ActivateHeal();
+            if (UseHeal.IsOn)
+                ActivateHeal();
             if (SpellCleanse.IsOn)
                 ActivateCleanse();
         }
@@ -348,16 +348,13 @@ namespace SWRevamped.Miscellaneous
             if (HasSummoner(SummonerSpellsEnum.Ignite))
             {
                 SpellClass ignite = GetSpellClass(SummonerSpellsEnum.Ignite);
-                Logger.Log(ignite);
                 CastSlot slot = GetCastSlot(SummonerSpellsEnum.Ignite);
                 if (ignite == null) return;
                 if (ignite.IsSpellReady)
                 {
                     if (target.HealthPercent < 15 && target.Position.IsOnScreen())
-                    {
-                        Logger.Log("Casting");
+                    { 
                         SpellCastProvider.CastSpell(slot, target.Position.ToW2S());
-                        Logger.Log("Casting ended.");
                     }
                 }
             }
