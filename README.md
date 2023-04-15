@@ -1,24 +1,45 @@
-<h1 align="center">SW Revamped</h1>
+# SyncWave Revamped
+Fully rewritten league of legends All In One Script. A project that's supposed to be easy to read, understand and extend by script developers.
 
-<p align="center">
-From the ground rewritten Version of my old AIO SyncWave (SWave). This is supposed to be an easily extendable script which can be read, understood and build upen by the average module developer.
-</p>
+### Todo / Planned
 
-<h2 align="center">Overview</h2>
+#### Champions
+- Alistar
+- Amumu
+- Anivia
+- Ashe
+- Bard
+- Draven
+- Galio
+- Gragas
+- And more
 
-<h3 align="center">Done</h3>
-<p align="center">
-Multiple Champions<br>
-Spells and Spellcasting<br>
-Better Damage Calculation/Drawings<br>
+#### Utilities
+- Extending current Utilities (mostly Activator and CS Helper)
+- Adding Better Auto Attack Damage Calculation with On Hit damage.
 
-</p>
+### Done
 
+#### Champions
+- Ahri
+- Annie
+- Blitz
+- Brand
+- Caitlyn
+- Cassiopeia
+- Mundo
+- Ezreal
+- Jinx
+- Kalista
+- KogMaw
+- Lux
+- Malphite
+- Morgana
+- Soraka
+- Veigar
 
-<h3 align="center">To do</h3>
-<p align="center">
-Add more champions<br>
-More Spell classes<br>
-More Utilities<br>
-
-</p>
+#### Utilities
+- Activator  - Activates Ignite,Smite,Heal,Shield and Cleanse + Pots
+- CSHelper   - Helps with CSing using Drawings
+- MoveViewer - Shows the League Calculated Path of Enemies,Allies and Self + Move Position
+- WardHelper - Can Automatically place wards on multiple places on the map
