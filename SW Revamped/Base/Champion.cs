@@ -35,6 +35,7 @@ namespace SWRevamped.Base
             List<Champion> supportedChampions = new List<Champion>()
             {
                 new Champion("Ahri", "1.0.0.2", true),
+                new Champion("Amumu", "1.0.0.0", true),
                 new Champion("Annie", "1.0.0.0", true),
                 new Champion("Blitzcrank", "1.0.0.0", true),
                 new Champion("Brand", "1.0.0.0", true), // Have to take a look at R...  (Implementation)
