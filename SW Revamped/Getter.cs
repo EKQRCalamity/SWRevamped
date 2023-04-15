@@ -1,4 +1,5 @@
 ﻿using Oasys.Common.GameObject;
+using Oasys.Common.GameObject.Clients;
 using Oasys.Common.GameObject.Clients.ExtendedInstances;
 using Oasys.Common.GameObject.Clients.ExtendedInstances.Spells;
 using Oasys.Common.Menu;
@@ -18,6 +19,8 @@ namespace SWRevamped
         internal static Tab MainTab => MenuManager.GetTab($"SW - {Me().ModelName}");
 
         internal static GameObjectBase Me() => UnitManager.MyChampion;
+
+        internal static AIHeroClient MeHero => UnitManager.MyChampion;
 
         internal static int Level => Me().Level;
 

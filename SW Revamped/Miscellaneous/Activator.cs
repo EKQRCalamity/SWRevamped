@@ -50,6 +50,10 @@ namespace SWRevamped.Miscellaneous
 
         internal Group Smite = new Group("Smite");
         internal Switch UseSmite = new Switch("Use Smite", true);
+        internal Group Smiteables = new Group("Smiteables");
+        internal Switch SmiteCommon = new Switch("Normal Camps", false);
+        internal Switch SmiteBuffs = new Switch("Buff Camps", false);
+        internal Switch SmiteEpics = new Switch("Epic Camps", true);
 
         internal Group Shield = new Group("Shield");
         internal Switch UseShield = new Switch("Use Shield", true);
@@ -76,6 +80,10 @@ namespace SWRevamped.Miscellaneous
 
             ActivatorGroup.AddItem(Smite);
             Smite.AddItem(UseSmite);
+            Smite.AddItem(Smiteables);
+            Smiteables.AddItem(SmiteCommon);
+            Smiteables.AddItem(SmiteBuffs);
+            Smiteables.AddItem(SmiteEpics);
 
             ActivatorGroup.AddItem(Shield);
             Shield.AddItem(UseShield);
@@ -100,7 +108,7 @@ namespace SWRevamped.Miscellaneous
 
         internal bool HasPots()
         {
-            foreach (Item item in Getter.Me().As<Hero>().Inventory.GetItemList())
+            foreach (Item item in Getter.MeHero.Inventory.GetItemList())
             {
                 if (item.ID == ItemID.Health_Potion || item.ID == ItemID.Corrupting_Potion || item.ID == ItemID.Refillable_Potion)
                 {
@@ -128,7 +136,7 @@ namespace SWRevamped.Miscellaneous
 
         internal CastSlot GetPotsSlot()
         {
-            foreach (Item item in Getter.Me().As<Hero>().Inventory.GetItemList())
+            foreach (Item item in Getter.MeHero.Inventory.GetItemList())
             {
                 if (item.ID == ItemID.Health_Potion || item.ID == ItemID.Corrupting_Potion || item.ID == ItemID.Refillable_Potion)
                 {
@@ -255,7 +263,7 @@ namespace SWRevamped.Miscellaneous
             }
             if (UsePots.IsOn)
             {
-                if (HasPots() && GameEngine.GameTime - lastpottime > 1000)
+                if (HasPots() && GameEngine.GameTime - lastpottime > 15)
                 {
                     CastSlot potslot = GetPotsSlot();
                     if (Getter.Me().HealthPercent < HealthCounter.Value)
@@ -324,15 +332,25 @@ namespace SWRevamped.Miscellaneous
             return MobType.Type.None;
         }
 
+        private bool ShouldCast(JungleMob mob)
+        {
+            if (SmiteEpics.IsOn && GetMobType(mob) == MobType.Type.Epic || SmiteBuffs.IsOn && GetMobType(mob) == MobType.Type.Buff || SmiteCommon.IsOn && GetMobType(mob) == MobType.Type.Common)
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void ActivateSmite()
         {
             if (HasSummoner(SummonerSpellsEnum.Smite) && GetSpellClass(SummonerSpellsEnum.Smite).IsSpellReady)
             {
                 List<JungleMob> JungleMobs = Monsters();
                 float damage = SmiteDamage();
+                SpellClass smite = GetSpellClass(SummonerSpellsEnum.Smite);
                 foreach (JungleMob mob in JungleMobs)
                 {
-                    if (mob.Health > 0 && mob.Health < damage && GetMobType(mob) == MobType.Type.Epic)
+                    if (mob.Health > 0 && mob.Health < damage && ShouldCast(mob) && smite.Charges >= 1 && smite.IsSpellReady)
                     {
                         SpellCastProvider.CastSpell(GetCastSlot(SummonerSpellsEnum.Smite), mob.Position.ToW2S());
                         break;
