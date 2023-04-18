@@ -41,6 +41,7 @@ namespace SWRevamped.Base
                 new Champion("Brand", "1.0.0.0", true), // Have to take a look at R...  (Implementation)
                 new Champion("Caitlyn", "1.0.0.0", true),
                 new Champion("Cassiopeia", "1.0.0.0", true),
+                new Champion("Draven", "1.0.0.0", false),
                 new Champion("DrMundo", "1.0.0.0", true),
                 new Champion("Ezreal", "1.0.1.0", true),
                 new Champion("Jinx", "1.0.2.0", true),

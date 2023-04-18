@@ -133,7 +133,7 @@ namespace SWRevamped.Spells
                     return Task.CompletedTask;
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {
-                if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
+                if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
                 {
                     Vector3 pos = pred.CastPosition;
                     Vector2 v2Pos = pos.ToW2S();
@@ -156,7 +156,7 @@ namespace SWRevamped.Spells
                     return Task.CompletedTask;
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {
-                if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
+                if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
                 {
                     Vector3 pos = pred.CastPosition;
                     Vector2 v2Pos = pos.ToW2S();
@@ -185,7 +185,7 @@ namespace SWRevamped.Spells
                     return Task.CompletedTask;
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {
-                if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target))
+                if (target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target))
                 {
                     Vector3 pos = pred.CastPosition;
                     Vector2 v2Pos = pos.ToW2S();
@@ -211,7 +211,7 @@ namespace SWRevamped.Spells
             }
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {
-                if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
+                if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
                 {
                     Vector3 pos = pred.CastPosition;
                     Vector2 v2Pos = pos.ToW2S();

@@ -113,7 +113,7 @@ namespace SWRevamped.Spells
 
             if (target == null || !IsOn || !LaneclearIsOn.IsOn )
                 return Task.CompletedTask;
-            if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
+            if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();
@@ -129,7 +129,7 @@ namespace SWRevamped.Spells
             GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
             if (target == null || !IsOn || !HarassIsOn.IsOn)
                 return Task.CompletedTask;
-            if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
+            if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();
@@ -150,7 +150,7 @@ namespace SWRevamped.Spells
 
             if (target == null || !IsOn || !LasthitIsOn.IsOn)
                 return Task.CompletedTask;
-            if (target.Health - effectCalc.GetValue(target) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
+            if (target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();
@@ -166,7 +166,7 @@ namespace SWRevamped.Spells
             GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
-            if (UseCanKill ? target.Health - effectCalc.GetValue(target) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
+            if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
             {
                 Vector3 pos = target.Position;
                 Vector2 v2Pos = pos.ToW2S();

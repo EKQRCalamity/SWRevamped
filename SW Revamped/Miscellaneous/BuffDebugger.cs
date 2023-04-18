@@ -40,7 +40,7 @@ namespace SWRevamped.Miscellaneous
             {
                 foreach (BuffEntry buff in Getter.Me().BuffManager.GetBuffList())
                 {
-                    if (LogActiveBuffs.IsOn && !buff.IsActive)
+                    if (LogActiveBuffs.IsOn && !buff.IsActive || buff.Name.Contains($"smite", StringComparison.OrdinalIgnoreCase))
                         continue;
                     if (!LogUnknown.IsOn && buff.Name.Contains("Unknown", StringComparison.OrdinalIgnoreCase))
                         continue;
