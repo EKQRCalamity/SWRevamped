@@ -195,6 +195,8 @@ namespace SWRevamped.Miscellaneous
 
         private void HandleActivation() 
         {
+            if (Getter.IsDead(Getter.Me()))
+                return;
             if (UseSmite.IsOn)
                 ActivateSmite();
             if (UseIgnite.IsOn)
