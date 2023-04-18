@@ -5,7 +5,6 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 
 #### Champions
 - Alistar
-- Amumu
 - Anivia
 - Ashe
 - Bard
@@ -22,6 +21,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 
 #### Champions
 - Ahri
+- Amumu
 - Annie
 - Blitz
 - Brand
