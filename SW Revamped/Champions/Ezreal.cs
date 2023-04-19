@@ -29,7 +29,7 @@ namespace SWRevamped.Champions
                 damage = BaseDamage[Getter.QLevel];
                 damage += Getter.TotalAP * APScaling;
                 damage += Getter.TotalAD * ADScaling;
-                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage);
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage) + Utility.CalculatorEx.CalculateAADamageWithOnHit(target);
             }
             
             return damage;
@@ -134,26 +134,6 @@ namespace SWRevamped.Champions
         {
             MenuManagerProvider.AddTab(MainTab);
             EffectDrawer.Init();
-            LineSpell qSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
-                QCalc,
-                QWidth,
-                QRange,
-                QSpeed,
-                QRange,
-                QCastTime,
-                false,
-                x => x.IsAlive,
-                x => x.IsAlive && x.Distance < QRange,
-                x => Getter.Me().Position,
-                Color.Red,
-                40,
-                Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
-                true,
-                true,
-                true,
-                new CollisionCheck(true, 0, 0),
-                7);
             LineSpell wSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
                 WCalc,
@@ -174,6 +154,27 @@ namespace SWRevamped.Champions
                 false,
                 new CollisionCheck(true, 9999, 0),
                 9);
+            LineSpell qSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
+                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
+                QCalc,
+                QWidth,
+                QRange,
+                QSpeed,
+                QRange,
+                QCastTime,
+                false,
+                x => x.IsAlive && (Getter.WLevel >= 1)? !Getter.WLooseReady : true,
+                x => x.IsAlive && x.Distance < QRange,
+                x => Getter.Me().Position,
+                Color.Red,
+                40,
+                Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
+                true,
+                true,
+                true,
+                new CollisionCheck(true, 0, 0),
+                7);
+            
             DashSpell eSpell = new DashSpell(Oasys.SDK.SpellCasting.CastSlot.E,
                 Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
