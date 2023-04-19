@@ -8,7 +8,6 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Anivia
 - Ashe
 - Bard
-- Draven
 - Galio
 - Gragas
 - And more
@@ -27,7 +26,8 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Brand
 - Caitlyn
 - Cassiopeia
-- Mundo
+- Draven
+- Dr Mundo
 - Ezreal
 - Jinx
 - Kalista
