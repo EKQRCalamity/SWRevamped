@@ -52,6 +52,7 @@ namespace SWRevamped.Base
                 new Champion("Malphite", "1.0.0.2", true),
                 new Champion("Morgana", "1.0.0.0", true),
                 new Champion("Soraka", "1.0.0.0", true),
+                new Champion("Twitch", "1.0.0.0", false),
                 new Champion("Veigar", "1.0.0.0", true)
             };
             return supportedChampions;            

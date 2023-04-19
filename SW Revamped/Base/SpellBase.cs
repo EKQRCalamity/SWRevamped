@@ -117,9 +117,15 @@ namespace SWRevamped.Base
             {
                 return "E";
             }
-            else
+            else if (Slot == SpellSlot.R)
             {
                 return "R";
+            } else if (Slot == SpellSlot.Passive)
+            {
+                return "P";
+            } else
+            {
+                return "U";
             }
         }
 

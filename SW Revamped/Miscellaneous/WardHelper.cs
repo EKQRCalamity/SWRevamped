@@ -3,6 +3,7 @@ using Oasys.Common.Extensions;
 using Oasys.Common.Logic;
 using Oasys.Common.Menu;
 using Oasys.Common.Menu.ItemComponents;
+using Oasys.SDK;
 using Oasys.SDK.Events;
 using Oasys.SDK.InputProviders;
 using Oasys.SDK.Rendering;
@@ -38,6 +39,8 @@ namespace SWRevamped.Miscellaneous
         public override string Description => "A small module that helps with automizing wards and the process of placing them.";
         internal override void Init()
         {
+            if (GameEngine.InGameInfo.MapID != Oasys.Common.Enums.GameEnums.MapIDFlag.SummonersRift)
+                return;
             UtilityManager.MainTab.AddGroup(WardHelperGroup);
             WardHelperGroup.AddItem(IsOnSwitch);
             WardHelperGroup.AddItem(DrawLocations);

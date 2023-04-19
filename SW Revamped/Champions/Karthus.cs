@@ -94,7 +94,7 @@ namespace SWRevamped.Champions
                 875,
                 10000,
                 875,
-                0.25F,
+                0.25F + 0.5F,
                 false,
                 x => x.IsAlive,
                 x => x.IsAlive,
