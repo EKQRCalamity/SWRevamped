@@ -5,11 +5,13 @@ using Oasys.Common.GameObject.Clients.ExtendedInstances.Spells;
 using Oasys.Common.Menu;
 using Oasys.SDK;
 using Oasys.SDK.Menu;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SWRevamped
 {
@@ -83,6 +85,8 @@ namespace SWRevamped
         internal static float TotalHP => Getter.Me().MaxHealth;
 
         internal static float CurrentHP => Getter.Me().Health;
+
+        internal static Vector2 MousePosOnScreen => new Vector2(Cursor.Position.X, Cursor.Position.Y);
 
         internal static float AAsLeft(GameObjectBase target) => TargetSelector.AttacksLeftToKill(target);
     }

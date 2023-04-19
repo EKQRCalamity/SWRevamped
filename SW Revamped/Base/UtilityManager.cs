@@ -24,7 +24,8 @@ namespace SWRevamped.Base
         internal static List<UtilityModule> debuggerModules = new List<UtilityModule>()
         {
             new BuffDebugger(),
-            new PositionDebugger()
+            new PositionDebugger(),
+            new ObjectDebugger()
         };
         internal static void InitAll()
         {
