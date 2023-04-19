@@ -11,6 +11,9 @@ using Oasys.Common.Menu;
 using SharpDX;
 using SWRevamped.Spells;
 using Oasys.Common.Menu.ItemComponents;
+using Oasys.Common.EventsProvider;
+using Oasys.Common;
+using Oasys.Common.Extensions;
 
 namespace SWRevamped.Champions
 {
@@ -114,6 +117,19 @@ namespace SWRevamped.Champions
         TwitchRCalc RCalc = new TwitchRCalc();
 
         internal Counter QDistanceCounter = new Counter("Usage Range", 1000, 0, 1200);
+        internal Switch QTimeSwitch = new Switch("Draw Q Time", true);
+
+        internal float QTime()
+        {
+            List<BuffEntry> buffs = Getter.Me().BuffManager.ActiveBuffs.deepCopy();
+            BuffEntry? QBuff = buffs.FirstOrDefault(x => x.Name == "TwitchHideInShadows" && x.Stacks >= 1);
+            if (QBuff != null)
+            {
+                float QTime = QBuff.RemainingDurationMs / 1000;
+                return QTime;
+            }
+            return -1;
+        }
 
         internal override void Init()
         {
@@ -124,8 +140,6 @@ namespace SWRevamped.Champions
             MainTab.AddGroup(PassiveGroup);
             Effect passiveEffect = new Effect("P", true, 4, 10000, MainTab, PassiveGroup, PassiveCalc, Color.Green);
             EffectDrawer.AddDamage(passiveEffect);
-
-
 
             SelfCastingSpell qSpell = new(Oasys.SDK.SpellCasting.CastSlot.Q,
                 Oasys.Common.Enums.GameEnums.SpellSlot.Q,
@@ -142,6 +156,7 @@ namespace SWRevamped.Champions
                 false,
                 0
                 );
+            qSpell.SpellGroup.AddItem(QTimeSwitch);
             qSpell.SpellGroup.AddItem(QDistanceCounter);
 
             CircleSpell wSpell = new(Oasys.SDK.SpellCasting.CastSlot.W,
@@ -176,6 +191,21 @@ namespace SWRevamped.Champions
                 90,
                 true,
                 6);
+
+            CoreEvents.OnCoreRender += Render;
+        }
+
+        private void Render()
+        {
+            if (QTimeSwitch.IsOn)
+            {
+                if (QTime() > 0 && Getter.Me().Position.IsOnScreen())
+                {
+                    Vector2 position = Getter.Me().Position.ToW2S();
+                    position.Y -= 10;
+                    RenderFactoryProvider.DrawText($"{QTime().ToString("n2")}s", position, Color.Black);
+                }
+            }
         }
     }
 }
