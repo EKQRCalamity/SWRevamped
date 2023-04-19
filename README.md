@@ -18,7 +18,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 
 ### Done
 
-#### Champions (20/163)
+#### Champions (21/163)
 - Ahri
 - Amumu
 - Annie
@@ -26,6 +26,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Brand
 - Caitlyn
 - Cassiopeia
+- Cho'Gath
 - Draven
 - Dr Mundo
 - Ezreal

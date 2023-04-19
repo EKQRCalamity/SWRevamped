@@ -41,6 +41,7 @@ namespace SWRevamped.Base
                 new Champion("Brand", "1.0.0.0", true), // Have to take a look at R...  (Implementation)
                 new Champion("Caitlyn", "1.0.0.0", true),
                 new Champion("Cassiopeia", "1.0.0.0", true),
+                new Champion("Chogath", "1.0.0.0", true),
                 new Champion("Draven", "1.0.0.0", true),
                 new Champion("DrMundo", "1.0.0.0", true),
                 new Champion("Ezreal", "1.0.1.0", true),
@@ -52,7 +53,7 @@ namespace SWRevamped.Base
                 new Champion("Malphite", "1.0.0.2", true),
                 new Champion("Morgana", "1.0.0.0", true),
                 new Champion("Soraka", "1.0.0.0", true),
-                new Champion("Twitch", "1.0.0.0", false),
+                new Champion("Twitch", "1.0.0.0", true),
                 new Champion("Veigar", "1.0.0.0", true)
             };
             return supportedChampions;            

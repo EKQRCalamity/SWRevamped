@@ -77,6 +77,13 @@ namespace SWRevamped
         internal static float MoveSpeed => Stats.MoveSpeed;
 
         internal static float AARange => Stats.AttackRange;
+
+        internal static float BonusHP => Getter.Me().BonusHealth;
+
+        internal static float TotalHP => Getter.Me().MaxHealth;
+
+        internal static float CurrentHP => Getter.Me().Health;
+
         internal static float AAsLeft(GameObjectBase target) => TargetSelector.AttacksLeftToKill(target);
     }
 }
