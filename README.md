@@ -13,8 +13,8 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - And more
 
 #### Utilities
-- Extending current Utilities (mostly Activator and CS Helper)
-- Adding Better Auto Attack Damage Calculation with On Hit damage.
+- Extending current Utilities (mostly Activator and CS Helper) (WIP)
+- Adding Better Auto Attack Damage Calculation with On Hit damage. (WIP)
 
 ### Done
 
@@ -31,6 +31,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Ezreal
 - Jinx
 - Kalista
+- Karthus
 - KogMaw
 - Lux
 - Malphite
