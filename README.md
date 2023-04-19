@@ -18,7 +18,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 
 ### Done
 
-#### Champions
+#### Champions (20/163)
 - Ahri
 - Amumu
 - Annie
@@ -37,6 +37,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Malphite
 - Morgana
 - Soraka
+- Twitch
 - Veigar
 
 #### Utilities
