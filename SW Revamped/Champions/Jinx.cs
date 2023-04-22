@@ -211,7 +211,6 @@ namespace SWRevamped.Champions
             }
             if (DrawRangeCircle.IsOn)
             {
-                //Logger.Log(CalculateRangeWithQ());
                 RenderFactory.DrawNativeCircle(Getter.Me().Position, CalculateRangeWithQ(), new Color(Color.Red.R, Color.Red.G, Color.Red.B, 0.3F), 2, false);
             }
         }

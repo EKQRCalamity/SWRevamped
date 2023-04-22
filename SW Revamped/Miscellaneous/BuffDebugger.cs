@@ -46,7 +46,8 @@ namespace SWRevamped.Miscellaneous
                         continue;
                     if (LogWithChName.IsOn && !buff.Name.Contains($"{Getter.Me().ModelName}", StringComparison.OrdinalIgnoreCase))
                         continue;
-                    Logger.Log($"{buff.Name} - {buff.IsActive} - Dur: {buff.DurationMs}:{buff.RemainingDurationMs} - Stacks: {buff.Stacks}");
+                    
+                    ($"{buff.Name} - {buff.IsActive} - Dur: {buff.DurationMs}:{buff.RemainingDurationMs} - Stacks: {buff.Stacks}");
 
                 }
             }

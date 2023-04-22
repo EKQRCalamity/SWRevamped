@@ -14,6 +14,8 @@ using Oasys.Common.Menu.ItemComponents;
 using Oasys.Common.EventsProvider;
 using Oasys.Common;
 using Oasys.Common.Extensions;
+using Oasys.SDK.Tools;
+using SWRevamped.Utility;
 
 namespace SWRevamped.Champions
 {
@@ -44,6 +46,11 @@ namespace SWRevamped.Champions
             return damage;
         }
 
+        internal float GetValueWithHealthReg(GameObjectBase target)
+        {
+            return GetValue(target) - (CalculatorEx.CalculateHealthWithRegeneration(target, PassiveDuration(target)) - target.Health);
+        }
+
         internal override float GetValue(GameObjectBase target)
         {
             return DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, 0, GetDamage(target));
@@ -68,6 +75,7 @@ namespace SWRevamped.Champions
 
     internal sealed class TwitchECalc : EffectCalc
     {
+        internal bool usePassive = false;
         internal float EStacks(GameObjectBase enemy)
         {
             List<BuffEntry> buffs = enemy.BuffManager.ActiveBuffs.deepCopy();
@@ -92,7 +100,7 @@ namespace SWRevamped.Champions
                     damage + stackDamage,
                     apstackDamage,
                     0
-                    );
+                    ) + ((usePassive)? new TwitchPassiveCalc().GetValueWithHealthReg(target) : 0);
             }
             return 0;
         }
@@ -118,6 +126,9 @@ namespace SWRevamped.Champions
 
         internal Counter QDistanceCounter = new Counter("Usage Range", 1000, 0, 1200);
         internal Switch QTimeSwitch = new Switch("Draw Q Time", true);
+
+        internal Switch EUsePassive = new Switch("Execute with passive damage", false);
+        internal InfoDisplay EPInfo = new InfoDisplay() { Title = "Note", Information = "Deactive Passive Draw when using" };
 
         internal float QTime()
         {
@@ -191,12 +202,15 @@ namespace SWRevamped.Champions
                 90,
                 true,
                 6);
+            eSpell.MainTab.AddItem(EUsePassive);
+            eSpell.MainTab.AddItem(EPInfo);
 
             CoreEvents.OnCoreRender += Render;
         }
 
         private void Render()
         {
+            ECalc.usePassive = EUsePassive.IsOn;
             if (QTimeSwitch.IsOn)
             {
                 if (QTime() > 0 && Getter.Me().Position.IsOnScreen())

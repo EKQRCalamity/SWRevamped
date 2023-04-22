@@ -1,6 +1,7 @@
 ﻿using Oasys.Common.GameObject;
 using Oasys.Common.GameObject.Clients;
 using Oasys.Common.Logic;
+using Oasys.SDK.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -194,6 +195,13 @@ namespace SWRevamped.Utility
 
             damage += Ardent(caster, target);
             return damage;
+        }
+
+        internal static float CalculateHealthWithRegeneration(GameObjectBase target, float timeins)
+        {
+            float health = target.Health;
+            float healthRegen = target.UnitStats.HPRegenRate;
+            return health + (healthRegen * timeins);
         }
     }
 }

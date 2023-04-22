@@ -56,8 +56,8 @@ namespace SWRevamped.Base
             return ColorConverter.GetColor(ColorDisplay.SelectedModeName);
         }
 
-        internal bool IsOn { get => _isOn; set => this._isOn = value; }
-        private bool _isOn = false;
+        internal bool IsOn { get => _isOn; }
+        private bool _isOn => (IsOnSwitch == null)? true : IsOnSwitch.IsOn;
 
         internal Func<GameObjectBase, bool> IsOnSelfCheck { get; set; }
         internal Func<GameObjectBase, bool> IsOnTargetCheck { get; set; }
@@ -123,7 +123,6 @@ namespace SWRevamped.Base
         public Effect(string origName, bool isOn, int prio, int drawrange, Tab mainTab, Group mainGroup, EffectCalc calculator, Color color)
         {
             OrigName = origName;
-            _isOn = isOn;
             ColorDisplay = new ModeDisplay() { Title = "Color", ModeNames = ColorConverter.GetColors(), SelectedModeName = $"{ColorToName(color)}"};
             IsOnSelfCheck = x => x.IsAlive;
             IsOnTargetCheck = x => x.IsAlive;
@@ -139,7 +138,6 @@ namespace SWRevamped.Base
         public Effect(string origName, bool isOn, int prio, int drawrange, Tab mainTab, Group mainGroup, EffectCalc calculator, Color color, Func<GameObjectBase, bool> isOnSelfCheck)
         {
             OrigName = origName;
-            _isOn = isOn;
             ColorDisplay = new ModeDisplay() { Title = "Color", ModeNames = ColorConverter.GetColors(), SelectedModeName = $"{ColorConverter.GetColors().FirstOrDefault()}" };
             IsOnSelfCheck = isOnSelfCheck;
             IsOnTargetCheck = x => x.IsAlive;
@@ -155,7 +153,6 @@ namespace SWRevamped.Base
         public Effect(string origName, bool isOn, int prio, int drawrange, Tab mainTab, Group mainGroup, EffectCalc calculator, Color color, Func<GameObjectBase, bool> isOnSelfCheck, Func<GameObjectBase, bool> isOnTargetCheck)
         {
             OrigName = origName;
-            _isOn = isOn;
             ColorDisplay = new ModeDisplay() { Title = "Color", ModeNames = ColorConverter.GetColors(), SelectedModeName = $"{ColorConverter.GetColors().FirstOrDefault()}" };
             IsOnSelfCheck = isOnSelfCheck;
             IsOnTargetCheck = isOnTargetCheck;
@@ -183,12 +180,12 @@ namespace SWRevamped.Base
 
         internal void Deactivate()
         {
-            _isOn = false;
+            IsOnSwitch.IsOn = false;
         }
 
         internal void Activate()
         {
-            _isOn = true;
+            IsOnSwitch.IsOn = true;
 
         }
     }

@@ -205,7 +205,6 @@ namespace SWRevamped.Spells
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Cone, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision)
             {
-                Logger.Log($"{defaultCollisionCheck.Collision} - {pred.CollisionObjects.Count} > {defaultCollisionCheck.MaxCollisionObjects}");
                 if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
                     return Task.CompletedTask;
             }

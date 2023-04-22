@@ -27,7 +27,6 @@ namespace SWRevamped
         private static Task Init()
         {
             // Setup
-            Logger.Log(Getter.Me().ModelName);
             if (Base.Champion.ChampWithNameSupported(Getter.Me().ModelName))
             {
                 Base.ChampionModule champion = Base.ChampionModule.GetFromName(Getter.Me().ModelName);

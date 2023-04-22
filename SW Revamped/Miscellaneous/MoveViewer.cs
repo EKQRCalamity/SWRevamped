@@ -66,7 +66,7 @@ namespace SWRevamped.Miscellaneous
                 {
                     if (i + 1 == path.Count) break;
                     if (i == 0)
-                        RenderFactory.DrawLine(LeagueNativeRendererManager.WorldToScreenSpell(Getter.Me().Position).X, LeagueNativeRendererManager.WorldToScreenSpell(Getter.Me().Position).Y, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).Y, 2, (target.OnMyTeam) ? (target.IsMe) ? new Color(23, 255, 58) : new Color(52, 128, 199) : new Color(252, 23, 65));
+                        RenderFactory.DrawLine(LeagueNativeRendererManager.WorldToScreenSpell(target.Position).X, LeagueNativeRendererManager.WorldToScreenSpell(target.Position).Y, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).Y, 2, (target.OnMyTeam) ? (target.IsMe) ? new Color(23, 255, 58) : new Color(52, 128, 199) : new Color(252, 23, 65));
                     else
                         RenderFactory.DrawLine(LeagueNativeRendererManager.WorldToScreenSpell(path[i]).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i]).Y, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).Y, 2, (target.OnMyTeam) ? (target.IsMe) ? new Color(23, 255, 58) : new Color(52, 128, 199) : new Color(252, 23, 65));
                     
