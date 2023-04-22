@@ -1,0 +1,1831 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Oasys.SDK</name>
+    </assembly>
+    <members>
+        <member name="T:Oasys.SDK.DamageCalculator">
+            <summary>
+            Standard damage calculator
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.DamageCalculator.GetTargetHealthAfterBasicAttack(Oasys.Common.GameObject.GameObjectBase,Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Gets the target's health after player's basic attack.
+            </summary>
+            <param name="attacker"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.DamageCalculator.GetNextBasicAttackDamage(Oasys.Common.GameObject.GameObjectBase,Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Gets the player's next attack damage to be dealt to the target.
+            </summary>
+            <param name="attacker"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Oasys.SDK.Events.CoreEvents">
+            <summary>
+            Core related events
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.CoreEvents.OnCoreMainTick">
+            <summary>
+            This event is raised multiple times per second. To be specific, it is raised every 10ms. 
+            This event is useful for custom caching and calculations executing every each of tick.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.CoreEvents.OnCoreMainInputRelease">
+            <summary>
+            This event is raised whenever the main input(space key for default) is released.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.CoreEvents.OnCoreMainInputAsync">
+            <summary>
+            This event is raised whenever the main input(space key for default) is pressed.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.CoreEvents.OnCoreHarassInputAsync">
+            <summary>
+            This event is raised whenever the harass input(x key for default) is pressed.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.CoreEvents.OnCoreLaneclearInputAsync">
+            <summary>
+            This event is raised whenever the laneclear input(v key for default) is pressed.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.CoreEvents.OnCoreLasthitInputAsync">
+            <summary>
+            This event is raised whenever the laasthit input(c key for default) is pressed.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.CoreEvents.OnCoreRender">
+            <summary>
+            This event is raised whenever the rendering occurs. If you want to draw, this is the event you want to subscribe to.
+            </summary>
+        </member>
+        <member name="T:Oasys.SDK.Events.GameEvents">
+            <summary>
+            Game related events.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnGameLoadComplete">
+            <summary>
+            This event is raised when the loading of the game finishes, where a user is inside the lobby. 
+            If the game has already started, then it is raised immediately after the core has initialized.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnGameMatchComplete">
+            <summary>
+            This event is raised when a game match finishes.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnProcessSpell">
+            <summary>
+            This event is raised whenever a champion casts a spell.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnGameSpellChanneling">
+            <summary>
+            This event is raised whenever a champion casts a channeling spell.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnProcessRecallFinished">
+            <summary>
+            This event is raised whenever enemy champion recalls is finished.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnProcessRecall">
+            <summary>
+            This event is raised whenever enemy champion recalls.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnGameNewPath">
+            <summary>
+            This event is raised whenever a champion changes pathing.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnGameDash">
+            <summary>
+            This event is raised whenever a champion is dashing.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnBuffChange">
+            <summary>
+            This event is raised whenever an object has a buff change.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnCreateObject">
+            <summary>
+            This event is raised whenever there is an object that is created by the game.
+            To activate this event, please refer to Common.Settings.Core.UseNativeObjectManagerCaching (It is disabled by default)
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnDeleteObject">
+            <summary>
+            This event is raised whenever there is an object that is deleted by the game.
+            To activate this event, please refer to Common.Settings.Core.UseNativeObjectManagerCaching (It is disabled by default)
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnBuyItem">
+            <summary>
+            This event is raised whenever a hero object buys an item.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnSellItem">
+            <summary>
+            This event is raised whenever a hero object sells an item.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnItemUpgrade">
+            <summary>
+            This event is raised whenever a hero object upgrades an item.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Events.GameEvents.OnItemSlotChanged">
+            <summary>
+            This event is raised whenever a hero object changes the slot of an item.
+            </summary>
+        </member>
+        <member name="T:Oasys.SDK.GameEngine">
+            <summary>
+            Provides information related to the game engine.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.GameTime">
+            <summary>
+            Gets the current game time in milliseconds format.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.GameTick">
+            <summary>
+            Gets the current game tick. This is equal to gametime * 1000
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.IsGameWindowFocused">
+            <summary>
+            Gets a boolean value presenting if the game is in focus by windows.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.GamePing">
+            <summary>
+            The local ping to server.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.GameVersion">
+            <summary>
+            Gets the current game version.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.HoveredGameObjectUnderMouse">
+            <summary>
+            Gets the game object that is underneath the mouse.
+            It will return last cached game object if no object is found.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.GameStatus">
+            <summary>
+            Gets the current game status.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.InGameInfo">
+            <summary>
+            Gets information about the current game match.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.ChatBox">
+            <summary>
+            Gets information about the chatbox.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.Minimap">
+            <summary>
+            Gets information about the minimap.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.FrameInformation">
+            <summary>
+            Gets information about the frame rate (FPS).
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.GameEngine.IsWall(SharpDX.Vector3)">
+            <summary>
+            Checks whether the given vector3 position is a wall.
+            </summary>
+            <param name="vec3Pos"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.WorldMousePosition">
+            <summary>
+            Position of the cursor in game world projection.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.ScreenMousePosition">
+            <summary>
+            Position of the cursor in screen projection relative to the world position.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.ZoomValue">
+            <summary>
+            Current zoom value in game.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.GameEngine.MaxZoomValue">
+            <summary>
+            Maz zoomable value in game.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.GameEngine.IssueOrder(Oasys.SDK.GameEngine.OrderType,SharpDX.Vector2)">
+            <summary>
+            Issue an order for the player(me) act on.
+            </summary>
+            <param name="issuedOrder"></param>
+            <param name="positionOrdered"></param>
+        </member>
+        <member name="M:Oasys.SDK.GameEngine.IssueOrder(Oasys.SDK.GameEngine.OrderType,SharpDX.Vector3)">
+            <summary>
+            Issue an order for the player(me) act on.
+            </summary>
+            <param name="issuedOrder"></param>
+            <param name="positionOrdered"></param>
+        </member>
+        <member name="T:Oasys.SDK.InputProviders.KeyboardProvider">
+            <summary>
+            Provides keyboard input emulation.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.IsKeyPressed(System.Windows.Forms.Keys)">
+            <summary>
+            Checks whether if a key is pressed.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.IsControlPressed">
+            <summary>
+            Checks whether if control is pressed.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.IsShiftPressed">
+            <summary>
+            Checks whether if shift is pressed.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.PressKeyDown(System.Int16)">
+            <summary>
+             Presses a key down.
+            </summary>
+            <param name="keyBoardScanCode"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.PressKeyDown(Oasys.SDK.InputProviders.KeyboardProvider.KeyBoardScanCodes)">
+            <summary>
+            Presses a key down.
+            </summary>
+            <param name="keyBoardScanCode"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.PressKeyUp(System.Int16)">
+            <summary>
+            Presses a key up.
+            </summary>
+            <param name="keyBoardScanCode"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.PressKeyUp(Oasys.SDK.InputProviders.KeyboardProvider.KeyBoardScanCodes)">
+            <summary>
+            Presses a key up.
+            </summary>
+            <param name="keyBoardScanCode"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.PressKey(System.Int16)">
+            <summary>
+            Simulates a key press.
+            </summary>
+            <param name="keyboardScanCode"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.KeyboardProvider.PressKey(Oasys.SDK.InputProviders.KeyboardProvider.KeyBoardScanCodes)">
+            <summary>
+            Simulates a key press.
+            </summary>
+            <param name="keyboardScanCode"></param>
+        </member>
+        <member name="E:Oasys.SDK.InputProviders.KeyboardProvider.OnKeyPress">
+            <summary>
+            This event is raised whenever a key is pressed.
+            </summary>
+        </member>
+        <member name="T:Oasys.SDK.InputProviders.MouseProvider">
+            <summary>
+            Provides mouse input emulation.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.SetCursor(System.Int32,System.Int32)">
+            <summary>
+            Sets the cursor position.
+            Note that using SetCursor over SetPosition will not send any input stream events that we might want for certain scenarios.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.SetCursor(Oasys.Common.Tools.Pos)">
+            <summary>
+            Sets the cursor position.
+            Note that using SetCursor over SetPosition will not send any input stream events that we might want for certain scenarios.
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.SetCursorRelative(System.Int32,System.Int32)">
+            <summary>
+            Changes the cursor position relatively to its current position.
+            Note that using SetCursor over SetPosition will not send any input stream events that we might want for certain scenarios.
+            </summary>
+            <param name="xOffset"></param>
+            <param name="yOffset"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.SetCursorRelative(Oasys.Common.Tools.Pos)">
+            <summary>
+            Changes the cursor position relatively to its current position.
+            Note that using SetCursor over SetPosition will not send any input stream events that we might want for certain scenarios.
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.SetPosition(System.Int32,System.Int32)">
+            <summary>
+            Sets the mouse position using the native mouse_event call.
+            This will also stream all information of mouse movement into the input handler.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.SetPosition(Oasys.Common.Tools.Pos)">
+            <summary>
+            Sets the mouse position using the native mouse_event call.
+            This will also stream all information of mouse movement into the input handler.
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.SetPositionRelative(System.Int32,System.Int32)">
+            <summary>
+            Changes the mouse position relatively to its current position using the native mouse_event call.
+            This will also stream all information of mouse movement into the input handler.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.SetPositionRelative(Oasys.Common.Tools.Pos)">
+            <summary>
+            Changes the mouse position relatively to its current position using the native mouse_event call.
+            This will also stream all information of mouse movement into the input handler.
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.ClickAndBounce(System.Int32,System.Int32,System.Int32,System.Boolean,System.Action)">
+            <summary>
+            Clicks on target position, and after [delay]ms bounces back to origin location.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="delay"></param>
+            <param name="left"></param>
+            <param name="callback">what to do instead of a right click in case we need a key press or something</param>
+            <returns>has clicked</returns>
+        </member>
+        <member name="M:Oasys.SDK.InputProviders.MouseProvider.ClickAndBounce(Oasys.Common.Tools.Pos,System.Int32,System.Boolean,System.Action)">
+            <summary>
+            Clicks on target position, and after [delay]ms bounces back to origin location.
+            </summary>
+            <param name="p"></param>
+            <param name="delay"></param>
+            <param name="left"></param>
+            <param name="callback">what to do instead of a right click in case we need a key press or something</param>
+            <returns>has clicked</returns>
+        </member>
+        <member name="M:Oasys.SDK.Menu.MenuManager.AddTab(Oasys.Common.Menu.Tab)">
+            <summary>
+            Adds the tab to the menu.
+            </summary>
+            <param name="tab"></param>
+            <returns>Index of tab</returns>
+            <example>
+               <code>
+                      MenuManager.AddTab(new Tab("Tab1"));
+               </code>
+            </example>
+        </member>
+        <member name="M:Oasys.SDK.Menu.MenuManager.GetTab(System.String)">
+            <summary>
+            Gets a tab with the name from the menu.
+            </summary>
+            <param name="tabName"></param>
+            <returns></returns>
+            <example>
+               <code>
+                      MenuManager.GetTab("Tab1");
+               </code>
+            </example>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Oasys.SDK.Menu.MenuManager.GetTab(System.Func{Oasys.Common.Menu.Tab,System.Boolean})" -->
+        <member name="M:Oasys.SDK.Menu.MenuManager.GetTab(System.Int32)">
+            <summary>
+            Gets a tab by its index.
+            </summary>
+            <param name="index"></param>
+            <returns>Requested item</returns>
+            <example>
+               <code>
+                       var tab1 = MenuManager.GetTab(1);
+               </code>
+            </example>
+        </member>
+        <member name="T:Oasys.SDK.OasysModuleEntryPoint">
+            <summary>
+            Without this entrypoint, module won't execute.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Orbwalker.GetTarget(Oasys.SDK.Orbwalker.OrbWalkingModeType)">
+            <summary>
+            Get a orbwalking target
+            </summary>
+            <param name="orbwalkingMode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.Orbwalker.GetTarget(Oasys.SDK.Orbwalker.OrbWalkingModeType,System.Single)">
+            <summary>
+            Get a orbwalking target with custom range, usecase fx: Zeri Q
+            </summary>
+            <param name="orbwalkingMode"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.CanBasicAttack">
+            <summary>
+            Can my champion basic attack
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Orbwalker.AttackReset">
+            <summary>
+            Reset attack timer
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.AllowAttacking">
+            <summary>
+            Enable/disable the orbwalker to being able to attack
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.AllowMoving">
+            <summary>
+            Enable/disable the orbwalker to being able to move
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.CanMove">
+            <summary>
+            Can my champion move after basic attack
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.AttackCooldownRemaining">
+            <summary>
+            Remaining time in seconds before basic attack is possible
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.LastBasicAttack">
+            <summary>
+            Last basic attack in game time
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.LastMove">
+            <summary>
+            Last move in game time
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.PreviousMinion">
+            <summary>
+            Previous attacked minion with orbwalker
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.SelectedHero">
+            <summary>
+            Manually overrided hero targetselection
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.SelectedTarget">
+            <summary>
+            Manually overrided target 
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.LaneClearTarget">
+            <summary>
+            Current selected laneclear target
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.TargetChampionsOnly">
+            <summary>
+            Is target champions only being pressed. Set to true for holding target champions only, set to false to stop holding target champions only.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.TargetHero">
+            <summary>
+            Current selected hero target
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.ForceMovePosition">
+            <summary>
+            Set this to force move to a screen position when can walk, remember to reset the value to Vector2.Zero.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Orbwalker.OnOrbwalkerBeforeBasicAttack">
+            <summary>
+            This event is raised when orbwalker is about to process a basicattack.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Orbwalker.OnOrbwalkerBasicAttack">
+            <summary>
+            This event is raised when orbwalker is processing a basicattack.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.Orbwalker.OnOrbwalkerAfterBasicAttack">
+            <summary>
+            This event is raised when orbwalker has just processed a basicattack.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Orbwalker.OrbwalkingMode">
+            <summary>
+            Orbwalking mode
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.LastHit">
+            <summary>
+                The orbwalker will only last hit minions.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.Mixed">
+            <summary>
+                The orbwalker will alternate between last hitting and auto attacking champions.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.LaneClear">
+            <summary>
+                The orbwalker will clear the lane of minions as fast as possible while attempting to get the last hit. But also targetting champions, monsters, turrrets, etc...
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.Combo">
+            <summary>
+                The orbwalker will only attack champions.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.Freeze">
+            <summary>
+                The orbwalker will only last hit minions as late as possible.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.Move">
+            <summary>
+                The orbwalker will only move.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.None">
+            <summary>
+                The orbwalker does nothing.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.Evade">
+            <summary>
+                The orbwalker will not attack while evading.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Orbwalker.OrbWalkingModeType.Support">
+            <summary>
+                The orbwalker will clear the lane of minions as fast as possible while attempting to not get the last hit. But also targetting champions, monsters, turrrets, etc...
+            </summary>
+        </member>
+        <member name="T:Oasys.SDK.Prediction">
+            <summary>
+            Spell Prediction.
+            </summary>
+        </member>
+        <member name="T:Oasys.SDK.Prediction.MenuSelected.PredictionOutput">
+            <summary>
+            The prediction output.
+            </summary>
+            <param name="UnitPosition">The position of unit.</param>
+            <param name="CastPosition">The position to cast.</param>
+            <param name="HitChance">The hitchance.</param>
+            <param name="CollisionObjects">The collision objects.</param>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.MenuSelected.PredictionOutput.#ctor(SharpDX.Vector3,SharpDX.Vector3,Oasys.SDK.Prediction.MenuSelected.HitChance,System.Collections.Generic.List{Oasys.Common.GameObject.GameObjectBase})">
+            <summary>
+            The prediction output.
+            </summary>
+            <param name="UnitPosition">The position of unit.</param>
+            <param name="CastPosition">The position to cast.</param>
+            <param name="HitChance">The hitchance.</param>
+            <param name="CollisionObjects">The collision objects.</param>
+        </member>
+        <member name="P:Oasys.SDK.Prediction.MenuSelected.PredictionOutput.Collision">
+            <summary>
+            CollisionObjects has any items.
+            </summary>
+        </member>
+        <member name="T:Oasys.SDK.Prediction.MenuSelected.PredictionInput">
+            <summary>
+            The prediction input.
+            </summary>
+            <param name="Type">The prediction type.</param>
+            <param name="Target">The target to predict.</param>
+            <param name="Range">The spell range.</param>
+            <param name="Radius">The spell width/radius/angle.</param>
+            <param name="Delay">The delay/cast time/animation time in seconds.</param>
+            <param name="Speed">The speed in units per second.</param>
+            <param name="SourcePosition">The source position. Ex: Victor's E can be placed somewhere else. Normally source position is Localplayer position.</param>
+            <param name="CollisionCheck">The CollisionCheck.</param>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.MenuSelected.PredictionInput.#ctor(Oasys.SDK.Prediction.MenuSelected.PredictionType,Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,SharpDX.Vector3,System.Boolean)">
+            <summary>
+            The prediction input.
+            </summary>
+            <param name="Type">The prediction type.</param>
+            <param name="Target">The target to predict.</param>
+            <param name="Range">The spell range.</param>
+            <param name="Radius">The spell width/radius/angle.</param>
+            <param name="Delay">The delay/cast time/animation time in seconds.</param>
+            <param name="Speed">The speed in units per second.</param>
+            <param name="SourcePosition">The source position. Ex: Victor's E can be placed somewhere else. Normally source position is Localplayer position.</param>
+            <param name="CollisionCheck">The CollisionCheck.</param>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.MenuSelected.GetPrediction(Oasys.SDK.Prediction.MenuSelected.PredictionType,Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,System.Boolean)">
+            <summary>
+            Get a prediction result based on prediction input and the menu selected SDK prediction mode.
+            </summary>
+            <param name="type">The prediction type.</param>
+            <param name="target">The target to predict.</param>
+            <param name="range">The spell range.</param>
+            <param name="radius">The spell width/radius/angle.</param>
+            <param name="delay">The delay/cast time/animation time in seconds.</param>
+            <param name="speed">The speed in units per second.</param>
+            <param name="collisionCheck">The CollisionCheck.</param>
+            <returns>The prediction output.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.MenuSelected.GetPrediction(Oasys.SDK.Prediction.MenuSelected.PredictionType,Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,SharpDX.Vector3,System.Boolean)">
+            <summary>
+            Get a prediction result based on prediction input and the menu selected SDK prediction mode.
+            </summary>
+            <param name="type">The prediction type.</param>
+            <param name="target">The target to predict.</param>
+            <param name="range">The spell range.</param>
+            <param name="radius">The spell width/radius/angle.</param>
+            <param name="delay">The delay/cast time/animation time in seconds.</param>
+            <param name="speed">The speed in units per second.</param>
+            <param name="sourcePosition">The source position. Ex: Victor's E can be placed somewhere else. Normally source position is Localplayer position.</param>
+            <param name="collisionCheck">The CollisionCheck.</param>
+            <returns>The prediction output.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.MenuSelected.GetPrediction(Oasys.SDK.Prediction.MenuSelected.PredictionInput)">
+            <summary>
+            Get a prediction result based on prediction input and the menu selected SDK prediction mode.
+            </summary>
+            <param name="input">The prediction input.</param>
+            <returns>The prediction output.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="T:Oasys.SDK.Prediction.LS">
+            <summary>
+            Ported LeagueSharp Prediction.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictLinearMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single,SharpDX.Vector3)">
+            <summary>
+            Predict linear cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictLinearMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,SharpDX.Vector3)">
+            <summary>
+            Predict linear cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictLinearMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single)">
+            <summary>
+            Predict linear cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictLinearMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Predict linear cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictCircularMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single,SharpDX.Vector3)">
+            <summary>
+            Predict circular cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictCircularMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,SharpDX.Vector3)">
+            <summary>
+            Predict circular cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictCircularMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single)">
+            <summary>
+            Predict circular cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictCircularMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Predict circular cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictConeSpell(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single,SharpDX.Vector3)">
+            <summary>
+            Predict cone cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictConeSpell(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,SharpDX.Vector3)">
+            <summary>
+            Predict cone cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictConeSpell(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single)">
+            <summary>
+            Predict cone cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.PredictConeSpell(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Predict cone cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.GetPrediction(Oasys.Common.GameObject.GameObjectBase,System.Single)">
+            <summary>
+                Gets the prediction.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.GetPrediction(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single)">
+            <summary>
+                Gets the prediction.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.GetPrediction(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single)">
+            <summary>
+                Gets the prediction.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.GetPrediction(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,Oasys.Common.Logic.LS.CollisionableObjects[])">
+            <summary>
+                Gets the prediction.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="collisionable">The collisionable object types.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.LS.GetPrediction(Oasys.Common.Logic.LS.PredictionInput)">
+            <summary>
+                Gets the prediction.
+            </summary>
+            <param name="input">The prediction data to predict.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="T:Oasys.SDK.Prediction.EB">
+            <summary>
+            Ported EloBuddy Prediction.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.GetPrediction(Oasys.Common.GameObject.GameObjectBase,Oasys.Common.Logic.EB.Prediction.Position.PredictionData,System.Boolean)">
+            <summary>
+            Predict cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="data">The prediction data to predict.</param>
+            <param name="skipCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictLinearMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Int32,System.Single,System.Int32,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict linear cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in milliseconds/ticks.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="allowedCollisionCount">The allowed collision count.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictLinearMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single,System.Int32,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict linear cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="allowedCollisionCount">The allowed collision count.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictLinearMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,System.Int32,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict linear cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="allowedCollisionCount">The allowed collision count.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictCircularMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Int32,System.Single,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict circular cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in milliseconds/ticks.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictCircularMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict circular cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictCircularMissile(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict circular cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictConeSpell(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Int32,System.Single,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict cone cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in milliseconds/ticks.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictConeSpell(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Int32,System.Single,System.Single,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict cone cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictConeSpell(Oasys.Common.GameObject.GameObjectBase,System.Single,System.Single,System.Single,System.Single,System.Nullable{SharpDX.Vector3},System.Boolean)">
+            <summary>
+            Predict cone cast position and collision for a specific target.
+            </summary>
+            <param name="target">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <param name="ignoreCollision">Skip collision checks.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.GetPredictionAoe(Oasys.Common.GameObject.GameObjectBase[],Oasys.Common.Logic.EB.Prediction.Position.PredictionData)">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets"> The targets to predict. If null then the enemy heroes will be chosen instead.</param>
+            <param name="data"> The prediction data to predict.</param>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictLinearMissileAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Int32,System.Int32,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in milliseconds/ticks.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictLinearMissileAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Int32,System.Single,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictLinearMissileAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Single,System.Single,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictCircularMissileAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Int32,System.Int32,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in milliseconds/ticks.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictCircularMissileAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Int32,System.Single,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictCircularMissileAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Single,System.Single,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The unit that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="radius"> The skillshot width's radius or the angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictConeSpellAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Int32,System.Int32,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The units that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in milliseconds/ticks.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictConeSpellAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Int32,System.Single,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The units that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="M:Oasys.SDK.Prediction.EB.PredictConeSpellAoe(Oasys.Common.GameObject.GameObjectBase[],System.Single,System.Single,System.Single,System.Single,System.Nullable{SharpDX.Vector3})">
+            <summary>
+            Predicts all the possible positions to hit as many targets as possible from a predifined group of targets.
+            </summary>
+            <param name="targets">The units that the prediction will made for.</param>
+            <param name="range">The skillshot range in units.</param>
+            <param name="angle"> The skillshot angle in case of the cone skillshots.</param>
+            <param name="delay">The skillshot delay in seconds.</param>
+            <param name="speed">The skillshot speed in units per second.</param>
+            <param name="sourcePosition">The position from where the skillshot missile gets fired.</param>
+            <returns>The output after calculating the prediction.</returns>
+        </member>
+        <member name="T:Oasys.SDK.Rendering.RenderFactory">
+            <summary>
+            Rendering for the core.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.Rendering.RenderFactory.RenderDevice">
+            <summary>
+            Gets the render device.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Rendering.RenderFactory.D3D9Font">
+            <summary>
+            Gets the D3D9 Font to draw.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Rendering.RenderFactory.D3D9Line">
+            <summary>
+            Gets the D3D9 Line to draw a line.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.Rendering.RenderFactory.D3D9BoxLine">
+            <summary>
+            Gets the D3D9 Line to draw a box.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.GenerateD3D9Font(SharpDX.Direct3D9.FontDescription)">
+            <summary>
+            Generates a new font with the given FontDescription parameter.
+            </summary>
+            <param name="ftDesc"></param>
+            <returns>SharpDX.Direct3D9.Font</returns>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawText(System.String,System.Int32,SharpDX.Vector2,SharpDX.Color,System.Boolean)">
+            <summary>
+            Draws a text on the screen.
+            </summary>
+            <param name="text"></param>
+            <param name="FontSize"></param>
+            <param name="position"></param>
+            <param name="color"></param>
+            <param name="centered"></param>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawText(SharpDX.Direct3D9.Font,System.String,System.Int32,SharpDX.Vector2,SharpDX.Color,System.Boolean)">
+            <summary>
+            Draws a text on the screen.
+            </summary>
+            <param name="providedFont"></param>
+            <param name="text"></param>
+            <param name="FontSize"></param>
+            <param name="position"></param>
+            <param name="color"></param>
+            <param name="centered"></param>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawLine(System.Single,System.Single,System.Single,System.Single,System.Single,SharpDX.Color)">
+            <summary>
+            Draws a line on the screen.
+            </summary>
+            <param name="x1"></param>
+            <param name="y1"></param>
+            <param name="x2"></param>
+            <param name="y2"></param>
+            <param name="w"></param>
+            <param name="Color"></param>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawSpellBoxedLine(SharpDX.Vector2,SharpDX.Vector2,System.Single,SharpDX.Color)">
+            <summary>
+            Draws a straight hollowed boxed line.
+            </summary>
+            <param name="sPos"></param>
+            <param name="ePos"></param>
+            <param name="sWidth"></param>
+            <param name="cl"></param>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawBox(System.Single,System.Single,System.Single,System.Single,SharpDX.Color)">
+            <summary>
+            Draws a box/rectangle.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="w"></param>
+            <param name="h"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawBoxMidPoint(SharpDX.Vector2,System.Single,System.Single,SharpDX.Color)">
+            <summary>
+            Draws a box/rectangle from the middle point of the vector position given.
+            </summary>
+            <param name="pos"></param>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawNativeCircle(SharpDX.Vector3,System.Single,SharpDX.Color,System.Single,System.Boolean)">
+            <summary>
+            Draws a native circle relative to the game position and viewmatrix.
+            </summary>
+            <param name="position"></param>
+            <param name="radius"></param>
+            <param name="color"></param>
+            <param name="thickness"></param>
+            <param name="filled"></param>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawCircle(SharpDX.Vector2,System.Single,SharpDX.Color,System.Single)">
+            <summary>
+            Draw circle on screen position
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawCircle(SharpDX.Vector2,System.Single,SharpDX.Color,System.Single,SharpDX.Vector2,SharpDX.Vector2)">
+            <summary>
+            Draw circle with boundaries that will be drawn if the circle hits the boundary.
+            StartingPos is top-left pos of the box.
+            MaxSize is the box size down-right from StartingPos.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawImage(Oasys.Common.Tools.Image)">
+            <summary>
+            Draw image
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawHPBarDamage(Oasys.Common.GameObject.GameObjectBase,System.Single)">
+            <summary>
+            Draw HP bar damage.
+            </summary>
+            <param name="target"></param>
+            <param name="damage"></param>
+        </member>
+        <member name="M:Oasys.SDK.Rendering.RenderFactory.DrawHPBarDamage(Oasys.Common.GameObject.GameObjectBase,System.Single,SharpDX.Color)">
+            <summary>
+            Draw HP bar damage.
+            </summary>
+            <param name="target"></param>
+            <param name="damage"></param>
+        </member>
+        <member name="P:Oasys.SDK.Resources.Images">
+            <summary>
+            Images from Oasys ressources.
+            </summary>
+        </member>
+        <member name="T:Oasys.SDK.SDKSpell">
+            <summary>
+            SDKSpell instance.
+            </summary>
+        </member>
+        <member name="E:Oasys.SDK.SDKSpell.OnSpellCast">
+            <summary>
+            Raised when a spell is casted by Oasys.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.#ctor(Oasys.SDK.SpellCasting.CastSlot,Oasys.Common.Enums.GameEnums.SpellSlot)">
+            <summary>
+            SDKSpell instance.
+            </summary>
+            <param name="castSlot">The castslot.</param>
+            <param name="spellSlot">The spellslot.</param>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.SpellClass">
+            <summary>
+            The spell class from spellbook.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.CastSlot">
+            <summary>
+            The castslot.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.SpellSlot">
+            <summary>
+            The spellslot.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Oasys.SDK.SDKSpell.IsSpellReady" -->
+        <member name="P:Oasys.SDK.SDKSpell.MinimumMana">
+            <summary>
+            The minimum mana for a spell to be used. Standard value = 0.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.MinimumCharges">
+            <summary>
+            The minimum charges for a spell to be used. Standard value = 0.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.IsEnabled">
+            <summary>
+            Defines if a spell is enabled. Fx: enabled by menu. Standard value = true.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.AllowCastInDirection">
+            <summary>
+            Allow to cast the spell in a direction. Standard value = false.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.AllowCastOnMap">
+            <summary>
+            Allow to cast the spell on minimap. Standard value = false.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.AllowCancelBasicAttack">
+            <summary>
+            Allow to cancel basicattack. Standard value = false.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.IsTargetted">
+            <summary>
+            Is a targetted spell. Standard value = false.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.IsCharge">
+            <summary>
+            Is a charge spell. Standard value = false.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.IsChannel">
+            <summary>
+            Is a channel spell. Standard value = false.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.Range">
+            <summary>
+            The spell range. Standard value = 0.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.Speed">
+            <summary>
+            The spell speed. Standard value = 0.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.Radius">
+            <summary>
+            The spell radius/width/angle. Standard value = 0.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.Delay">
+            <summary>
+            The spell delay/animation time/cast time. Standard value = 0.25.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.From">
+            <summary>
+            The position to cast from. Standard value = UnitManager.MyChampion.AIManager.ServerPosition.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.MinimumHitChance">
+            <summary>
+            The minimum hit chance. Standard value = HitChance.High.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.PredictionMode">
+            <summary>
+            The prediction type/mode. Standard value = PredictionType.Line.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.CastPosition">
+            <summary>
+            The castposition on screen. Standard value = predicted position or targets own position on screen.
+            Override this to change cast position based on the predicted position. Ex Thresh E backwards.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.AllowCollision">
+            <summary>
+            Should allow collision or not. Standard value = true.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.ShouldCast">
+            <summary>
+            Should cast spell. Standard value = target is not null.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.TargetSelect">
+            <summary>
+            Target selection. Standard value = null.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.Damage">
+            <summary>
+            Damage calculation. Standard value = 0.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.RenderSpellUsage">
+            <summary>
+            Render method. Fx: Karthus ult can kill x, y, z.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.SDKSpell.ChargeTimer">
+            <summary>
+            Chargetimer to control chargespell time.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.IsCharging">
+            <summary>
+            Returns true if ChargeTimer is running.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.GetPrediction(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Get prediction.
+            </summary>
+            <param name="target">The target to predict.</param>
+            <returns>Prediction result.</returns>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.GetTargets(Oasys.SDK.Orbwalker.OrbWalkingModeType)">
+            <summary>
+            Get available targets that is possible to hit based on spell data.
+            </summary>
+            <param name="mode">Input mode.</param>
+            <returns>Available targets.</returns>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.GetTargets(Oasys.SDK.Orbwalker.OrbWalkingModeType,System.Func{Oasys.Common.GameObject.GameObjectBase,System.Boolean})">
+            <summary>
+            Get available targets that is possible to hit based on spell data.
+            </summary>
+            <param name="mode">Input mode.</param>
+            <param name="predicate">Predicate to check for each target.</param>
+            <returns>Available targets.</returns>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.IsTargetable(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Determines if a target is targetable.
+            </summary>
+            <param name="target">Target to check.</param>
+            <returns>True if target is targetable.</returns>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.IsPossibleToHit(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Is possible to hit.
+            </summary>
+            <param name="target">Target to check.</param>
+            <returns>True if possible to hit, false if not.</returns>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.IsPossibleToHit(Oasys.Common.GameObject.GameObjectBase,Oasys.SDK.Prediction.MenuSelected.PredictionOutput)">
+            <summary>
+            Is possible to hit.
+            </summary>
+            <param name="target">Target to check.</param>
+            <param name="predictionOutput">Prediction output to validate.</param>
+            <returns>True if possible to hit, false if not.</returns>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.ExecuteCastSpell(Oasys.SDK.Orbwalker.OrbWalkingModeType)">
+            <summary>
+            Execute spell.
+            </summary>
+            <param name="mode">Input mode.</param>
+            <returns>True if spell is casted/rendered/started to charge/released charge.</returns>
+        </member>
+        <member name="M:Oasys.SDK.SDKSpell.ChargeSpellAtPos(Oasys.SDK.SpellCasting.CastSlot,SharpDX.Vector2,System.Single)">
+            <summary>
+            Release spell at position or start charging spell.
+            </summary>
+            <param name="castSlot">The cast slot.</param>
+            <param name="pos">The w2s cast position.</param>
+            <param name="castTime">The cast time in seconds.</param>
+            <returns>True if release spell at position or start charging spell.</returns>
+        </member>
+        <member name="T:Oasys.SDK.SpellCasting.ItemCastProvider">
+            <summary>
+            Provides item casting emulation.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.ItemCastProvider.CastItem(Oasys.Common.Enums.GameEnums.ItemID)">
+            <summary>
+            Casts an item at/towards the position of the mouse, or self casts.
+            </summary>
+            <param name="iID"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.ItemCastProvider.CastItem(Oasys.Common.Enums.GameEnums.ItemID,SharpDX.Vector3)">
+            <summary>
+            Casts an item at/towards the given vector3 position parameter
+            </summary>
+            <param name="iID"></param>
+            <param name="objectPosition"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.ItemCastProvider.CastItem(Oasys.Common.Enums.GameEnums.ItemID,SharpDX.Vector2)">
+            <summary>
+            Casts an item at/towards the given vector3 position parameter
+            </summary>
+            <param name="iID"></param>
+            <param name="screenPosition"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.ItemCastProvider.CastItem(Oasys.Common.Enums.GameEnums.ItemID,Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Casts an item at/towards the given target.
+            </summary>
+            <param name="iID"></param>
+            <param name="target"></param>
+        </member>
+        <member name="T:Oasys.SDK.SpellCasting.SpellCastProvider">
+            <summary>
+            Provides spell casting emulation.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastSpell(Oasys.SDK.SpellCasting.CastSlot)">
+            <summary>
+            Casts a spell at/towards the position of the mouse.
+            </summary>
+            <param name="slot"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastSpell(Oasys.SDK.SpellCasting.CastSlot,System.Single)">
+            <summary>
+            Casts a spell at/towards the position of the mouse.
+            </summary>
+            <param name="slot"></param>
+            <param name="castTime"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.StartChargeSpell(Oasys.Common.Enums.GameEnums.SpellCastSlot)">
+            <summary>
+            Start charging spell
+            </summary>
+            <param name="slot"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.ReleaseChargeSpell(Oasys.Common.Enums.GameEnums.SpellCastSlot)">
+            <summary>
+            Release charged spell
+            </summary>
+            <param name="slot"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.ReleaseChargeSpell(Oasys.Common.Enums.GameEnums.SpellCastSlot,System.Single)">
+            <summary>
+            Release charged spell that has cast time
+            </summary>
+            <param name="slot"></param>
+            <param name="castTime"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.ReleaseChargeSpell(Oasys.Common.Enums.GameEnums.SpellCastSlot,SharpDX.Vector3,System.Single)">
+            <summary>
+            Release charged spell that has cast time
+            </summary>
+            <param name="slot"></param>
+            <param name="objectPosition"></param>
+            <param name="castTime"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.ReleaseChargeSpell(Oasys.Common.Enums.GameEnums.SpellCastSlot,SharpDX.Vector2,System.Single)">
+            <summary>
+            Release charged spell that has cast time
+            </summary>
+            <param name="slot"></param>
+            <param name="screenPosition"></param>
+            <param name="castTime"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastSpell(Oasys.SDK.SpellCasting.CastSlot,SharpDX.Vector3)">
+            <summary>
+            Casts a spell at/towards the given vector3 position parameter
+            </summary>
+            <param name="slot"></param>
+            <param name="objectPosition"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastSpell(Oasys.SDK.SpellCasting.CastSlot,SharpDX.Vector2)">
+            <summary>
+            Casts a spell at/towards the given vector2 position parameter.
+            </summary>
+            <param name="slot"></param>
+            <param name="screenPosition"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastSpell(Oasys.SDK.SpellCasting.CastSlot,SharpDX.Vector3,System.Single)">
+            <summary>
+            Casts a spell at/towards the given vector3 position parameter
+            </summary>
+            <param name="slot"></param>
+            <param name="objectPosition"></param>
+            <param name="castTime"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastSpell(Oasys.SDK.SpellCasting.CastSlot,SharpDX.Vector2,System.Single)">
+            <summary>
+            Casts a spell at/towards the given vector2 position parameter.
+            </summary>
+            <param name="slot"></param>
+            <param name="screenPosition"></param>
+            <param name="castTime"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastMultiSpell(Oasys.SDK.SpellCasting.CastSlot[])">
+            <summary>
+            Casts multiple spells at/towards the position of the mouse.
+            </summary>
+            <param name="slotArray"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastMultiSpell(Oasys.SDK.SpellCasting.CastSlot[],SharpDX.Vector3)">
+            <summary>
+            Casts multiple spells at/towards the given vector3 position parameter.
+            </summary>
+            <param name="slotArray"></param>
+            <param name="objectPosition"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastMultiSpell(Oasys.SDK.SpellCasting.CastSlot[],SharpDX.Vector2)">
+            <summary>
+            Casts multiple spells at/towards the given vector2 position parameter.
+            </summary>
+            <param name="slotArray"></param>
+            <param name="screenPosition"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastMultiSpell(System.Tuple{Oasys.SDK.SpellCasting.CastSlot,SharpDX.Vector3}[])">
+            <summary>
+            Casts multiple spells at/towards the given each vector3 position array in a tuple.
+            </summary>
+            <param name="respectiveSpells"></param>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SpellCastProvider.CastMultiSpell(System.Tuple{Oasys.SDK.SpellCasting.CastSlot,SharpDX.Vector2}[])">
+            <summary>
+            Casts multiple spells at/towards the given each vector2 position array in a tuple.
+            </summary>
+            <param name="respectiveSpells"></param>
+        </member>
+        <member name="T:Oasys.SDK.SpellCasting.SummonerSpellsProvider">
+            <summary>
+            Provides summoner spell information.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.SpellCasting.SummonerSpellsProvider.IHaveSpellOnSlot(Oasys.SDK.SpellCasting.SummonerSpellsEnum,Oasys.SDK.SpellCasting.SummonerSpellSlot)">
+            <summary>
+            Checks whether if I(player) have a given summoner spell on the slot provided.
+            </summary>
+            <param name="summSpell"></param>
+            <param name="summSpellSlot"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Oasys.SDK.TargetSelector">
+            <summary>
+            Standard target selector.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.GetBestChampionTarget(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Gets the best considered champion to target.
+            </summary>
+            <param name="selectedChampion"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.AttacksLeftToKill(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Gets the amount of attacks left to kill.
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.IsKillable(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Checks whether if the target is killable.
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.IsAttackable(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Checks whether if the player can attack the target.
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.IsAttackable(Oasys.Common.GameObject.GameObjectBase,System.Boolean)">
+            <summary>
+            Checks whether if the player can attack the target.
+            </summary>
+            <param name="target"></param>
+            <param name="teamCheck"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.IsInRange(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Checks whether if the target is in the player's base(attackable) range.
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.IsInvulnerable(Oasys.Common.GameObject.GameObjectBase,Oasys.Common.Logic.DamageType,System.Boolean)">
+            <summary>
+            Checks whether if the target is invulnerable to damage of the specified damagetype, ignore shields default.
+            </summary>
+            <param name="target"></param>
+            <param name="damageType"></param>
+            <param name="ignoreShields">Default true. Ignores spell shields like Sivir E</param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.IsTotalCCImmune(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            https://leagueoflegends.fandom.com/wiki/Crowd_control#Immunity
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.IsDisplacementImmune(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            https://leagueoflegends.fandom.com/wiki/Crowd_control#Displacement_Immunity
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Oasys.SDK.TargetSelector.ShouldAttackMinion(Oasys.Common.GameObject.GameObjectBase)">
+            <summary>
+            Checks whether if the target is in the player's base(attackable) range.
+            </summary>
+            <param name="minion"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Oasys.SDK.Tools.Logger">
+            <summary>
+            Standard console logger.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.Tools.Logger.Log(System.Object,Oasys.SDK.Tools.LogSeverity)">
+            <summary>
+            Logs the given data to the console.
+            </summary>
+            <param name="dataToLog"></param>
+            <param name="severity"></param>
+        </member>
+        <member name="T:Oasys.SDK.UnitManager">
+            <summary>
+            Manages the units.
+            </summary>
+        </member>
+        <member name="F:Oasys.SDK.UnitManager.MyChampion">
+            <summary>
+            Simply the champion the player is playing as.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.AllNativeObjects">
+            <summary>
+            Gets all native objects collected from OnCreateObject and OnDeleteObject.
+            To actively use this list, please refer to Common.Settings.Core.UseNativeObjectManagerCaching (It is disabled by default).
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.Enemies">
+            <summary>
+            Gets all the enemy game objects. This includes champions, minions, jungle mobs, towers and inhibitors.
+            </summary>
+        </member>
+        <member name="M:Oasys.SDK.UnitManager.GetEnemies(Oasys.Common.Enums.GameEnums.ObjectTypeFlag[])">
+            <summary>
+            Get objects by types.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.Allies">
+            <summary>
+            Gets all the ally game objects. This includes champions, minions, jungle mobs, towers and inhibitors.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.Wards">
+            <summary>
+            Gets all the wards present in game.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.Nexuses">
+            <summary>
+            Gets all nexuses in game if UseNativeObjectManagerCaching is enabled
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.EnemyNexus">
+            <summary>
+            Gets enemy nexus if UseNativeObjectManagerCaching is enabled
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.AllyNexus">
+            <summary>
+            Gets ally nexus if UseNativeObjectManagerCaching is enabled
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.EnemyChampions">
+            <summary>
+            Gets all the enemy champions.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.AllyChampions">
+            <summary>
+            Gets all the ally champions, including the player champion.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.EnemyMinions">
+            <summary>
+            Gets all the enemy minions.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.AllyMinions">
+            <summary>
+            Gets all the ally minions.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.EnemyTowers">
+            <summary>
+            Gets all the enemy towers.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.AllyTowers">
+            <summary>
+            Gets all the ally towers.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.EnemyInhibitors">
+            <summary>
+            Gets all the enemy inhibitors.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.AllyInhibitors">
+            <summary>
+            Gets all the ally inhibitors.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.EnemyJungleMobs">
+            <summary>
+            Gets all the enemy jungle mobs.
+            </summary>
+        </member>
+        <member name="P:Oasys.SDK.UnitManager.AllyJungleMobs">
+            <summary>
+            Gets all the ally jungle mobs.
+            </summary>
+        </member>
+    </members>
+</doc>
