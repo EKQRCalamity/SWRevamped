@@ -122,7 +122,7 @@ namespace SWRevamped.Spells
             targets.AddRange(UnitManager.AllyJungleMobs.ToList<GameObjectBase>());
             targets = targets.OrderBy(x => x.Health).ToList<GameObjectBase>();
 
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.Distance < CastRange).FirstOrDefault();
+            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange).FirstOrDefault();
 
             if (target == null || !IsOn || !LaneclearIsOn.IsOn)
                 return Task.CompletedTask;
@@ -146,7 +146,7 @@ namespace SWRevamped.Spells
 
         private Task HarassInput()
         {
-            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.Distance < CastRange);
+            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
             if (target == null || !IsOn || HarassIsOn.IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
@@ -176,7 +176,7 @@ namespace SWRevamped.Spells
             targets.AddRange(UnitManager.AllyJungleMobs.ToList<GameObjectBase>());
             targets = targets.OrderBy(x => x.Health).ToList<GameObjectBase>();
 
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.Distance < CastRange).FirstOrDefault();
+            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange).FirstOrDefault();
 
             if (target == null || !IsOn || !LasthitIsOn.IsOn)
                 return Task.CompletedTask;
@@ -200,7 +200,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.Distance < CastRange);
+            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);

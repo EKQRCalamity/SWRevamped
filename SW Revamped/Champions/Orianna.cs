@@ -1,8 +1,11 @@
-﻿using Oasys.Common.GameObject;
+﻿using Oasys.Common.EventsProvider;
+using Oasys.Common.GameObject;
 using Oasys.Common.GameObject.Clients.ExtendedInstances;
 using Oasys.Common.GameObject.ObjectClass;
 using Oasys.Common.Menu;
+using Oasys.Common.Menu.ItemComponents;
 using Oasys.SDK;
+using Oasys.SDK.Rendering;
 using SharpDX;
 using SWRevamped.Base;
 using SWRevamped.Spells;
@@ -91,12 +94,16 @@ namespace SWRevamped.Champions
     {
         internal Tab MainTab = new Tab("SW - Orianna");
 
+        internal Switch DrawWRangeSwitch = new Switch("Draw W Range", false);
+        internal Switch DrawRRangeSwitch = new Switch("Draw R Range", false);
+
         OriQCalc QCalc = new();
         OriWCalc WCalc = new();
         OriECalc ECalc = new();
         OriRCalc RCalc = new();
 
-        internal static GameObjectBase Ball { get; set; } = UnitManager.AllNativeObjects.FirstOrDefault(x => x.Name == "TheDoomBall" && x.IsAlive && x.Health >= 1);
+
+        internal static GameObjectBase Ball => UnitManager.AllNativeObjects.FirstOrDefault(x => x.Name == "TheDoomBall" && x.IsAlive && x.Health >= 1);
 
         internal static bool IsBallOnMe()
         {
@@ -159,7 +166,7 @@ namespace SWRevamped.Champions
                 false,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance < 825,
-                x => GetBallPosition(),
+                x => QPosition(),
                 Color.Blue,
                 50,
                 Prediction.MenuSelected.HitChance.VeryHigh,
@@ -171,14 +178,14 @@ namespace SWRevamped.Champions
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
                 WCalc,
                 225,
-                0,
-                0,
-                0,
+                225,
+                10000,
+                225,
                 0,
                 false,
                 x => x.IsAlive,
-                x => x.IsAlive && x.DistanceTo(GetBallPosition()) < 225,
-                x => GetBallPosition(),
+                x => x.IsAlive && x.DistanceTo(QPosition()) < 225,
+                x => QPosition(),
                 Color.Red,
                 80,
                 Prediction.MenuSelected.HitChance.VeryHigh,
@@ -194,7 +201,7 @@ namespace SWRevamped.Champions
                 0,
                 x => x.IsAlive,
                 x => x.IsAlive,
-                x => GetBallPosition(),
+                x => QPosition(),
                 Color.Green,
                 60,
                 3,
@@ -203,14 +210,14 @@ namespace SWRevamped.Champions
                 Oasys.Common.Enums.GameEnums.SpellSlot.R,
                 RCalc,
                 415,
-                0,
-                0,
-                0,
+                415,
+                100000,
+                415,
                 0.5F,
                 false,
                 x => x.IsAlive,
-                x => x.IsAlive,
-                x => GetBallPosition(),
+                x => x.IsAlive && x.DistanceTo(QPosition()) < 415,
+                x => QPosition(),
                 Color.Orange,
                 100,
                 Prediction.MenuSelected.HitChance.VeryHigh,
@@ -219,6 +226,27 @@ namespace SWRevamped.Champions
                 false,
                 new CollisionCheck(true, 9999, 3),
                 7);
+            MainTab.AddItem(DrawWRangeSwitch);
+            MainTab.AddItem(DrawRRangeSwitch);
+            CoreEvents.OnCoreRender += DrawRanges;
+        }
+
+        private void DrawRanges()
+        {
+            if (Getter.WLevel >= 1)
+            {
+                if (DrawWRangeSwitch.IsOn)
+                {
+                    RenderFactory.DrawNativeCircle(QPosition(), 225, Color.Blue, 2);
+                }
+            }
+            if (Getter.RLevel >= 1)
+            {
+                if (DrawRRangeSwitch.IsOn)
+                {
+                    RenderFactory.DrawNativeCircle(QPosition(), 415, Color.Red, 2);
+                }
+            }
         }
     }
 }
