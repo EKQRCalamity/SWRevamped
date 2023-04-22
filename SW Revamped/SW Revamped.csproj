@@ -8,13 +8,7 @@
 	<Title>SW Revamped</Title>
 	<Version>1.0.0.0</Version>
 	<Authors>EKQR Kotlin</Authors>
-	  <CopyTargetDir>C:\Program Files\64a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5n\Modules\</CopyTargetDir>
   </PropertyGroup>
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="move /Y &quot;$(CopyTargetDir)$(ProjectName).omod&quot; &quot;$(CopyTargetDir)Pre\$(ProjectName)_$([System.DateTime]::Now.ToString(dd.MM.yyyy_HH-mm-ss))_backup.omod&quot;" />
-		<Exec Command="copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(CopyTargetDir)$(ProjectName).omod&quot;" />
-	</Target>
-
 	<ItemGroup>
 	  <Reference Include="Newtonsoft.Json">
 	    <HintPath>..\..\..\..\..\Programming\Modules\Oasys\Include\Newtonsoft.Json.dll</HintPath>
