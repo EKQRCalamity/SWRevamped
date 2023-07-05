@@ -28,19 +28,22 @@ namespace SWRevamped.Spells
         internal bool PuppetAlive => (Puppet == null) ? false : true;
         internal GameObjectBase? Puppet => UnitManager.Allies.FirstOrDefault(x => x.Name.Contains(puppetName, StringComparison.OrdinalIgnoreCase));
 
-        internal PuppetSpell(CastSlot castSlot, SpellSlot spellSlot, int range, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, string entityname)
+        internal PuppetSpell(CastSlot castSlot, SpellSlot spellSlot, int range, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, string entityname, bool addToGroup = false)
         {
             MainTab = Getter.MainTab;
             SpellCastSlot = castSlot;
             Slot = spellSlot;
-            SpellGroup = new Group($"{SpellSlotToString()} Settings");
+            if (addToGroup)
+                SpellGroup = MainTab.GetGroup($"{SpellSlotToString()} Settings");
+            else
+                SpellGroup = new Group($"{SpellSlotToString()} Settings");
             Range = range;
 
             puppetName = entityname;
 
             SpellGroup.AddItem(PuppeteeringSwitch);
-            
-            MainTab.AddGroup(SpellGroup);
+            if (!addToGroup)
+                MainTab.AddGroup(SpellGroup);
 
             SelfCheck = selfCheck;
             TargetCheck = targetCheck;

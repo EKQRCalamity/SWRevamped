@@ -184,7 +184,16 @@ namespace SWRevamped.Champions
                 new CollisionCheck(true, 10000, 0),
                 9
                 );
+            PuppetSpell rPuppetSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
+                Oasys.Common.Enums.GameEnums.SpellSlot.R,
+                RRange,
+                x => x.IsAlive,
+                x => x.IsAlive,
+                "Tibbers",
+                true);
+            new MultiClassSpell(new SpellBase[] { rSpell, rPuppetSpell }, new Func<GameObjectBase, bool>[] { x => !Getter.RSpell.SpellData.SpellName.Contains("AnnieRController", StringComparison.OrdinalIgnoreCase), x => Getter.RSpell.SpellData.SpellName.Contains("AnnieRController", StringComparison.OrdinalIgnoreCase) });
             MainTab.GetGroup("R Settings").AddItem(ROnlyUseMaxStacks);
+
         }
     }
 }
