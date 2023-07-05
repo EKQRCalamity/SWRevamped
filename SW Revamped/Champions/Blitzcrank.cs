@@ -25,7 +25,7 @@ namespace SWRevamped.Champions
             {
                 damage = BaseDamage[Getter.QLevel];
                 damage += Getter.TotalAP * APScaling;
-                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage);
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, damage, 0);
             }
 
             return damage;

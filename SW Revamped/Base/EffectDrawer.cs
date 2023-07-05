@@ -113,7 +113,7 @@ namespace SWRevamped.Base
                 case var value when ColorEquals(color, Color.OrangeRed):
                     name = "OrangeRed";
                     break;
-                dafault:
+                default:
                     name = "White";
                     break;
             }

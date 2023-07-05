@@ -94,7 +94,7 @@ namespace SWRevamped.Champions
                 875,
                 10000,
                 875,
-                0.25F + 0.5F,
+                0.25F,
                 false,
                 x => x.IsAlive,
                 x => x.IsAlive,
@@ -106,6 +106,7 @@ namespace SWRevamped.Champions
                 true,
                 true,
                 new CollisionCheck(true, 10000, 0));
+            
             CircleSpell wSpell = new(Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
                 WCalc,

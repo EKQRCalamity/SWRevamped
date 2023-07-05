@@ -37,7 +37,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Lux
 - Malphite
 - Morgana
-- Orianna (untested)
+- Orianna
 - Soraka
 - Twitch
 - Veigar
