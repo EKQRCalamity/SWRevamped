@@ -54,7 +54,7 @@ namespace SWRevamped.Base
                 new Champion("Lux", "1.0.0.1", true),
                 new Champion("Malphite", "1.0.0.2", true),
                 new Champion("Morgana", "1.0.0.0", true),
-                new Champion("Orianna", "1.0.0.0", false),
+                new Champion("Orianna", "1.0.0.1", false),
                 new Champion("Soraka", "1.0.0.0", true),
                 new Champion("Twitch", "1.0.0.0", true),
                 new Champion("Veigar", "1.0.0.0", true)
