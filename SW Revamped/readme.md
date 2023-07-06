@@ -1,24 +1,7 @@
 # SyncWave Revamped
-Fully rewritten league of legends All In One Script. A project that's supposed to be easy to read, understand and extend by script developers.
+Fully rewritten script. Supports multiple damage drawings
 
-### Todo / Planned
-
-#### Champions
-- Alistar
-- Anivia
-- Ashe
-- Bard
-- Galio
-- Gragas
-- And more
-
-#### Utilities
-- Extending current Utilities (mostly Activator and CS Helper) (WIP)
-- Adding Better Auto Attack Damage Calculation with On Hit damage. (WIP)
-
-### Done
-
-#### Champions (22/163)
+#### Champions (24/163)
 - Ahri
 - Amumu
 - Annie
@@ -30,14 +13,16 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Draven
 - Dr Mundo
 - Ezreal
+- Ivern
 - Jinx
 - Kalista
 - Karthus
 - KogMaw
+- Lee Sin
 - Lux
 - Malphite
 - Morgana
-- Orianna (untested)
+- Orianna
 - Soraka
 - Twitch
 - Veigar
@@ -47,3 +32,13 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - CSHelper   - Helps with CSing using Drawings
 - MoveViewer - Shows the League Calculated Path of Enemies,Allies and Self + Move Position
 - WardHelper - Can Automatically place wards on multiple places on the map
+
+
+#### Utilities To Do
+- Extending current Utilities (mostly Activator and CS Helper) (WIP)
+- Adding Better Auto Attack Damage Calculation with On Hit damage. (WIP)
+
+
+
+
+

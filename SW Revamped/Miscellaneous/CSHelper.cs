@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace SWRevamped.Miscellaneous
 {
-    internal class CSHelper : UtilityModule
+    internal sealed class CSHelper : UtilityModule
     {
         internal Group CSHelperGroup = new Group("CS Helper");
         internal Switch IsOnSwitch = new Switch("Enabled", true);
