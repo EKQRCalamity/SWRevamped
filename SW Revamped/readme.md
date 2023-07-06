@@ -1,5 +1,5 @@
 # SyncWave Revamped
-Fully rewritten script. Supports multiple damage drawings
+Fully rewritten script. Supports multiple damage drawings (Shows Q,W,E and R individually.)
 
 #### Champions (24/163)
 - Ahri       - Q, W, E and R usage
