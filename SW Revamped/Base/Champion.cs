@@ -57,7 +57,8 @@ namespace SWRevamped.Base
                 new Champion("Orianna", "1.0.0.1", true),
                 new Champion("Soraka", "1.0.0.0", true),
                 new Champion("Twitch", "1.0.0.0", true),
-                new Champion("Veigar", "1.0.0.0", true)
+                new Champion("Veigar", "1.0.0.0", true),
+                new Champion("Vex", "1.0.0.1", false)
             };
             return supportedChampions;            
         }

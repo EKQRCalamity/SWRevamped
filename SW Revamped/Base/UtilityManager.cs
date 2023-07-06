@@ -26,7 +26,8 @@ namespace SWRevamped.Base
         {
             new BuffDebugger(),
             new PositionDebugger(),
-            new ObjectDebugger()
+            new ObjectDebugger(),
+            new SpellDebugger()
         };
         internal static void InitAll()
         {
