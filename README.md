@@ -18,7 +18,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 
 ### Done
 
-#### Champions (22/163)
+#### Champions (25/163)
 - Ahri
 - Amumu
 - Annie
@@ -30,6 +30,8 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Draven
 - Dr Mundo
 - Ezreal
+- Irelia
+- Ivern
 - Jinx
 - Kalista
 - Karthus
@@ -41,6 +43,7 @@ Fully rewritten league of legends All In One Script. A project that's supposed t
 - Soraka
 - Twitch
 - Veigar
+- Vex
 
 #### Utilities
 - Activator  - Activates Ignite,Smite,Heal,Shield and Cleanse + Pots
