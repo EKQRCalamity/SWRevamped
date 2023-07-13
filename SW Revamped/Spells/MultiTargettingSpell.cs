@@ -72,13 +72,16 @@ namespace SWRevamped.Spells
 
         private Task HarassInput()
         {
-            List<GameObjectBase> targetList = UnitManager.EnemyChampions.Where(x => TargetCheck(x) && x.Distance < CastRange).ToList<GameObjectBase>();
-            foreach (GameObjectBase target in targetList)
+            if (IsOn)
             {
-                if (TargetCheck(target) && SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && (UseCanKill) ? target.Health - effectCalc.GetValue(target) < 0 : true)
+                List<GameObjectBase> targetList = UnitManager.EnemyChampions.Where(x => TargetCheck(x) && x.Distance < CastRange).ToList<GameObjectBase>();
+                foreach (GameObjectBase target in targetList)
                 {
-                    SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
-                    break;
+                    if (TargetCheck(target) && SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && (UseCanKill) ? target.Health - effectCalc.GetValue(target) < 0 : true)
+                    {
+                        SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
+                        break;
+                    }
                 }
             }
             return Task.CompletedTask;
@@ -86,13 +89,16 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            List<GameObjectBase> targetList = UnitManager.EnemyChampions.Where(x => TargetCheck(x) && x.Distance < CastRange).ToList<GameObjectBase>();
-            foreach (GameObjectBase target in targetList)
+            if (IsOn)
             {
-                if (TargetCheck(target) && SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && (UseCanKill)? target.Health - effectCalc.GetValue(target) < 0 : true)
+                List<GameObjectBase> targetList = UnitManager.EnemyChampions.Where(x => TargetCheck(x) && x.Distance < CastRange).ToList<GameObjectBase>();
+                foreach (GameObjectBase target in targetList)
                 {
-                    SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
-                    break;
+                    if (TargetCheck(target) && SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && (UseCanKill) ? target.Health - effectCalc.GetValue(target) < 0 : true)
+                    {
+                        SpellCastProvider.CastSpell(SpellCastSlot, CastTime);
+                        break;
+                    }
                 }
             }
             return Task.CompletedTask;

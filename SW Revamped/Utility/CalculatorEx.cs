@@ -145,7 +145,57 @@ namespace SWRevamped.Utility
             float damage = caster.UnitStats.BaseAttackDamage * 2;
             return DamageCalculator.CalculateActualDamage(caster, target, damage);
         }
-        
+
+        internal static float CalculateOnHit(GameObjectBase target)
+        {
+            return CalculateOnHit(Getter.Me(), target);
+        }
+
+        internal static float CalculateOnHit(GameObjectBase caster, GameObjectBase target, bool isOnHitSpell = false)
+        {
+            float damage = 0;
+            foreach (Item item in caster.As<AIHeroClient>().Inventory.GetItemList())
+            {
+                switch (item.ID)
+                {
+                    case Oasys.Common.Enums.GameEnums.ItemID.Nashors_Tooth:
+                        damage += NashorsTooth(caster, target);
+                        break;
+                    case Oasys.Common.Enums.GameEnums.ItemID.Wits_End:
+                        damage += WitsEnd(caster, target);
+                        break;
+                    case Oasys.Common.Enums.GameEnums.ItemID.Sheen:
+                        if (HasSheenBuff(caster) || isOnHitSpell && item.IsReady)
+                            damage += Sheen(caster, target);
+                        break;
+                    case Oasys.Common.Enums.GameEnums.ItemID.Essence_Reaver:
+                        if (HasEssenceBuff(caster) || isOnHitSpell && item.IsReady)
+                            damage += EssenceReaver(caster, target);
+                        break;
+                    case Oasys.Common.Enums.GameEnums.ItemID.Divine_Sunderer:
+                        if (HasDivineBuff(caster) || isOnHitSpell && item.IsReady)
+                            damage += Divine(caster, target);
+                        break;
+                    case Oasys.Common.Enums.GameEnums.ItemID.Frostfire_Gauntlet:
+                        if (HasIcebornBuff(caster) || isOnHitSpell && item.IsReady)
+                            damage += Sheen(caster, target);
+                        break;
+                    case Oasys.Common.Enums.GameEnums.ItemID.Lich_Bane:
+                        if (HasLichbaneBuff(caster) || isOnHitSpell && item.IsReady)
+                            damage += Lichbane(caster, target);
+                        break;
+                    case Oasys.Common.Enums.GameEnums.ItemID.Trinity_Force:
+                        if (HasTrinityBuff(caster) || isOnHitSpell && item.IsReady)
+                            damage += Trinity(caster, target);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            damage += Ardent(caster, target);
+            return damage;
+        }
+
         internal static float CalculateAADamageWithOnHit(GameObjectBase target)
         {
             return CalculateAADamageWithOnHit(Getter.Me(), target);

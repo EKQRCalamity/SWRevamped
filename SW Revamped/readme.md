@@ -30,6 +30,7 @@ Fully rewritten script. Supports multiple damage drawings (Shows Q,W,E and R ind
 
 * W should support Rengar when he has a target to place a bush beneath. Sadly cant check for visibility so might place a bush while in another one...
   Also should place a bush beneath you or other allies against Kalista to "block" her auto attacks.
+
 #### Utilities
 - Activator  - Activates Ignite,Smite,Heal,Shield and Cleanse + Pots
 - CSHelper   - Helps with CSing using Drawings
@@ -40,8 +41,3 @@ Fully rewritten script. Supports multiple damage drawings (Shows Q,W,E and R ind
 #### Utilities To Do
 - Extending current Utilities (mostly Activator and CS Helper) (WIP)
 - Adding Better Auto Attack Damage Calculation with On Hit damage. (WIP)
-
-
-
-
-

@@ -11,6 +11,10 @@ namespace SWRevamped.Base
     {
         internal static EffectCalc Empty => new EmptyEffect();
         internal abstract float GetValue(GameObjectBase target);
+        internal bool CanKill(GameObjectBase target)
+        {
+            return (target.Health - GetValue(target)) < 0;
+        }
     }
 
     internal sealed class EmptyEffect : EffectCalc

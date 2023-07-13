@@ -59,17 +59,20 @@ namespace SWRevamped.Spells
         internal bool EnemyNearPuppet() => UnitManager.EnemyChampions.Any(x => x.DistanceTo(Puppet.Position) <= Range);
         private Task ComboInput()
         {
-            if (PuppetAlive)
+            if (IsOn)
             {
-                if (GameEngine.GameTime > delayEnd)
+                if (PuppetAlive)
                 {
-                    GameObjectBase puppet = Puppet;
-                    if (EnemyNearPuppet())
+                    if (GameEngine.GameTime > delayEnd)
                     {
-                        GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, x => x.DistanceTo(Puppet.Position) <= Range);
-                        SpellCastProvider.CastSpell(SpellCastSlot, target.Position, 0);
-                        delayStart = GameEngine.GameTime;
-                        delayEnd = GameEngine.GameTime + delay;
+                        GameObjectBase puppet = Puppet;
+                        if (EnemyNearPuppet())
+                        {
+                            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, x => x.DistanceTo(Puppet.Position) <= Range);
+                            SpellCastProvider.CastSpell(SpellCastSlot, target.Position, 0);
+                            delayStart = GameEngine.GameTime;
+                            delayEnd = GameEngine.GameTime + delay;
+                        }
                     }
                 }
             }
