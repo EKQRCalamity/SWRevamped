@@ -99,7 +99,7 @@ namespace SWRevamped.Champions
         internal Switch QIsOn = new Switch("Enabled", true);
         internal Switch QAllowTower = new Switch("Allow Under Tower", false);
         internal Switch QSkipCheck = new Switch("Skip Check", false);
-        internal Switch QHPGapClose = new Switch("Low HP Gap Close", false);
+        internal Switch QHPGapClose = new Switch("Low HP Gap Close", true);
         internal Group QHealGroup = new Group("Heal");
         internal Group QLaneClearGroup = new Group("Laneclear");
         internal Switch LaneclearIsOn = new Switch("Enabled", true);
@@ -107,7 +107,7 @@ namespace SWRevamped.Champions
         internal Switch QLaneClearMaxStacks = new Switch("W/ Max Stacks", true);
 
         internal Group DrawingsGroup = new Group("Drawings");
-        internal Switch QPathIsOn = new Switch("Show Q Path", false);
+        internal Switch QPathIsOn = new Switch("Show Q Path", true);
         internal Group EDrawingsGroup = new Group("Drawings");
         internal Group RDrawingsGroup = new Group("Drawings");
 
@@ -376,7 +376,7 @@ namespace SWRevamped.Champions
             {
                 if (currentPath.Count > 0 && currentPath[1].IsAlive)
                 {
-                    if ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient)) ? !EnemyInAARange() && (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1])) : (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1]) || (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) : false)))
+                    if ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient)) ? (QLaneClearMaxStacks.IsOn? true : !HasMaxStacks()) && !EnemyInAARange() && (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1])) : (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1]) || (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) : false)))
                     {
                         SpellCastProvider.CastSpell(CastSlot.Q, currentPath[1].Position, 0);
                     }
