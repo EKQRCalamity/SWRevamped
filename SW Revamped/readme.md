@@ -1,7 +1,7 @@
 # SyncWave Revamped
 Fully rewritten script. Supports multiple damage drawings (Shows Q,W,E and R individually.)
 
-#### Champions (24/163)
+#### Champions (25/163)
 - Ahri       - Q, W, E and R usage
 - Amumu      - Q, W, E and R usage
 - Annie      - Q, W, E and R usage + R Puppet auto attack
@@ -13,6 +13,7 @@ Fully rewritten script. Supports multiple damage drawings (Shows Q,W,E and R ind
 - Draven	 - Q, W, E and R usage (No axe catching, I dont like it)
 - Dr Mundo	 - Q, W, E and R usage
 - Ezreal	 - Q, W, E and R usage
+- Irelia   - Q, E and R usage (Q with Pathfinding, Multiple E modes - Pred is by far best, R with 1vs1 and Multi Targets)
 - Ivern		 - Q, W (untested!!!), E and R usage*
 - Jinx		 - Q, W, E and R usage
 - Kalista	 - Q, W and E usage
