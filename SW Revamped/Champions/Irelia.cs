@@ -270,7 +270,9 @@ namespace SWRevamped.Champions
             return a;
         }
 
-        private static GameObjectBase EObj => UnitManager.AllNativeObjects.Where(x => x.Name.Contains("Base_E_Blades", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+        private static GameObjectBase EObj => UnitManager.AllNativeObjects.Where(x => x.Name.Contains("E_Blades", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+        
+        
         private static bool firstCast = false;
         private Vector2 GetEPositionBezier(GameObjectBase player, GameObjectBase target, float t)
         {
@@ -313,7 +315,7 @@ namespace SWRevamped.Champions
                 firstCastPred = true;
                 lastTick = tick;
                 return GetEPositionInterpolated(player, target, 0.8F);
-            } else if (EObj != null) 
+            } else if (EObj != null && Getter.ESpell.SpellData.SpellName.Contains("IreliaE2")) 
             {
                 Vector3 EObjPos = EObj.Position;
                 Prediction.MenuSelected.PredictionOutput prediction = Prediction.MenuSelected.GetPrediction(Prediction.MenuSelected.PredictionType.Line, target, 750, 50, 0.264F, 2000, EObjPos, false);
@@ -322,7 +324,7 @@ namespace SWRevamped.Champions
                     firstCastPred = false;
                     return prediction.CastPosition.Extend(EObj.Position, -GetEExtend(prediction.CastPosition)).ToW2S();
                 }
-            } else if (EObj == null && ((tick - lastTick) > 200))
+            } else if (EObj == null && ((tick - lastTick) > 500) || !Getter.ESpell.SpellData.SpellName.Contains("IreliaE2"))
             {
                 lastTick = tick;
                 firstCastPred = false;
@@ -479,16 +481,19 @@ namespace SWRevamped.Champions
         {
             if (Getter.QLooseReady)
             {
-                List<GameObjectBase> list = UnitManager.EnemyChampions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 7 && (QAllowTower.IsOn ? true : !InTowerRange(x)) && !InNexusRange(x) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x) || (QHPGapClose.IsOn ? ((x.Health - (QCalc.GetValue(x) * 2)) < 0) : false))).ToList();
-                list.AddRange(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 7 && (QAllowTower.IsOn ? true : !InTowerRange(x) && !InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))));
+                List<GameObjectBase> list = UnitManager.EnemyChampions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !InTowerRange(x)) && !InNexusRange(x) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x) || (QHPGapClose.IsOn ? ((x.Health - (QCalc.GetValue(x) * 2)) < 0) : false))).ToList();
+                list.AddRange(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !InTowerRange(x) && !InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))));
                 List<GameObjectBase> validTargets = new() { Getter.Me() };
                 GameObjectBase mainTarget = null;
+
+                if (!list.Any(x => x.Distance < QRange))
+                    return new();
 
                 foreach (var item in list)
                 {
                     if (item.IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient))
                     {
-                        if (item.UnitComponentInfo.SkinName.Contains("Minion", StringComparison.OrdinalIgnoreCase) && item.Distance < QRange * 7 && item.IsVisible)
+                        if (item.UnitComponentInfo.SkinName.Contains("Minion", StringComparison.OrdinalIgnoreCase) && item.Distance < QRange * 4 && item.IsVisible)
                         {
                             validTargets.Add(item);
                         }

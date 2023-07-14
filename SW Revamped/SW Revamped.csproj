@@ -6,7 +6,7 @@
 	<UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
 	<Title>SW Revamped</Title>
-	<Version>2.1.1.0</Version>
+	<Version>2.1.1.2</Version>
 	<Authors>EKQR Kotlin</Authors>
 	  <CopyTargetDir>C:\Program Files\64a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5n\Modules\</CopyTargetDir>
   </PropertyGroup>

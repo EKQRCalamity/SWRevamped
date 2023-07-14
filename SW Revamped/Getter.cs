@@ -78,7 +78,7 @@ namespace SWRevamped
 
         internal static float MoveSpeed => Stats.MoveSpeed;
 
-        internal static float AARange => Stats.AttackRange;
+        internal static float AARange => Getter.Me().TrueAttackRange;
 
         internal static float BonusHP => Getter.Me().BonusHealth;
 
