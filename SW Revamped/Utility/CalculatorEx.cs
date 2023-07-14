@@ -15,6 +15,52 @@ namespace SWRevamped.Utility
 {
     internal static class CalculatorEx
     {
+        internal static float Ardent(GameObjectBase target)
+        {
+            return Ardent(Getter.Me(), target);
+        }
+
+        internal static float Ardent(GameObjectBase caster, GameObjectBase target)
+        {
+            if (caster.BuffManager.GetBuffList().Any(x => x.Name.Contains("3504buff", StringComparison.OrdinalIgnoreCase)))
+            {
+                // old patch
+                //float[] damage = { 0, 5, 5.88F, 6.76F, 7.65F, 8.53F, 9.41F, 10.29F, 11.18F, 12.06F, 12.94F, 13.82F, 14.71F, 15.59F, 16.47F, 17.35F, 18.24F, 19.12F, 20 };
+                return DamageCalculator.CalculateActualDamage(caster, target, 0, 15, 0);
+            }
+            return 0;
+        }
+        internal static bool HasEssenceBuff(GameObjectBase target)
+        {
+            return target.BuffManager.GetBuffList().Any(x => x.IsActive && x.Name.Contains("3508buff", StringComparison.OrdinalIgnoreCase));
+        }
+
+        internal static float EssenceReaver(GameObjectBase target)
+        {
+            return EssenceReaver(Getter.Me(), target);
+        }
+
+        internal static float EssenceReaver(GameObjectBase caster, GameObjectBase target)
+        {
+            float damage = (caster.UnitStats.BaseAttackDamage * 1.3F ) + (0.2F * caster.UnitStats.BonusAttackDamage);
+            return DamageCalculator.CalculateActualDamage(caster, target, damage);
+        }
+        internal static bool HasLichbaneBuff(GameObjectBase target)
+        {
+            return target.BuffManager.GetBuffList().Any(x => x.IsActive && x.Name.Contains("lichbane", StringComparison.OrdinalIgnoreCase));
+        }
+
+        internal static float Lichbane(GameObjectBase target)
+        {
+            return Lichbane(Getter.Me(), target);
+        }
+
+        internal static float Lichbane(GameObjectBase caster, GameObjectBase target)
+        {
+            float damage = (caster.UnitStats.BaseAttackDamage * 0.75F) + (caster.UnitStats.TotalAbilityPower * 0.5F);
+            return DamageCalculator.CalculateActualDamage(caster, target, 0, damage, 0);
+        }
+
         internal static float NashorsTooth(GameObjectBase target)
         {
             return NashorsTooth(Getter.Me(), target);
@@ -23,6 +69,22 @@ namespace SWRevamped.Utility
         internal static float NashorsTooth(GameObjectBase caster, GameObjectBase target)
         {
             return DamageCalculator.CalculateActualDamage(caster, target, 0, (15 + (Getter.TotalAP * 0.2F)), 0);
+        }
+
+        internal static float Sheen(GameObjectBase target)
+        {
+            return Sheen(Getter.Me(), target);
+        }
+
+        internal static bool HasSheenBuff(GameObjectBase target)
+        {
+            return target.BuffManager.GetBuffList().Any(x => x.IsActive && x.Name.Contains("sheen", StringComparison.OrdinalIgnoreCase));
+        }
+
+        internal static float Sheen(GameObjectBase caster, GameObjectBase target)
+        {
+            float damage = caster.UnitStats.BaseAttackDamage;
+            return DamageCalculator.CalculateActualDamage(caster, target, damage);
         }
 
         internal static float WitsEnd(GameObjectBase target)
@@ -45,56 +107,9 @@ namespace SWRevamped.Utility
             return damage;
         }
 
-        internal static float Sheen(GameObjectBase target)
-        {
-            return Sheen(Getter.Me(), target);
-        }
-
-        internal static bool HasSheenBuff(GameObjectBase target)
-        {
-            return target.BuffManager.GetBuffList().Any(x => x.IsActive && x.Name.Contains("sheen", StringComparison.OrdinalIgnoreCase));
-        }
-
-        internal static float Sheen(GameObjectBase caster, GameObjectBase target)
-        {
-            float damage = caster.UnitStats.BaseAttackDamage;
-            return DamageCalculator.CalculateActualDamage(caster, target, damage);
-        }
-
         internal static bool HasIcebornBuff(GameObjectBase target)
         {
             return target.BuffManager.GetBuffList().Any(x => x.IsActive && x.Name.Contains("6662buff", StringComparison.OrdinalIgnoreCase));
-        }
-
-        internal static float Ardent(GameObjectBase target)
-        {
-            return Ardent(Getter.Me(), target);
-        }
-
-        internal static float Ardent(GameObjectBase caster, GameObjectBase target)
-        {
-            if (caster.BuffManager.GetBuffList().Any(x => x.Name.Contains("3504buff", StringComparison.OrdinalIgnoreCase)))
-            {
-                float[] damage = { 0, 5, 5.88F, 6.76F, 7.65F, 8.53F, 9.41F, 10.29F, 11.18F, 12.06F, 12.94F, 13.82F, 14.71F, 15.59F, 16.47F, 17.35F, 18.24F, 19.12F, 20 };
-                return DamageCalculator.CalculateActualDamage(caster, target, 0, damage[caster.Level], 0);
-            }
-            return 0;
-        }
-
-        internal static bool HasEssenceBuff(GameObjectBase target)
-        {
-            return target.BuffManager.GetBuffList().Any(x => x.IsActive && x.Name.Contains("3508buff", StringComparison.OrdinalIgnoreCase));
-        }
-
-        internal static float EssenceReaver(GameObjectBase target)
-        {
-            return EssenceReaver(Getter.Me(), target);
-        }
-
-        internal static float EssenceReaver(GameObjectBase caster, GameObjectBase target)
-        {
-            float damage = caster.UnitStats.BaseAttackDamage + 0.4F * caster.UnitStats.BonusAttackDamage;
-            return DamageCalculator.CalculateActualDamage(caster, target, damage);
         }
 
         internal static bool HasDivineBuff(GameObjectBase target)
@@ -109,25 +124,9 @@ namespace SWRevamped.Utility
 
         internal static float Divine(GameObjectBase caster, GameObjectBase target)
         {
-            float damage = caster.UnitStats.BaseAttackDamage * 1.25F;
-            damage += target.MaxHealth * ((caster.AttackRange > 250) ? 0.03F : 0.06F);
+            float damage = caster.UnitStats.BaseAttackDamage * 1.6F;
+            damage += target.MaxHealth * ((caster.AttackRange > 250) ? 0.02F : 0.04F);
             return DamageCalculator.CalculateActualDamage(caster, target, damage);
-        }
-
-        internal static bool HasLichbaneBuff(GameObjectBase target)
-        {
-            return target.BuffManager.GetBuffList().Any(x => x.IsActive && x.Name.Contains("lichbane", StringComparison.OrdinalIgnoreCase));
-        }
-
-        internal static float Lichbane(GameObjectBase target)
-        {
-            return Lichbane(Getter.Me(), target);
-        }
-
-        internal static float Lichbane(GameObjectBase caster, GameObjectBase target)
-        {
-            float damage = (caster.UnitStats.BaseAttackDamage * 0.75F) + (caster.UnitStats.TotalAbilityPower * 0.5F);
-            return DamageCalculator.CalculateActualDamage(caster, target, 0, damage, 0);
         }
 
         internal static bool HasTrinityBuff(GameObjectBase target)

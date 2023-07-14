@@ -146,7 +146,12 @@ namespace SWRevamped.Champions
 
         internal bool EnemyInAARange()
         {
-            return UnitManager.EnemyChampions.Where(x => x.Distance < Getter.AARange).Count() > 0;
+            return NEnemiesInAARange() > 0;
+        }
+
+        internal int NEnemiesInAARange()
+        {
+            return UnitManager.EnemyChampions.Where(x => x.Distance < Getter.AARange).Count();
         }
 
         internal bool HasMark(GameObjectBase target)
@@ -210,7 +215,7 @@ namespace SWRevamped.Champions
 
         private Task RSpell()
         {
-            if (Getter.RLooseReady && RIsOn.IsOn && !Getter.Me().BuffManager.HasActiveBuff("ireliawdefense"))
+            if (Getter.RLooseReady && RIsOn.IsOn && !Getter.Me().BuffManager.HasActiveBuff("ireliawdefense") && Getter.Me().Mana > 100)
             {
                 GameObjectBase target = TargetSelector.GetBestHeroTarget(null, x => x.Distance < (RRange - 50));
                 if (target != null)
@@ -335,7 +340,7 @@ namespace SWRevamped.Champions
 
         private Task ESpell()
         {
-            if (Getter.ELooseReady && EIsOn.IsOn)
+            if (Getter.ELooseReady && EIsOn.IsOn && Getter.Me().Mana > 70)
             {
                 GameObjectBase target = TargetSelector.GetBestHeroTarget(null, x => x.Distance < (ERange - 50) && !Getter.Me().BuffManager.HasActiveBuff("ireliawdefense"));
                 if (target != null && target.Position.IsOnScreen())
@@ -374,11 +379,11 @@ namespace SWRevamped.Champions
 
         private Task QSpell()
         {
-            if (QIsOn.IsOn && Getter.QLooseReady && !Getter.Me().BuffManager.HasActiveBuff("ireliawdefense"))
+            if (QIsOn.IsOn && Getter.QLooseReady && !Getter.Me().BuffManager.HasActiveBuff("ireliawdefense") && Getter.Me().Mana > 20)
             {
                 if (currentPath.Count > 0 && currentPath[1].IsAlive)
                 {
-                    if ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient)) ? (QLaneClearMaxStacks.IsOn? true : !HasMaxStacks()) && !EnemyInAARange() && (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1])) : (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1]) || (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) : false)))
+                    if ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient)) ? (QLaneClearMaxStacks.IsOn? true : !HasMaxStacks()) && !EnemyInAARange() && (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1])) : (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1]) || (NEnemiesInAARange() > 1 ? false : (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) : false))))
                     {
                         SpellCastProvider.CastSpell(CastSlot.Q, currentPath[1].Position, 0);
                     }
