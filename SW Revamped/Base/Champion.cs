@@ -45,7 +45,7 @@ namespace SWRevamped.Base
                 new Champion("Draven", "1.0.0.0", true),
                 new Champion("DrMundo", "1.0.0.0", true),
                 new Champion("Ezreal", "1.0.1.0", true),
-                new Champion("Irelia", "0.9.1.0", false),
+                new Champion("Irelia", "0.9.4.0", false),
                 new Champion("Ivern", "1.0.0.0", true),
                 new Champion("Jinx", "1.0.2.0", true),
                 new Champion("Kalista", "1.0.0.0", true),

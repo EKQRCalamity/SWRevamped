@@ -11,7 +11,7 @@ namespace SWRevamped.Base
     internal static class UtilityManager
     {
         internal static Tab MainTab = new Tab("SW - Utility");
-        private static bool LoadDebugger = false;
+        private static bool LoadDebugger = true;
         internal static Group DebuggerGroup = new Group("Debuggers");
 
         internal static List<UtilityModule> utilityModules = new List<UtilityModule>()

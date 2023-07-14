@@ -16,7 +16,7 @@ namespace SWRevamped.Miscellaneous
     {
         internal Group BuffsGroup = new Group("Buffs");
         internal Switch SelfBuffSwitch = new Switch("Log SelfBuffs", false);
-        internal Switch LogActiveBuffs = new Switch("Log Active", true);
+        internal Switch LogActiveBuffs = new Switch("Log Active", false);
         internal Switch LogUnknown = new Switch("Log Unknown Buffs", false);
         internal Switch LogWithChName = new Switch("Log with Champ name", false);
         public override string Author => "EKQR Kotlin";

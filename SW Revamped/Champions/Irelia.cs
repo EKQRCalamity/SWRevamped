@@ -49,7 +49,43 @@ namespace SWRevamped.Champions
 
         internal override float GetValue(GameObjectBase target)
         {
-            return Scaling[Getter.Me().Level] * Getter.TotalAD;
+            return (target.IsMe ? Scaling[Getter.QLevel] * Getter.TotalAD : 0);
+        }
+    }
+
+    internal sealed class IreliaECalc : EffectCalc
+    {
+        internal static int[] Base = { 0, 80, 125, 170, 215, 260 };
+        internal static float APScaling = 0.8F;
+
+        internal override float GetValue(GameObjectBase target)
+        {
+            float damage = 0;
+            if (Getter.ELevel > 0)
+            {
+                damage = Base[Getter.ELevel];
+                damage += APScaling * Getter.TotalAP;
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, damage, 0);
+            }
+            return damage;
+        }
+    }
+
+    internal sealed class IreliaRCalc : EffectCalc
+    {
+        internal static int[] Base = { 0, 125, 250, 375 };
+        internal static float APScaling = 0.7F;
+
+        internal override float GetValue(GameObjectBase target)
+        {
+            float damage = 0;
+            if (Getter.RLevel > 0)
+            {
+                damage = Base[Getter.RLevel];
+                damage += APScaling * Getter.TotalAP;
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, damage, 0);
+            }
+            return damage;
         }
     }
 
@@ -59,11 +95,12 @@ namespace SWRevamped.Champions
 
         internal Tab MainTab = new Tab("SW - Irelia");
 
-        internal Group QGroup = new Group("Q Settings");
+        internal Group QGroup = new Group("Q - Settings");
         internal Switch QIsOn = new Switch("Enabled", true);
         internal Switch QAllowTower = new Switch("Allow Under Tower", false);
         internal Switch QSkipCheck = new Switch("Skip Check", false);
         internal Switch QHPGapClose = new Switch("Low HP Gap Close", false);
+        internal Group QHealGroup = new Group("Heal");
         internal Group QLaneClearGroup = new Group("Laneclear");
         internal Switch LaneclearIsOn = new Switch("Enabled", true);
         internal Switch QLaneClearCombo = new Switch("Combo", true);
@@ -71,6 +108,8 @@ namespace SWRevamped.Champions
 
         internal Group DrawingsGroup = new Group("Drawings");
         internal Switch QPathIsOn = new Switch("Show Q Path", false);
+        internal Group EDrawingsGroup = new Group("Drawings");
+        internal Group RDrawingsGroup = new Group("Drawings");
 
         internal Group EGroup = new Group("E - Settings");
         internal Switch EIsOn = new Switch("Enabled", true);
@@ -101,6 +140,14 @@ namespace SWRevamped.Champions
         internal List<GameObjectBase> currentPath = new();
 
         IreliaQDamageCalc QCalc = new IreliaQDamageCalc();
+        IreliaQHealCalc QHealCalc = new IreliaQHealCalc();
+        IreliaECalc ECalc = new IreliaECalc();
+        IreliaRCalc RCalc = new IreliaRCalc();
+
+        internal bool EnemyInAARange()
+        {
+            return UnitManager.EnemyChampions.Where(x => x.Distance < Getter.AARange).Count() > 0;
+        }
 
         internal bool HasMark(GameObjectBase target)
         {
@@ -116,15 +163,17 @@ namespace SWRevamped.Champions
             QGroup.AddItem(QAllowTower);
             QGroup.AddItem(QSkipCheck);
             QGroup.AddItem(QHPGapClose);
+            QGroup.AddItem(QLaneClearGroup);
+            QGroup.AddItem(QHealGroup);
             QGroup.AddItem(DrawingsGroup);
             DrawingsGroup.AddItem(QPathIsOn);
-            QGroup.AddItem(QLaneClearGroup);
             QLaneClearGroup.AddItem(LaneclearIsOn);
             QLaneClearGroup.AddItem(QLaneClearCombo);
             QLaneClearGroup.AddItem(QLaneClearMaxStacks);
             MainTab.AddItem(EGroup);
             EGroup.AddItem(EIsOn);
             EGroup.AddItem(EMode);
+            EGroup.AddItem(EDrawingsGroup);
             MainTab.AddItem(RGroup);
             RGroup.AddItem(RIsOn);
             RGroup.AddItem(MinHits);
@@ -135,12 +184,21 @@ namespace SWRevamped.Champions
             R1vs1Group.AddItem(RTargetHealth);
             R1vs1Group.AddItem(RMeHealthAbove);
             R1vs1Group.AddItem(RMeHealthBelow);
+            RGroup.AddItem(RDrawingsGroup);
             RGroup.AddItem(info);
 
             EffectDrawer.Init();
 
-            Effect effect = new Effect($"Q", true, 5, 10000, MainTab, DrawingsGroup, QCalc, Color.Blue);
-            EffectDrawer.AddDamage(effect);
+            Effect QDmg = new Effect($"Q", true, 5, 10000, MainTab, DrawingsGroup, QCalc, Color.Blue);
+            Effect QHeal = new Effect($"Q", true, 5, 10000, MainTab, QHealGroup, QHealCalc, Color.Green);
+            Effect EDmg = new Effect($"E", true, 6, 10000, MainTab, EDrawingsGroup, ECalc, Color.Red);
+            Effect RDmg = new Effect($"R", true, 7, 10000, MainTab, RDrawingsGroup, RCalc, Color.Orange);
+
+            EffectDrawer.AddDamage(QDmg);
+            EffectDrawer.AddBuff(QHeal);
+            EffectDrawer.AddDamage(EDmg);
+            EffectDrawer.AddDamage(RDmg);
+
             CoreEvents.OnCoreMainInputAsync += QSpell;
             CoreEvents.OnCoreLaneclearInputAsync += QLaneClear;
             CoreEvents.OnCoreMainInputAsync += ESpell;
@@ -152,7 +210,7 @@ namespace SWRevamped.Champions
 
         private Task RSpell()
         {
-            if (Getter.RLooseReady && RIsOn.IsOn)
+            if (Getter.RLooseReady && RIsOn.IsOn && !Getter.Me().BuffManager.HasActiveBuff("ireliawdefense"))
             {
                 GameObjectBase target = TargetSelector.GetBestHeroTarget(null, x => x.Distance < (RRange - 50));
                 if (target != null)
@@ -221,12 +279,10 @@ namespace SWRevamped.Champions
             Vector2 intermediatePosition = new();
             if (!(EObj != null) && !firstCast)
             {
-                Logger.Log("First cast.");
                 firstCast = true;
                 intermediatePosition = Vector2.Lerp(playerPosition, targetPosition, t).Extend(target, 100);
             } else if (firstCast && EObj != null)
             {
-                Logger.Log("Second cast.");
                 intermediatePosition = EObj.Position.Extend(target, -100);
                 firstCast = false;
             }
@@ -256,11 +312,9 @@ namespace SWRevamped.Champions
             {
                 firstCastPred = true;
                 lastTick = tick;
-                Logger.Log("Inter");
                 return GetEPositionInterpolated(player, target, 0.8F);
             } else if (EObj != null) 
             {
-                Logger.Log("Pred");
                 Vector3 EObjPos = EObj.Position;
                 Prediction.MenuSelected.PredictionOutput prediction = Prediction.MenuSelected.GetPrediction(Prediction.MenuSelected.PredictionType.Line, target, 750, 50, 0.264F, 2000, EObjPos, false);
                 if (prediction.HitChance > Prediction.MenuSelected.HitChance.High)
@@ -270,7 +324,6 @@ namespace SWRevamped.Champions
                 }
             } else if (EObj == null && ((tick - lastTick) > 200))
             {
-                Logger.Log($"FF {tick}-{lastTick}");
                 lastTick = tick;
                 firstCastPred = false;
             }
@@ -282,7 +335,7 @@ namespace SWRevamped.Champions
         {
             if (Getter.ELooseReady && EIsOn.IsOn)
             {
-                GameObjectBase target = TargetSelector.GetBestHeroTarget(null, x => x.Distance < (ERange - 50));
+                GameObjectBase target = TargetSelector.GetBestHeroTarget(null, x => x.Distance < (ERange - 50) && !Getter.Me().BuffManager.HasActiveBuff("ireliawdefense"));
                 if (target != null && target.Position.IsOnScreen())
                 {
                     if (EMode.SelectedModeName == "Short&Easy")
@@ -319,11 +372,14 @@ namespace SWRevamped.Champions
 
         private Task QSpell()
         {
-            if (QIsOn.IsOn && Getter.QLooseReady)
+            if (QIsOn.IsOn && Getter.QLooseReady && !Getter.Me().BuffManager.HasActiveBuff("ireliawdefense"))
             {
                 if (currentPath.Count > 0 && currentPath[1].IsAlive)
                 {
-                    SpellCastProvider.CastSpell(CastSlot.Q, currentPath[1].Position, 0);
+                    if ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient)) ? !EnemyInAARange() && (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1])) : (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1]) || (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) : false)))
+                    {
+                        SpellCastProvider.CastSpell(CastSlot.Q, currentPath[1].Position, 0);
+                    }
                 }
             }
             return Task.CompletedTask;
@@ -423,8 +479,8 @@ namespace SWRevamped.Champions
         {
             if (Getter.QLooseReady)
             {
-                List<GameObjectBase> list = UnitManager.EnemyChampions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 7 && ((QAllowTower.IsOn) ? true : !InTowerRange(x)) && HasMark(x) || QCalc.CanKill(x) || ((QHPGapClose.IsOn) ? ((x.Health - (QCalc.GetValue(x) * 2)) < 0) : false)).ToList();
-                list.AddRange(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 7 && ((QAllowTower.IsOn) ? true : !InTowerRange(x)) && HasMark(x) || QCalc.CanKill(x)));
+                List<GameObjectBase> list = UnitManager.EnemyChampions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 7 && (QAllowTower.IsOn ? true : !InTowerRange(x)) && !InNexusRange(x) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x) || (QHPGapClose.IsOn ? ((x.Health - (QCalc.GetValue(x) * 2)) < 0) : false))).ToList();
+                list.AddRange(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 7 && (QAllowTower.IsOn ? true : !InTowerRange(x) && !InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))));
                 List<GameObjectBase> validTargets = new() { Getter.Me() };
                 GameObjectBase mainTarget = null;
 
