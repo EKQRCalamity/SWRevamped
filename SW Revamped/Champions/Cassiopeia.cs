@@ -16,7 +16,7 @@ namespace SWRevamped.Champions
 {
     internal sealed class CassioQCalc : EffectCalc
     {
-        internal int[] QBaseDamage = new int[] { 0, 70, 110, 145, 180, 215 };
+        internal int[] QBaseDamage = new int[] { 0, 75, 110, 145, 180, 215 };
         internal float QAPScaling = 0.9F;
 
         internal override float GetValue(GameObjectBase target)

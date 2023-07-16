@@ -72,10 +72,27 @@ namespace SWRevamped.Champions
         }
     }
 
+    internal sealed class OriEShieldCalc : EffectCalc
+    {
+        internal int[] Base = { 0, 55, 90, 125, 160, 195 };
+        internal float APScaling = 0.45F;
+
+        internal override float GetValue(GameObjectBase target)
+        {
+            float damage = 0;
+            if (Getter.ELevel > 0)
+            {
+                damage = Base[Getter.ELevel];
+                damage += APScaling * Getter.TotalAP;
+            }
+            return damage;
+        }
+    }
+
     internal sealed class OriRCalc : EffectCalc
     {
-        internal int[] BaseDamage = { 0, 250, 350, 450};
-        internal float APScaling = 0.9F;
+        internal int[] BaseDamage = { 0, 250, 400, 550};
+        internal float APScaling = 0.95F;
 
         internal override float GetValue(GameObjectBase target)
         {

@@ -93,7 +93,7 @@ namespace SWRevamped.Champions
     {
         internal Tab MainTab = new Tab("SW - Leesin");
 
-        internal const int QRange = 1800;
+        internal const int QRange = 1200;
         internal const int QWidth = 120;
         internal const float QCastTime = 0.25F;
         internal const int QEnergy = 50;

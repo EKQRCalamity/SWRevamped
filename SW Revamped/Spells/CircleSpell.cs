@@ -205,7 +205,7 @@ namespace SWRevamped.Spells
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
             if (defaultCollisionCheck.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
+                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || ((useMinCollisions) ? pred.CollisionObjects.Where(x => x.IsObject(ObjectTypeFlag.AIHeroClient)).ToList().Count < defaultCollisionCheck.MinCollisionObjects : false))
                     return Task.CompletedTask;
             if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
             {

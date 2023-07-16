@@ -18,8 +18,8 @@ namespace SWRevamped.Champions
 {
     internal sealed class AnnieQCalc : EffectCalc
     {
-        internal readonly int[] BaseDamage = new int[] { 0, 80, 115, 150, 185, 220 };
-        internal readonly float APScaling = 0.8F;
+        internal readonly int[] BaseDamage = new int[] { 0, 70, 105, 140, 175, 210 };
+        internal readonly float APScaling = 0.75F;
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -54,7 +54,7 @@ namespace SWRevamped.Champions
 
     internal sealed class AnnieECalc : EffectCalc
     {
-        internal readonly int[] BaseShield = { 0, 60, 100, 140, 180, 220 };
+        internal readonly int[] BaseShield = { 0, 60, 95, 130, 165, 200 };
         internal readonly float APScaling = 0.4F;
 
         internal override float GetValue(GameObjectBase target)

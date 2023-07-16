@@ -15,7 +15,7 @@ namespace SWRevamped.Champions
     internal sealed class VeigarQCalc : EffectCalc
     {
         internal static int[] BaseDamage = new int[] { 0, 80, 120, 160, 200, 240 };
-        internal static float APScaling = 0.6F;
+        internal static float[] APScaling = new float[] { 0, 0.45F, 0.5F, 0.55F, 0.6F, 0.65F };
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -23,7 +23,7 @@ namespace SWRevamped.Champions
             if (Getter.QLevel > 0)
             {
                 damage = BaseDamage[Getter.QLevel];
-                damage += Getter.TotalAP * APScaling;
+                damage += Getter.TotalAP * APScaling[Getter.QLevel];
                 damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, damage, 0);
             }
 
@@ -34,7 +34,7 @@ namespace SWRevamped.Champions
     internal sealed class VeigarWCalc : EffectCalc
     {
         internal static int[] BaseDamage = new int[] { 0, 85, 140, 195, 250, 305 };
-        internal static float APScaling = 1F;
+        internal static float[] APScaling = new float[] { 0, 0.7F, 0.8F, 0.9F, 1F, 1.1F };
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -42,7 +42,7 @@ namespace SWRevamped.Champions
             if (Getter.WLevel > 0)
             {
                 damage = BaseDamage[Getter.WLevel];
-                damage += Getter.TotalAP * APScaling;
+                damage += Getter.TotalAP * APScaling[Getter.WLevel];
                 damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, damage, 0);
             }
 
@@ -61,7 +61,7 @@ namespace SWRevamped.Champions
     internal sealed class VeigarRCalc : EffectCalc
     {
         internal static int[] BaseDamage = new int[] { 0, 175, 250, 325 };
-        internal static float APScaling = 0.75F;
+        internal static float[] APScaling = new float[] { 0, 0.65F, 0.7F, 0.75F };
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -69,7 +69,7 @@ namespace SWRevamped.Champions
             if (Getter.RLevel > 0)
             {
                 damage = BaseDamage[Getter.RLevel];
-                damage += Getter.TotalAP * APScaling;
+                damage += Getter.TotalAP * APScaling[Getter.RLevel];
                 damage = damage * (1 + (target.MissingHealthPercent / 100));
                 damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, 0, damage, 0);
             }

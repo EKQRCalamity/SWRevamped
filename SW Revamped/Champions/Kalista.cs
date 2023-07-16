@@ -22,7 +22,7 @@ namespace SWRevamped.Champions
     internal sealed class KalistaQEffectCalc : EffectCalc
     {
         internal static int[] BaseDamage = new int[] { 0, 20, 85, 150, 215, 280 };
-        internal static float ADScaling = 1F;
+        internal static float ADScaling = 1.05F;
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -40,9 +40,10 @@ namespace SWRevamped.Champions
     {
         internal static int[] BaseDamage = new int[] { 0, 20, 30, 40, 50, 60 };
         internal float ADScaling = 0.7F;
+        internal static float APScaling = 0.2F;
 
-        internal static int[] AdditionalDamage = new int[] { 0, 10, 16, 22, 28, 34 };
-        internal static float[] AdditionalScaling = new float[] { 0, 0.232F, 0.2755F, 0.319F, 0.3625F, 0.406F };
+        internal static int[] AdditionalDamage = new int[] { 0, 8, 12, 16, 20, 24 };
+        internal static float[] AdditionalScaling = new float[] { 0, 0.25F, 0.3F, 0.35F, 0.4F, 0.45F };
 
         internal float GetEStacks(GameObjectBase target)
         {
@@ -60,9 +61,9 @@ namespace SWRevamped.Champions
             if (Getter.ELevel > 0 && target.IsAlive && target.IsValidTarget() && stacks > 0)
             {
                 damage = BaseDamage[Getter.ELevel];
-                damage += ADScaling * Getter.TotalAD;
+                damage += ADScaling * Getter.TotalAD + (Getter.TotalAP * APScaling);
                 damage += (AdditionalDamage[Getter.ELevel] + (AdditionalScaling[Getter.ELevel] * Getter.TotalAD)) * (stacks - 1);
-                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage);
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage) - 25;
             }
             return damage;
         }
