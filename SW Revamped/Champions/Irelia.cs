@@ -383,7 +383,7 @@ namespace SWRevamped.Champions
             {
                 if (currentPath.Count > 0 && currentPath[1].IsAlive)
                 {
-                    if ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient)) ? (QLaneClearMaxStacks.IsOn? true : !HasMaxStacks()) && !EnemyInAARange() && (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1])) : (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1]) || (NEnemiesInAARange() > 1 ? false : (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) : false))))
+                    if ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient)) ? (QLaneClearMaxStacks.IsOn? true : !HasMaxStacks()) && !EnemyInAARange() && (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1])) : (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1]) || (NEnemiesInAARange() > 1 ? false : (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) && currentPath[1].Distance > Getter.AARange : false))))
                     {
                         SpellCastProvider.CastSpell(CastSlot.Q, currentPath[1].Position, 0);
                     }

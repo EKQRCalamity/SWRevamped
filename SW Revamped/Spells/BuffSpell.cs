@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using Oasys.Common.Menu;
 using Oasys.Common.EventsProvider;
 using Oasys.Common.Extensions;
+using Oasys.SDK;
+using SWRevamped.Utility;
+using Oasys.SDK.Tools;
 
 namespace SWRevamped.Spells
 {
@@ -22,7 +25,9 @@ namespace SWRevamped.Spells
 
         internal Func<GameObjectBase, Vector3> SourcePosition;
 
-        internal BuffSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int range, float casttime, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, int drawprio = 5, int health = 80)
+        internal Priorities? prios = null;
+
+        internal BuffSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int range, float casttime, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, int drawprio = 5, int health = 80, bool priority = true)
         {
             Color color = drawColor;
 
@@ -51,7 +56,8 @@ namespace SWRevamped.Spells
 
             SelfCheck = selfCheck;
             TargetCheck = targetCheck;
-
+            if (priority)
+                prios = new Priorities(SpellGroup);
             Init();
         }
 
@@ -62,7 +68,17 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
+
             GameObjectBase target = AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
+
+            if (prios != null)
+            {
+                target = AllyTargetSelector.GetLowestHealthPrioTarget(x => TargetCheck(x) && x.Distance < CastRange, prios);
+                if (target == null)
+                    return Task.CompletedTask;
+                if (prios.PriorityValues[target.Name] == -1 || prios.PriorityValues[target.Name] == 0)
+                    return Task.CompletedTask;
+            }
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             if (SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && target.HealthPercent < HealthCounter.Value)
