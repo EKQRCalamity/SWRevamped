@@ -49,7 +49,7 @@ namespace SWRevamped.Base
                 new Champion("Ivern", "1.0.0.0", true),
                 new Champion("Jinx", "1.0.2.0", true),
                 new Champion("Kalista", "1.0.0.1", true),
-                new Champion("Karthus", "1.0.0.0", true),
+                new Champion("Karthus", "1.0.0.1", true),
                 new Champion("KogMaw", "1.0.0.0", true),
                 new Champion("LeeSin", "1.0.0.0", true),
                 new Champion("Lux", "1.0.0.1", true),
