@@ -22,20 +22,18 @@ namespace SWRevamped.Spells
     {
         internal bool UseCanKill = false;
         internal Counter MinMana;
-        internal TeamFlag flag;
+        internal bool IsFriendly;
 
         internal Switch HarassIsOn;
         internal Switch LaneclearIsOn;
         internal Switch LasthitIsOn;
         internal Func<GameObjectBase, Vector3> SourcePosition;
 
-        internal PointAndClickSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int range, int speed, int castrange, float casttime, bool useCanKill, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, bool laneclear = false, bool harass = false, bool lasthit = false, int drawprio = 5, TeamFlag drawflag = TeamFlag.Unknown)
+        internal PointAndClickSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int range, int speed, int castrange, float casttime, bool useCanKill, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, bool laneclear = false, bool harass = false, bool lasthit = false, int drawprio = 5, bool isFriendly = false)
         {
             Color color = drawColor;
 
-            if (drawflag == TeamFlag.Unknown)
-                drawflag = (Getter.Me().Team == TeamFlag.Chaos) ? TeamFlag.Order : TeamFlag.Chaos;
-            flag = drawflag;
+            IsFriendly = isFriendly;
 
             MainTab = Getter.MainTab;
             Slot = spellSlot;
@@ -75,7 +73,7 @@ namespace SWRevamped.Spells
                 HarassIsOn.IsOn = true;
             }
             Effect effect = new Effect($"{SpellSlotToString()}", true, drawprio, Range, MainTab, SpellGroup, effectCalc, color);
-            EffectDrawer.Add(effect, drawflag);
+            EffectDrawer.Add(effect, IsFriendly);
 
             SelfCheck = selfCheck;
             TargetCheck = targetCheck;
@@ -126,7 +124,7 @@ namespace SWRevamped.Spells
 
         private Task HarassInput()
         {
-            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
+            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
             if (target == null || !IsOn || !HarassIsOn.IsOn)
                 return Task.CompletedTask;
             if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
@@ -163,7 +161,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
+            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)

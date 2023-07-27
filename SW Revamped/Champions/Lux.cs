@@ -160,7 +160,7 @@ namespace SWRevamped.Champions
                 false,
                 new CollisionCheck(true, 999999, 0),
                 5,
-                (Getter.Me().Team == Oasys.Common.Enums.GameEnums.TeamFlag.Order) ? Oasys.Common.Enums.GameEnums.TeamFlag.Order : Oasys.Common.Enums.GameEnums.TeamFlag.Chaos
+                true
                 );
             wSpell.SpellGroup.AddItem(HealthCounter); 
             CircleSpell eSpell = new CircleSpell(Oasys.SDK.SpellCasting.CastSlot.E,

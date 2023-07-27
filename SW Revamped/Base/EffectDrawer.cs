@@ -719,9 +719,9 @@ namespace SWRevamped.Base
 
         internal static bool Initialized = false;
 
-        internal static void Add(Effect effect, TeamFlag team)
+        internal static void Add(Effect effect, bool friendly)
         {
-            if (team == Getter.Me().Team)
+            if (friendly)
             {
                 friendlyEffects.Add(effect);
             } else
@@ -732,12 +732,12 @@ namespace SWRevamped.Base
 
         internal static void AddDamage(Effect effect)
         {
-            Add(effect, TeamFlag.Unknown);
+            Add(effect, false);
         }
 
         internal static void AddBuff(Effect effect)
         {
-            Add(effect, Getter.Me().Team);
+            Add(effect, true);
         }
 
         // Shouldnt be called more often than once but still checking

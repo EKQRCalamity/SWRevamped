@@ -82,7 +82,7 @@ namespace SWRevamped.Champions
         }
     }
 
-    internal class Jinx : ChampionModule
+    internal sealed class Jinx : ChampionModule
     {
         internal Tab MainTab = new Tab("SW - Jinx");
         internal Switch DrawRangeCircle = new Switch("Draw Q Range", true);

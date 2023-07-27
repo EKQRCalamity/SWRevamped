@@ -65,7 +65,7 @@ namespace SWRevamped.Spells
             effectCalc = eCalc;
 
             Effect effect = new Effect($"{SpellSlotToString()}", true, drawprio, Range, MainTab, SpellGroup, effectCalc, color);
-            EffectDrawer.Add(effect, (TeamFlag.Chaos == Getter.Me().Team) ? TeamFlag.Order : TeamFlag.Chaos);
+            EffectDrawer.Add(effect, false);
 
             SelfCheck = selfCheck;
             TargetCheck = targetCheck;

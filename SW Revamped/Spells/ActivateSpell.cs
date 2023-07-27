@@ -23,7 +23,7 @@ namespace SWRevamped.Spells
         internal Func<GameObjectBase, Vector3> SourcePosition;
         internal Func<GameObjectBase, bool> DeactivateCheck;
         
-        internal ActivateSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int range, float casttime, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> enemyActivateCheck, Func<GameObjectBase, bool> deactivateCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, int drawprio = 5, TeamFlag teamflag = TeamFlag.Unknown)
+        internal ActivateSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int range, float casttime, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> enemyActivateCheck, Func<GameObjectBase, bool> deactivateCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana = 0, int drawprio = 5)
         {
             Color color = drawColor;
             MainTab = Getter.MainTab;
@@ -32,11 +32,7 @@ namespace SWRevamped.Spells
             SpellGroup = new Group($"{SpellSlotToString()} Settings");
             MinMana = new Counter("Min Mana", minMana, 0, 10000);
 
-            if (TeamFlag.Unknown == teamflag)
-            {
-                teamflag = (Getter.Me().Team == TeamFlag.Order) ? TeamFlag.Chaos : TeamFlag.Order;
-            }
-
+            
             DeactivateCheck = deactivateCheck;
             Range = range;
 
@@ -47,7 +43,7 @@ namespace SWRevamped.Spells
 
             effectCalc = eCalc;
             Effect effect = new Effect($"{SpellSlotToString()}", true, drawprio, Range, MainTab, SpellGroup, effectCalc, color);
-            EffectDrawer.Add(effect, teamflag);
+            EffectDrawer.AddDamage(effect);
 
             CastTime = casttime;
 

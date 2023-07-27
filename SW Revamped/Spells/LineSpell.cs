@@ -26,7 +26,7 @@ namespace SWRevamped.Spells
 
         internal ModeDisplay _HitChance;
         internal Counter MinMana;
-        internal TeamFlag flag;
+        internal bool IsFriendly;
 
         internal CollisionCheck defaultCollisionCheck = new CollisionCheck(true, 0, 0);
 
@@ -35,16 +35,14 @@ namespace SWRevamped.Spells
         internal Switch LasthitIsOn;
         internal Func<GameObjectBase, Vector3> SourcePosition;
 
-        internal LineSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int width, int range, int speed, int castrange, float casttime, bool useCanKill, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana, HitChance minHitChance, bool laneclear, bool harass, bool lasthit, CollisionCheck collisionCheck, int drawprio = 5, TeamFlag drawflag = TeamFlag.Unknown)
+        internal LineSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int width, int range, int speed, int castrange, float casttime, bool useCanKill, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana, HitChance minHitChance, bool laneclear, bool harass, bool lasthit, CollisionCheck collisionCheck, int drawprio = 5, bool isFriendly = false)
         {
             defaultCollisionCheck = collisionCheck;
 
             if (defaultCollisionCheck.MinCollisionObjects > 0) 
                 useMinCollisions = true;
 
-            if (drawflag == TeamFlag.Unknown)
-                drawflag = (Getter.Me().Team == TeamFlag.Chaos) ? TeamFlag.Order : TeamFlag.Chaos;
-            flag = drawflag;
+            IsFriendly = isFriendly;
 
             Color drawcolor = (Color)drawColor;
             MainTab = Getter.MainTab;
@@ -89,7 +87,7 @@ namespace SWRevamped.Spells
                 HarassIsOn.IsOn = true;
             }
             Effect effect = new Effect($"{SpellSlotToString()}", true, drawprio, Range, MainTab, SpellGroup, effectCalc, drawColor);
-            EffectDrawer.Add(effect, drawflag);
+            EffectDrawer.Add(effect, IsFriendly);
             SelfCheck = selfCheck;
             TargetCheck = targetCheck;
 
@@ -148,7 +146,7 @@ namespace SWRevamped.Spells
 
         private Task HarassInput()
         {
-            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
+            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
             if (target == null || !IsOn || !HarassIsOn.IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Line, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
@@ -204,7 +202,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            GameObjectBase target = (flag != Getter.Me().Team) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
+            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Line, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);

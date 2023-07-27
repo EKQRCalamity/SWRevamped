@@ -63,7 +63,7 @@ namespace SWRevamped.Champions
                 damage = BaseDamage[Getter.ELevel];
                 damage += ADScaling * Getter.TotalAD + (Getter.TotalAP * APScaling);
                 damage += (AdditionalDamage[Getter.ELevel] + (AdditionalScaling[Getter.ELevel] * Getter.TotalAD)) * (stacks - 1);
-                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage) - 25;
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage) - 90;
             }
             return damage;
         }
