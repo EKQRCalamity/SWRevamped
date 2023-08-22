@@ -487,6 +487,8 @@ namespace SWRevamped.Champions
             if (Getter.QLooseReady)
             {
                 List<GameObjectBase> list = UnitManager.EnemyChampions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !InTowerRange(x)) && !InNexusRange(x) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x) || (QHPGapClose.IsOn ? ((x.Health - (QCalc.GetValue(x) * 2)) < 0) : false))).ToList();
+                Logger.Log(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !InTowerRange(x) && !InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))).Count());
+                Logger.Log(UnitManager.EnemyMinions.Count());
                 list.AddRange(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !InTowerRange(x) && !InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))));
                 List<GameObjectBase> validTargets = new() { Getter.Me() };
                 GameObjectBase mainTarget = null;

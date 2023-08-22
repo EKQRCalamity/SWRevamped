@@ -202,7 +202,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
+            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x))) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x));
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Line, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);

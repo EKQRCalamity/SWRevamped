@@ -44,6 +44,7 @@ namespace SWRevamped.Champions
 
         internal static int[] AdditionalDamage = new int[] { 0, 8, 12, 16, 20, 24 };
         internal static float[] AdditionalScaling = new float[] { 0, 0.25F, 0.3F, 0.35F, 0.4F, 0.45F };
+        internal static float AdditionalAPScaling = 0.25F;
 
         internal float GetEStacks(GameObjectBase target)
         {
@@ -60,10 +61,9 @@ namespace SWRevamped.Champions
             float stacks = GetEStacks(target);
             if (Getter.ELevel > 0 && target.IsAlive && target.IsValidTarget() && stacks > 0)
             {
-                damage = BaseDamage[Getter.ELevel];
-                damage += ADScaling * Getter.TotalAD + (Getter.TotalAP * APScaling);
-                damage += (AdditionalDamage[Getter.ELevel] + (AdditionalScaling[Getter.ELevel] * Getter.TotalAD)) * (stacks - 1);
-                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage) - 90;
+                damage = BaseDamage[Getter.ELevel] + (ADScaling * Getter.TotalAD + (Getter.TotalAP * APScaling));
+                damage += (AdditionalDamage[Getter.ELevel] + (AdditionalScaling[Getter.ELevel] * Getter.TotalAD) + (AdditionalAPScaling * Getter.TotalAP)) * (stacks - 1);
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage);
             }
             return damage;
         }

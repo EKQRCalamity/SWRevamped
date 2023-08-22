@@ -283,7 +283,7 @@ namespace SWRevamped.Base
             IsOnSwitch = new Switch("Drawings", _isOn);
             ShowNameSwitch = new Switch("Show Name", ShowName);
             Calculator = calculator;
-            InitMenu(mainGroup);
+            InitMenu(mainGroup, new Group("Effect Draws"));
         }
 
         public Effect(string origName, bool isOn, int prio, int drawrange, Tab mainTab, Group mainGroup, EffectCalc calculator, Color color, Func<GameObjectBase, bool> isOnSelfCheck)
@@ -298,7 +298,7 @@ namespace SWRevamped.Base
             IsOnSwitch = new Switch("Drawings", _isOn);
             ShowNameSwitch = new Switch("Show Name", ShowName);
             Calculator = calculator;
-            InitMenu(mainGroup);
+            InitMenu(mainGroup, new Group("Effect Draws"));
         }
 
         public Effect(string origName, bool isOn, int prio, int drawrange, Tab mainTab, Group mainGroup, EffectCalc calculator, Color color, Func<GameObjectBase, bool> isOnSelfCheck, Func<GameObjectBase, bool> isOnTargetCheck)
@@ -313,15 +313,16 @@ namespace SWRevamped.Base
             IsOnSwitch = new Switch("Drawings", _isOn);
             ShowNameSwitch = new Switch("Show Name", ShowName);
             Calculator = calculator;
-            InitMenu(mainGroup);
+            InitMenu(mainGroup, new Group("Effect Draws"));
         }
 
-        internal void InitMenu(Group group)
+        internal void InitMenu(Group group, Group draws)
         {
-            group.AddItem(IsOnSwitch);
-            group.AddItem(ShowNameSwitch);
-            group.AddItem(PriorityCounter);
-            group.AddItem(ColorDisplay);
+            group.AddItem(draws);
+            draws.AddItem(IsOnSwitch);
+            draws.AddItem(ShowNameSwitch);
+            draws.AddItem(PriorityCounter);
+            draws.AddItem(ColorDisplay);
         }
 
         internal float GetHealthAffect(GameObjectBase target)

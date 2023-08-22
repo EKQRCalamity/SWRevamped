@@ -96,7 +96,7 @@ namespace SWRevamped.Champions
                 875,
                 0.25F,
                 false,
-                x => x.IsZombie || x.IsAlive,
+                x => (x.IsAlive || x.IsZombie),
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Blue,

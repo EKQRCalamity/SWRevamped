@@ -1,6 +1,9 @@
-﻿using Oasys.Common.GameObject;
+﻿using Oasys.Common.EventsProvider;
+using Oasys.Common.Extensions;
+using Oasys.Common.GameObject;
 using Oasys.Common.Logic;
 using Oasys.Common.Menu;
+using Oasys.Common.Menu.ItemComponents;
 using SharpDX;
 using SWRevamped.Base;
 using SWRevamped.Spells;
@@ -82,6 +85,8 @@ namespace SWRevamped.Champions
         DravenECalc ECalc = new DravenECalc();
         DravenRCalc RCalc = new DravenRCalc();
 
+        internal Counter RRangeCounter = new Counter("Ult Min Distance", 700, 0, 10000);
+
         internal override void Init()
         {
             MenuManagerProvider.AddTab(MainTab);
@@ -146,7 +151,7 @@ namespace SWRevamped.Champions
                 0.25F,
                 true,
                 x => x.IsAlive,
-                x => x.IsAlive,
+                x => x.IsAlive && x.Distance > RRangeCounter.Value,
                 x => Getter.Me().Position,
                 Color.OrangeRed,
                 100,
@@ -156,6 +161,8 @@ namespace SWRevamped.Champions
                 false,
                 new CollisionCheck(true, 99999, 0),
                 5);
+            rSpell.SpellGroup.AddItem(RRangeCounter);
+            RRangeCounter.ValueFrequency = 50;
         }
     }
 }
