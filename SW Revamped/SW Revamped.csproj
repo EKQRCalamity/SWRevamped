@@ -14,12 +14,7 @@
 	  <Exec Command="move /Y &quot;$(CopyTargetDir)$(ProjectName).omod&quot; &quot;$(CopyTargetDir)Pre\$(ProjectName)_$([System.DateTime]::Now.ToString(dd.MM.yyyy_HH-mm-ss))_backup.omod&quot;" />
 	  <Exec Command="copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(CopyTargetDir)$(ProjectName).omod&quot;" />
   </Target>
-  <ItemGroup>
-    <Compile Remove="Miscellaneous\WardPing.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Miscellaneous\WardPing.cs" />
-  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\..\Programming\Modules\Oasys\Include\Newtonsoft.Json.dll</HintPath>
