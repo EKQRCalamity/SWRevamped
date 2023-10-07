@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.Devices;
+using Oasys.Common.Enums.GameEnums;
 using Oasys.Common.Extensions;
 using Oasys.Common.Logic;
 using Oasys.Common.Menu;
@@ -18,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Oasys.Common.GameObject.Clients.ExtendedInstances.HeroInventory;
 
 namespace SWRevamped.Miscellaneous
 {
@@ -27,6 +29,9 @@ namespace SWRevamped.Miscellaneous
 
         internal Group WardHelperGroup = new Group("Ward Helper");
         internal Switch IsOnSwitch = new Switch("Enabled", true);
+        internal Switch SWItemSwitch = new Switch("Use Stealth Wards", true);
+        internal Switch PinkItemSwitch = new Switch("Use Pink Wards", true);
+        internal Switch WardItemSwitch = new Switch("Use Ward Items", true);
         internal Switch DrawLocations = new Switch("Draw Locations", true);
         internal Group WardLocations = new Group("Locations");
         internal KeyBinding AutoWardKey = new KeyBinding() { Title = "Auto Ward Key", SelectedKey = System.Windows.Forms.Keys.CapsLock };
@@ -43,6 +48,9 @@ namespace SWRevamped.Miscellaneous
                 return;
             UtilityManager.MainTab.AddGroup(WardHelperGroup);
             WardHelperGroup.AddItem(IsOnSwitch);
+            WardHelperGroup.AddItem(SWItemSwitch);
+            WardHelperGroup.AddItem(PinkItemSwitch);
+            WardHelperGroup.AddItem(WardItemSwitch);
             WardHelperGroup.AddItem(DrawLocations);
             WardHelperGroup.AddItem(WardLocations);
             WardHelperGroup.AddItem(AutoWardKey);
@@ -57,18 +65,122 @@ namespace SWRevamped.Miscellaneous
             CoreEvents.OnCoreMainTick += MainFunc;
         }
 
+        private CastSlot SpellCastSlot2CastSlot(SpellCastSlot slot)
+        {
+            switch (slot)
+            {
+                case SpellCastSlot.Item1:
+                    return CastSlot.Item1;
+                case SpellCastSlot.Item2:
+                    return CastSlot.Item2;
+                case SpellCastSlot.Item3:
+                    return CastSlot.Item3;
+                case SpellCastSlot.Item4:
+                    return CastSlot.Item4;
+                case SpellCastSlot.Item5:
+                    return CastSlot.Item5;
+                case SpellCastSlot.Item6:
+                    return CastSlot.Item6;
+                case SpellCastSlot.Item7:
+                    return CastSlot.Item7;
+                case SpellCastSlot.Q:
+                    return CastSlot.Q;
+                case SpellCastSlot.W:
+                    return CastSlot.W;
+                case SpellCastSlot.E:
+                    return CastSlot.E;
+                case SpellCastSlot.R:
+                    return CastSlot.R;
+                case SpellCastSlot.Summoner1:
+                    return CastSlot.Summoner1;
+                default:
+                    return CastSlot.Summoner2;
+            }
+        }
+
+        List<ItemID> wardItemIDs = new List<ItemID>() 
+        {
+            ItemID.Vigilant_Wardstone,
+            ItemID.Pauldrons_of_Whiterock,
+            ItemID.Harrowing_Crescent,
+            ItemID.Frostfang,
+            ItemID.Bulwark_of_the_Mountain,
+            ItemID.Black_Mist_Scythe,
+            ItemID.Runesteel_Spaulders,
+            ItemID.Shard_of_True_Ice,
+            ItemID.Targons_Buckler,
+            ItemID.Watchful_Wardstone
+        };
         private Task MainFunc()
         {
             if (Warding)
             {
                 Ward? ward = WardManager.GetClosestWard(Getter.Me());
-                if (ward.MovePosition.DistanceToPlayer() < 25)
+                if (ward.MovePosition.DistanceToPlayer() < 5)
                 {
-                    SpellCastProvider.CastSpell(CastSlot.Item4, ward.ClickPosition);
+                    if (WardItemSwitch.IsOn && HasWardItem())
+                    {
+                        for (int i = 0; i < wardItemIDs.Count - 1; i++)
+                        {
+                            SpellCastSlot slot = GetCastSlotFromInv(wardItemIDs[i]);
+                            if (slot != SpellCastSlot.Summoner2)
+                            {
+                                Logger.Log($"{SpellCastSlot2CastSlot(slot)} | T");
+                                SpellCastProvider.CastSpell(SpellCastSlot2CastSlot(slot), ward.ClickPosition);
+                                break;
+                            }
+                        }
+                    }
+                    if (SWItemSwitch.IsOn && HasNormalWard())
+                        SpellCastProvider.CastSpell(CastSlot.Item4, ward.ClickPosition);
+                    if (PinkItemSwitch.IsOn && HasPinkWard())
+                    {
+                        SpellCastSlot slot = GetCastSlotFromInv(ItemID.Control_Ward, false);
+                        if (slot != SpellCastSlot.Summoner2)
+                        {
+                            Logger.Log($"{SpellCastSlot2CastSlot(slot)} | T2");
+                            SpellCastProvider.CastSpell(SpellCastSlot2CastSlot(slot), ward.ClickPosition);
+                        }
+                    }
                     Warding = false;
                 }
             }
             return Task.CompletedTask;
+        }
+
+        private SpellCastSlot GetCastSlotFromInv(Oasys.Common.Enums.GameEnums.ItemID itemID, bool charge = true)
+        {
+            foreach (Item item in Getter.MeHero.Inventory.GetItemList())
+            {
+                Logger.Log(item.ID);
+                if (item.ID == itemID && ((charge)? item.Charges > 0 : true))
+                    return item.SpellCastSlot;
+            }
+            return SpellCastSlot.Summoner2;
+        }
+
+        private bool HasNormalWard()
+        {
+            return Getter.MeHero.Inventory.HasItem(Oasys.Common.Enums.GameEnums.ItemID.Stealth_Ward);
+        }
+
+        private bool HasPinkWard()
+        {
+            return Getter.MeHero.Inventory.HasItem(Oasys.Common.Enums.GameEnums.ItemID.Control_Ward);
+        }
+
+        private bool HasWardItem()
+        {
+            return Getter.MeHero.Inventory.HasItem(ItemID.Vigilant_Wardstone) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Pauldrons_of_Whiterock) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Harrowing_Crescent) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Frostfang) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Bulwark_of_the_Mountain) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Black_Mist_Scythe) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Runesteel_Spaulders) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Shard_of_True_Ice) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Targons_Buckler) ||
+                   Getter.MeHero.Inventory.HasItem(ItemID.Watchful_Wardstone);
         }
 
         private void Draw()
