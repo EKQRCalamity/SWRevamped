@@ -176,7 +176,7 @@ namespace SWRevamped.Spells
             targets.AddRange(UnitManager.AllyJungleMobs.ToList<GameObjectBase>());
             targets = targets.OrderBy(x => x.Health).ToList<GameObjectBase>();
 
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange).FirstOrDefault();
+            GameObjectBase target = targets.Where(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange).OrderByDescending(x => x.Distance).FirstOrDefault();
 
             if (target == null || !IsOn || !LasthitIsOn.IsOn)
                 return Task.CompletedTask;

@@ -475,7 +475,7 @@ namespace SWRevamped.Champions
             if (Getter.QLooseReady)
             {
                 GameObjectBase target = GetLaneclearTarget();
-                if (target != null )
+                if (target != null)
                 {
                     SpellCastProvider.CastSpell(CastSlot.Q, target.Position, 0);
                 }
@@ -537,6 +537,8 @@ namespace SWRevamped.Champions
 
         private void CalculatePath()
         {
+            Oasys.Common.Settings.Orbwalker.HoldTargetChampsOnlyWhileMoving = false;
+            Oasys.Common.Settings.Orbwalker.HoldTargetChampsOnly = false;
             if (QPathIsOn.IsOn)
             {
                 List<GameObjectBase> path = currentPath;

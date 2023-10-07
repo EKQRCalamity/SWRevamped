@@ -249,15 +249,15 @@ namespace SWRevamped.Miscellaneous
                 SpellClass heal = GetSpellClass(SummonerSpellsEnum.Heal);
                 if (UseHeal.IsOn)
                 {
-                    if (Getter.Me().HealthPercent < HealthCounter.Value)
+                    if (Getter.Me().IsAlive && Getter.Me().HealthPercent < HealthCounter.Value)
                     {
                         SpellCastProvider.CastSpell(GetCastSlot(SummonerSpellsEnum.Heal));
                     }
                 }
                 if (UseForAllies.IsOn)
                 {
-                    GameObjectBase target = AllyTargetSelector.GetLowestHealthPercentTarget(x => x.Distance < 850);
-                    if (target.HealthPercent < HealthCounter.Value)
+                    GameObjectBase target = AllyTargetSelector.GetLowestHealthPercentTarget(x => x.Distance < 820);
+                    if (target.IsAlive && target.HealthPercent < HealthCounter.Value)
                     {
                         SpellCastProvider.CastSpell(GetCastSlot(SummonerSpellsEnum.Heal), target.Position);
                     }

@@ -7,6 +7,7 @@ using Oasys.Common.Menu;
 using Oasys.Common.Menu.ItemComponents;
 using Oasys.SDK;
 using Oasys.SDK.Rendering;
+using Oasys.SDK.Tools;
 using SharpDX;
 using SWRevamped.Base;
 using System;
@@ -18,6 +19,82 @@ using System.Windows.Forms;
 
 namespace SWRevamped.Miscellaneous
 {
+    internal class PathChain
+    {
+        GameObjectBase obj;
+        Vector2 objPos => LeagueNativeRendererManager.WorldToScreenSpell(obj.Position);
+        Vector2 first = Vector2.Zero;
+        Vector2 last = Vector2.Zero;
+        public PathChain(Vector3 a, Vector3 b, GameObjectBase Object)
+        {
+            first = LeagueNativeRendererManager.WorldToScreenSpell(a);
+            last = LeagueNativeRendererManager.WorldToScreenSpell(b);
+            obj = Object;
+        }
+
+        public Vector2 GetFirst()
+        {
+            return first;
+        }
+
+        public Vector2 GetSecond()
+        {
+            return last;
+        }
+
+        public Vector2 GetObjPos()
+        {
+            return objPos;
+        }
+
+        public bool OnPath()
+        {
+            double tolerance = 17;
+            double minX = Math.Min(first.X, last.X) - tolerance;
+            double maxX = Math.Max(first.X, last.X) + tolerance;
+            double minY = Math.Min(first.Y, last.Y) - tolerance;
+            double maxY = Math.Max(first.Y, last.Y) + tolerance;
+
+            if (objPos.X >= maxX || objPos.X <= minX || objPos.Y >= maxY || objPos.Y <= minY) 
+            {
+                return false;
+            }
+
+            if (first.X == last.X)
+            {
+                if (Math.Abs(first.X - last.X) >= tolerance)
+                {
+                    return false;
+                }
+                return true;
+            }
+
+            if (first.Y == last.Y)
+            {
+                if (Math.Abs(first.Y - last.Y) >= tolerance)
+                {
+                    return false;
+                }
+                return true;
+            }
+
+            double dist = Math.Abs(((last.X - first.X) * (first.Y - objPos.Y)) - ((first.X - objPos.X) * (last.Y - first.Y))) / Math.Sqrt((last.X - first.X) * (last.X - first.X) + (last.Y - first.Y) * (last.Y - first.Y));
+
+            if (dist >= tolerance) { return false; } else { return true; }
+        }
+    }
+    internal class PathChainer
+    {
+        public List<PathChain> Path = new List<PathChain> ();
+
+        public PathChainer(List<Vector3> path, GameObjectBase target)
+        {
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                Path.Add(new PathChain(path[i], path[i + 1], target));
+            }
+        }
+    }
     internal class MoveViewer : UtilityModule
     {
         public override string Author => "EKQRKotlin";
@@ -37,6 +114,8 @@ namespace SWRevamped.Miscellaneous
         internal Switch EnemiesMDSwitch = new Switch("Enemies", true);
         internal Switch AllyMDSwitch = new Switch("Allies", true);
         internal Switch SelfMDSwitch = new Switch("Self", true);
+
+        internal PathChainer? chain;
 
         internal override void Init()
         {
@@ -62,15 +141,23 @@ namespace SWRevamped.Miscellaneous
             foreach (GameObjectBase target in targets)
             {
                 List<Vector3> path = target.AIManager.GetNavPoints();
-                for (int i = 0; i < path.Count - 1; i++)
+                bool wOnPath = false;
+                if (path.Count > 1) 
                 {
-                    if (i + 1 == path.Count) break;
-                    if (i == 0)
-                        RenderFactory.DrawLine(LeagueNativeRendererManager.WorldToScreenSpell(target.Position).X, LeagueNativeRendererManager.WorldToScreenSpell(target.Position).Y, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).Y, 2, (target.OnMyTeam) ? (target.IsMe) ? new Color(23, 255, 58) : new Color(52, 128, 199) : new Color(252, 23, 65));
-                    else
-                        RenderFactory.DrawLine(LeagueNativeRendererManager.WorldToScreenSpell(path[i]).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i]).Y, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1]).Y, 2, (target.OnMyTeam) ? (target.IsMe) ? new Color(23, 255, 58) : new Color(52, 128, 199) : new Color(252, 23, 65));
-                    
-
+                    chain = new PathChainer(path, target);
+                    foreach (PathChain chainPiece in chain.Path)
+                    {
+                        if (!wOnPath && !chainPiece.OnPath())
+                            continue;
+                        if (chainPiece.OnPath())
+                        {
+                            wOnPath = true;
+                            RenderFactory.DrawLine(chainPiece.GetObjPos().X, chainPiece.GetObjPos().Y, chainPiece.GetSecond().X, chainPiece.GetSecond().Y, 2, (target.OnMyTeam) ? (target.IsMe) ? new Color(23, 255, 58) : new Color(52, 128, 199) : new Color(252, 23, 65));
+                        } else
+                        {
+                            RenderFactory.DrawLine(chainPiece.GetFirst().X, chainPiece.GetFirst().Y, chainPiece.GetSecond().X, chainPiece.GetSecond().Y, 2, (target.OnMyTeam) ? (target.IsMe) ? new Color(23, 255, 58) : new Color(52, 128, 199) : new Color(252, 23, 65));
+                        }
+                    }
                 }
             }
         }
