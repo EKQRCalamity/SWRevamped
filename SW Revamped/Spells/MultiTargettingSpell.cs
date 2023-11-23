@@ -43,7 +43,6 @@ namespace SWRevamped.Spells
             Width = 0;
             Range = range;
             Speed = 0;
-            CastRange = range;
             CastTime = casttime;
             effectCalc = eCalc;
 
@@ -74,7 +73,7 @@ namespace SWRevamped.Spells
         {
             if (IsOn)
             {
-                List<GameObjectBase> targetList = UnitManager.EnemyChampions.Where(x => TargetCheck(x) && x.Distance < CastRange).ToList<GameObjectBase>();
+                List<GameObjectBase> targetList = UnitManager.EnemyChampions.Where(x => TargetCheck(x) && x.Distance < Range).ToList<GameObjectBase>();
                 foreach (GameObjectBase target in targetList)
                 {
                     if (TargetCheck(target) && SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && (UseCanKill) ? target.Health - effectCalc.GetValue(target) < 0 : true)
@@ -91,7 +90,7 @@ namespace SWRevamped.Spells
         {
             if (IsOn)
             {
-                List<GameObjectBase> targetList = UnitManager.EnemyChampions.Where(x => TargetCheck(x) && x.Distance < CastRange).ToList<GameObjectBase>();
+                List<GameObjectBase> targetList = UnitManager.EnemyChampions.Where(x => TargetCheck(x) && x.Distance < Range).ToList<GameObjectBase>();
                 foreach (GameObjectBase target in targetList)
                 {
                     if (TargetCheck(target) && SelfCheck(Getter.Me()) && Getter.Me().Mana >= MinMana.Value && (UseCanKill) ? target.Health - effectCalc.GetValue(target) < 0 : true)

@@ -111,7 +111,7 @@ namespace SWRevamped.Champions
         {
             MenuManagerProvider.AddTab(MainTab);
             EffectDrawer.Init();
-            new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q, Oasys.Common.Enums.GameEnums.SpellSlot.Q, QCalc, QWidth, QRange, QSPeed, QRange, 0.05F, false, x => x.IsAlive, x => x.IsAlive, x => Getter.Me().Position, Color.Blue, 90, Prediction.MenuSelected.HitChance.VeryHigh, false, true, true, new(true, 2, 0));
+            new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q, QCalc, QWidth, QRange, QSPeed, x => x.IsAlive, x => x.IsAlive, x => Getter.Me().Position, Color.Blue, 90, new CollisionCheck(true, new() { new(1, CollisionModes.HeroMinion, CollLogic.Max) }), Prediction.MenuSelected.HitChance.VeryHigh, false, true, true, 0f);
             new BuffSpell(Oasys.SDK.SpellCasting.CastSlot.W, Oasys.Common.Enums.GameEnums.SpellSlot.W, WCalc, WRange, WCastTime, x => x.IsAlive, x => x.IsAlive, x => Getter.Me().Position, Color.Green, 130, 5, 80, true);
         }
     }

@@ -132,89 +132,81 @@ namespace SWRevamped.Champions
             EffectDrawer.Init();
             new LineSpell(
                 Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 QCalc,
                 QWidth,
                 QRange,
                 QSpeed,
-                QRange,
-                QCastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Purple,
                 65,
+                new CollisionCheck(false, new()),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 true,
                 false,
-                new CollisionCheck(true, 99999, 0)
+                QCastTime,
+                false
                 );
             new CircleSpell(
                 Oasys.SDK.SpellCasting.CastSlot.W,
-                Oasys.Common.Enums.GameEnums.SpellSlot.W,
                 WCalc,
                 WRadius,
                 WRadius,
                 100000,
-                WRadius,
-                WCastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance < WRadius,
                 x => Getter.Me().Position,
                 Color.Blue,
                 75,
+                new CollisionCheck(false, new()),
                 Prediction.MenuSelected.HitChance.High,
                 false,
                 true,
                 false,
-                new CollisionCheck(true, 99999, 0),
-                4
+                WCastTime,
+                false,
+                6
                 );
             new CircleSpell(
                 Oasys.SDK.SpellCasting.CastSlot.E,
-                Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
                 ERadius,
                 ERange,
                 ESpeed,
-                ERange,
-                ECastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Red,
                 110,
+                new CollisionCheck(false, new()),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 true,
                 false,
-                new CollisionCheck(true, 99999, 0),
+                ECastTime,
+                false,
                 3
                 );
             R = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.R,
-                Oasys.Common.Enums.GameEnums.SpellSlot.R,
                 RCalc,
                 RWidth,
                 RRange,
                 RSpeed,
-                RRange,
-                RCastTime,
-                true,
                 x => x.IsAlive,
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Magenta,
                 100,
+                new CollisionCheck(false, new()),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 0, 0),
-                2
+                RCastTime,
+                false,
+                7
                 );
             new MultiClassSpell(new SpellBase[] { R }, new Func<GameObjectBase, bool>[] { x => !Getter.RSpell.SpellData.SpellName.Contains("VexR2", StringComparison.OrdinalIgnoreCase) });
 
@@ -225,7 +217,6 @@ namespace SWRevamped.Champions
 
         private Task UpdateRRange()
         {
-            R.CastRange = Range[Getter.RLevel];
             R.Range = Range[Getter.RLevel];
             return Task.CompletedTask;
         }

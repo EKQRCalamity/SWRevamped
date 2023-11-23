@@ -173,44 +173,38 @@ namespace SWRevamped.Champions
             EffectDrawer.Init();
 
             LineSpell qSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 QCalc,
                 160,
                 825,
                 1400,
-                825,
-                0,
-                false,
                 x => x.IsAlive,
-                x => x.IsAlive && x.Distance < 825,
+                x => x.IsAlive,
                 x => QPosition(),
                 Color.Blue,
                 50,
+                new(false, new()),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 true,
                 true,
                 true,
-                new CollisionCheck(true, 999, 0));
-            CircleSpell wSpell = new CircleSpell(Oasys.SDK.SpellCasting.CastSlot.W,
-                Oasys.Common.Enums.GameEnums.SpellSlot.W,
+                0.0f,
+                false,
+                6);
+            PositionCenteredSpell wSpell = new(Oasys.SDK.SpellCasting.CastSlot.W,
                 WCalc,
                 225,
-                225,
-                10000,
-                225,
-                0,
-                false,
                 x => x.IsAlive,
-                x => x.IsAlive && x.DistanceTo(QPosition()) < 225,
+                x => x.IsAlive,
                 x => QPosition(),
                 Color.Red,
                 80,
-                Prediction.MenuSelected.HitChance.VeryHigh,
+                new CollisionCheck(true, new() { new(0, CollisionModes.Hero, CollLogic.Min) }),
                 true,
                 true,
                 true,
-                new CollisionCheck(true, 9999, 0),
-                4);
+                0f,
+                false,
+                5);
             BuffSpell eSpell = new BuffSpell(Oasys.SDK.SpellCasting.CastSlot.E,
                 Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
@@ -223,47 +217,21 @@ namespace SWRevamped.Champions
                 60,
                 3,
                 70);
-            CircleSpell rSpell = new CircleSpell(Oasys.SDK.SpellCasting.CastSlot.R,
-                Oasys.Common.Enums.GameEnums.SpellSlot.R,
+            PositionCenteredSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
                 RCalc,
-                415,
-                415,
-                100000,
-                415,
-                0.5F,
-                false,
+                400,
                 x => x.IsAlive,
-                x => x.IsAlive && x.DistanceTo(QPosition()) < 415,
+                x => x.IsAlive,
                 x => QPosition(),
-                Color.Orange,
+                Color.OrangeRed,
                 100,
-                Prediction.MenuSelected.HitChance.VeryHigh,
+                new CollisionCheck(true, new() { new(2, CollisionModes.Hero, CollLogic.Min) }),
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 9999, 3),
-                7);
-            MainTab.AddItem(DrawWRangeSwitch);
-            MainTab.AddItem(DrawRRangeSwitch);
-            CoreEvents.OnCoreRender += DrawRanges;
-        }
-
-        private void DrawRanges()
-        {
-            if (Getter.WLevel >= 1)
-            {
-                if (DrawWRangeSwitch.IsOn)
-                {
-                    RenderFactory.DrawNativeCircle(QPosition(), 225, Color.Blue, 2);
-                }
-            }
-            if (Getter.RLevel >= 1)
-            {
-                if (DrawRRangeSwitch.IsOn)
-                {
-                    RenderFactory.DrawNativeCircle(QPosition(), 415, Color.Red, 2);
-                }
-            }
+                0.25f,
+                false,
+                4);
         }
     }
 }

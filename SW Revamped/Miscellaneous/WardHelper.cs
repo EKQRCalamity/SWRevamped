@@ -125,7 +125,6 @@ namespace SWRevamped.Miscellaneous
                             SpellCastSlot slot = GetCastSlotFromInv(wardItemIDs[i]);
                             if (slot != SpellCastSlot.Summoner2)
                             {
-                                Logger.Log($"{SpellCastSlot2CastSlot(slot)} | T");
                                 SpellCastProvider.CastSpell(SpellCastSlot2CastSlot(slot), ward.ClickPosition);
                                 break;
                             }
@@ -138,7 +137,6 @@ namespace SWRevamped.Miscellaneous
                         SpellCastSlot slot = GetCastSlotFromInv(ItemID.Control_Ward, false);
                         if (slot != SpellCastSlot.Summoner2)
                         {
-                            Logger.Log($"{SpellCastSlot2CastSlot(slot)} | T2");
                             SpellCastProvider.CastSpell(SpellCastSlot2CastSlot(slot), ward.ClickPosition);
                         }
                     }
@@ -152,7 +150,6 @@ namespace SWRevamped.Miscellaneous
         {
             foreach (Item item in Getter.MeHero.Inventory.GetItemList())
             {
-                Logger.Log(item.ID);
                 if (item.ID == itemID && ((charge)? item.Charges > 0 : true))
                     return item.SpellCastSlot;
             }

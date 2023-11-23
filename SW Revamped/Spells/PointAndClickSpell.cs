@@ -52,7 +52,6 @@ namespace SWRevamped.Spells
             Width = 0;
             Range = range;
             Speed = speed;
-            CastRange = castrange;
             CastTime = casttime;
             UseCanKill = useCanKill;
             effectCalc = eCalc;
@@ -124,7 +123,7 @@ namespace SWRevamped.Spells
 
         private Task HarassInput()
         {
-            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
+            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < Range)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < Range);
             if (target == null || !IsOn || !HarassIsOn.IsOn)
                 return Task.CompletedTask;
             if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)
@@ -161,7 +160,7 @@ namespace SWRevamped.Spells
 
         private Task ComboInput()
         {
-            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
+            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => TargetCheck(x) && x.Distance < Range)) : AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < Range);
             if (target == null || !IsOn)
                 return Task.CompletedTask;
             if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target) && Getter.Me().Mana >= MinMana.Value)

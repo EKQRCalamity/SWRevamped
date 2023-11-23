@@ -1,7 +1,9 @@
 ﻿using Oasys.Common.Enums.GameEnums;
 using Oasys.Common.GameObject;
+using Oasys.Common.GameObject.Clients;
 using Oasys.Common.Menu;
 using Oasys.Common.Menu.ItemComponents;
+using Oasys.SDK;
 using Oasys.SDK.SpellCasting;
 using System;
 using System.Collections.Generic;
@@ -13,18 +15,75 @@ using System.Windows.Forms;
 
 namespace SWRevamped.Base
 {
+    internal enum SpellCastMode
+    {
+        Spam,
+        AfterAutoAttack,
+        BeforeAutoAttack
+    }
+
+    internal enum CollisionModes
+    {
+        Hero,
+        Minion,
+        HeroMinion,
+        None
+    }
+
+    internal enum TargetModes
+    {
+        Hero,
+        Minion,
+        HeroMinion
+    }
+
+    internal enum CollLogic
+    {
+        Min,
+        Max
+    }
+
+    internal class PredOut
+    {
+        internal Prediction.MenuSelected.PredictionOutput Prediction;
+        internal GameObjectBase Target;
+        internal bool Failed;
+
+        public PredOut(Prediction.MenuSelected.PredictionOutput pred, GameObjectBase target, bool failed = false)
+        {
+            Prediction = pred;
+            Target = target;
+            Failed = failed;
+        }
+    }
+
+    internal class Coll
+    {
+        internal int Num => (CollisionCounter != null) ? CollisionCounter.Value : 0;
+        internal int _initn { get; private set; }
+        internal CollisionModes Mode { get; set; }
+        internal CollLogic Logic { get; set; }
+        internal Counter CollisionCounter { get; set; }
+        public Coll(int n, CollisionModes mode, CollLogic logic)
+        {
+            _initn = n;
+            Mode = mode;
+            Logic = logic;
+        }
+    }
+
     internal class CollisionCheck
     {
         internal bool Collision { get; private set; }
-        internal int MaxCollisionObjects { get; set; }
-        internal int MinCollisionObjects => (MinCollisionObjectsCounter != null) ? MinCollisionObjectsCounter.Value : 0;
+        internal List<Coll> CollisionObjects { get; set; }
         internal Counter MinCollisionObjectsCounter { get; private set; }
 
-        internal CollisionCheck(bool collision, int maxCollisionObjects, int minCollisionObjects = 0)
+        internal CollisionCheck(bool collision, List<Coll> collisions)
         {
             Collision = collision;
-            MaxCollisionObjects = maxCollisionObjects;
-            MinCollisionObjectsCounter = new Counter("Min Collisions", minCollisionObjects, 0, 5);
+            CollisionObjects = collisions;
+            Coll? minColl = collisions.Where(x => x.Logic == CollLogic.Min).FirstOrDefault();
+            MinCollisionObjectsCounter = new Counter("Min Collisions", (minColl != null)? minColl._initn : 0, 0, 5);
         }
     }
 
@@ -44,7 +103,6 @@ namespace SWRevamped.Base
         internal int Range;
         internal int Width;
         internal int Speed;
-        internal int CastRange;
         internal float CastTime;
 
         internal EffectCalc effectCalc;

@@ -116,26 +116,22 @@ namespace SWRevamped.Champions
             EffectDrawer.Init();
             LineSpell qSpell = new(
                 Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 QCalc,
                 QWidth,
                 QRange,
                 QSpeed,
-                QRange,
-                QCastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive,
                 x => Getter.Me().Position,
-                Color.Green,
-                95,
+                Color.Blue,
+                70,
+                new CollisionCheck(false, new()),
                 Prediction.MenuSelected.HitChance.VeryHigh,
+                true,
                 false,
-                false,
-                false,
-                new CollisionCheck(false, 0, 0),
-                7
-                );
+                true,
+                QCastTime,
+                false);
             SelfCastingSpell wSpell = new(
                 Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
@@ -154,24 +150,22 @@ namespace SWRevamped.Champions
                 );
             LineSpell eSpell = new(
                 Oasys.SDK.SpellCasting.CastSlot.E,
-                Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
                 EWidth,
                 ERange,
                 ESpeed,
-                ERange,
-                ECastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Green,
-                95,
+                70,
+                new CollisionCheck(true, new() { new Coll(0, CollisionModes.Minion, CollLogic.Max)}),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
+                true,
+                ECastTime,
                 false,
-                new CollisionCheck(true, 0, 0),
                 8
                 );
             DashSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,

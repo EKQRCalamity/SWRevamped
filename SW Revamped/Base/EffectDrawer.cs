@@ -223,6 +223,8 @@ namespace SWRevamped.Base
 
         internal Switch ShowOnHPBar { get; set; }
 
+        internal Group DrawGroup { get; set; }
+
         internal EffectCalc Calculator { get; private set; }
 
         internal bool ColorEquals(Color color, Color otherColor)
@@ -283,7 +285,8 @@ namespace SWRevamped.Base
             IsOnSwitch = new Switch("Drawings", _isOn);
             ShowNameSwitch = new Switch("Show Name", ShowName);
             Calculator = calculator;
-            InitMenu(mainGroup, new Group("Effect Draws"));
+            DrawGroup = new Group("Effect Draws");
+            InitMenu(mainGroup, DrawGroup);
         }
 
         public Effect(string origName, bool isOn, int prio, int drawrange, Tab mainTab, Group mainGroup, EffectCalc calculator, Color color, Func<GameObjectBase, bool> isOnSelfCheck)
@@ -298,7 +301,8 @@ namespace SWRevamped.Base
             IsOnSwitch = new Switch("Drawings", _isOn);
             ShowNameSwitch = new Switch("Show Name", ShowName);
             Calculator = calculator;
-            InitMenu(mainGroup, new Group("Effect Draws"));
+            DrawGroup = new Group("Effect Draws");
+            InitMenu(mainGroup, DrawGroup);
         }
 
         public Effect(string origName, bool isOn, int prio, int drawrange, Tab mainTab, Group mainGroup, EffectCalc calculator, Color color, Func<GameObjectBase, bool> isOnSelfCheck, Func<GameObjectBase, bool> isOnTargetCheck)
@@ -313,7 +317,8 @@ namespace SWRevamped.Base
             IsOnSwitch = new Switch("Drawings", _isOn);
             ShowNameSwitch = new Switch("Show Name", ShowName);
             Calculator = calculator;
-            InitMenu(mainGroup, new Group("Effect Draws"));
+            DrawGroup = new Group("Effect Draws");
+            InitMenu(mainGroup, DrawGroup);
         }
 
         internal void InitMenu(Group group, Group draws)
@@ -762,11 +767,13 @@ namespace SWRevamped.Base
             List<Effect> buffs = friendlyEffects.Where(x => x.IsOn).ToList();
             foreach (Hero target in enemyTargets)
             {
-                DrawingsExtended.DrawMultiEffects(target, damages, showOnHPBar, TransparencyCounter.Value);
+                if (target != null)
+                    DrawingsExtended.DrawMultiEffects(target, damages, showOnHPBar, TransparencyCounter.Value);
             }
             foreach (Hero target in allyTargets)
             {
-                DrawingsExtended.DrawMultiEffects(target, buffs, showOnHPBar, TransparencyCounter.Value);
+                if (target != null)
+                    DrawingsExtended.DrawMultiEffects(target, buffs, showOnHPBar, TransparencyCounter.Value);
             }
         }
     }

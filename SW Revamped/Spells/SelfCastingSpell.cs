@@ -46,7 +46,6 @@ namespace SWRevamped.Spells
             Width = 0;
             Range = range;
             Speed = 0;
-            CastRange = range;
             CastTime = casttime;
             effectCalc = eCalc;
 

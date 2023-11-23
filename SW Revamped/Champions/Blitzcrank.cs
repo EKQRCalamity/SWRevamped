@@ -2,14 +2,8 @@
 using Oasys.Common.Menu;
 using Oasys.SDK;
 using SharpDX;
-using SharpDX.DXGI;
 using SWRevamped.Base;
 using SWRevamped.Spells;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SWRevamped.Champions
 {
@@ -93,27 +87,24 @@ namespace SWRevamped.Champions
             MenuManagerProvider.AddTab(MainTab);
             EffectDrawer.Init();
             LineSpell qSpell = new(Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 QCalc,
                 QWidth,
                 QRange,
                 QSpeed,
-                QRange,
-                QCastTime,
-                false,
                 x => x.IsAlive,
-                x => x.IsAlive && x.Distance < QRange,
+                x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Red,
                 100,
+                new CollisionCheck(true, new() { new(0, CollisionModes.HeroMinion, CollLogic.Max) }),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
-                true,
                 false,
-                new CollisionCheck(true, 0, 0),
-                9
-
+                false,
+                QCastTime,
+                false
                 );
+
             PointAndClickSpell eSpell = new(Oasys.SDK.SpellCasting.CastSlot.E,
                 Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
@@ -132,24 +123,23 @@ namespace SWRevamped.Champions
                 false,
                 3);
             CircleSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
-                Oasys.Common.Enums.GameEnums.SpellSlot.R,
                 RCalc,
                 RRadius,
                 RRadius,
                 100000,
-                RRadius,
-                RCastTime,
-                true,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance < RRadius,
                 x => Getter.Me().Position,
                 Color.Orange,
                 100,
+                new CollisionCheck(true, new() { new(1, CollisionModes.Hero, CollLogic.Min)}),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 9999, 0));
+                RCastTime,
+                false
+                );
 
         }
     }

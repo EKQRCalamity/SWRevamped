@@ -102,23 +102,22 @@ namespace SWRevamped.Champions
             MenuManagerProvider.AddTab(MainTab);
             EffectDrawer.Init();
             LineSpell qSpell = new(Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
-                QCalc, 160,
+                QCalc, 
+                160,
                 1100,
                 2000,
-                1100,
-                0.25F,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Red,
-                65,
+                80,
+                new(true, new() { new(0, CollisionModes.Minion, CollLogic.Min) }),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 0, 0));
+                0.25F
+                );
             ActivateSpell wSpell = new(Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
                 WCalc,
@@ -132,43 +131,40 @@ namespace SWRevamped.Champions
                 8,
                 4);
             CircleSpell eSpell = new(Oasys.SDK.SpellCasting.CastSlot.E,
-                Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
                 350,
                 350,
                 1000,
-                350,
-                0.25F,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance < 350,
                 x => Getter.Me().Position,
                 Color.Blue,
                 35,
+                new(false, new()), 
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
                 false,
-                new CollisionCheck(false, 0, 0), 6);
+                0.25F,
+                false,
+                3);
             CircleSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
-                Oasys.Common.Enums.GameEnums.SpellSlot.R,
                 RCalc,
                 550,
                 550,
-                100000,
-                550,
-                0.25F,
-                false,
+                0,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance < 550,
                 x => Getter.Me().Position,
                 Color.Blue,
                 200,
+                new CollisionCheck(true, new() { new(2, CollisionModes.Hero, CollLogic.Min) }),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 10000, 2), 6);
+                0.25F
+                );
         }
     }
 }

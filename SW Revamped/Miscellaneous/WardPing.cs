@@ -64,19 +64,14 @@ namespace SWRevamped.Miscellaneous
         {
             if (callbackObject.Name.Contains("SightWard", StringComparison.OrdinalIgnoreCase) || callbackObject.Name.Contains("JammerDevice", StringComparison.OrdinalIgnoreCase))
             {
-                Logger.Log("Test");
                 if (callbackObject.Distance > MaxDist.Value || callbackObject.Distance < MinDist.Value || !IsOnSwitch.IsOn)
                     return Task.CompletedTask;
-                Logger.Log("Test2");
                 if (IsFighting() && NoFight.IsOn)
                     return Task.CompletedTask;
-                Logger.Log("Test3");
                 if (callbackObject.Team != Getter.Me().Team && callbackObject.Team != Oasys.Common.Enums.GameEnums.TeamFlag.Unknown)
                 {
-                    Logger.Log("Test4");
                     if (callbackObject.IsVisible && callbackObject.IsAlive && ((GameEngine.GameTime) - (LastPing)) > PingDelay.Value / 10)
                     {
-                        Logger.Log("Test5");
                         Thread.Sleep(TimeSpan.FromSeconds((double)PingDelay.Value / 1000));
                         if (callbackObject.Position.IsOnScreen())
                         {

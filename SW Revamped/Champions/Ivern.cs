@@ -85,24 +85,21 @@ namespace SWRevamped.Champions
             EffectDrawer.Init();
             LineSpell qSpell = new(
                 Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 QCalc,
                 QWidth,
                 QRange,
                 QSpeed,
-                QRange,
-                QCastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive && x.IsValidTarget(),
                 x => Getter.Me().Position,
                 Color.Red,
                 QMana,
+                new(true, new() { new(0, CollisionModes.HeroMinion, CollLogic.Max)}),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 0, 0)
+                QCastTime
             );
 
             MainTab.AddGroup(WSpellGroup);

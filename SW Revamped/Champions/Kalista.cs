@@ -63,7 +63,7 @@ namespace SWRevamped.Champions
             {
                 damage = BaseDamage[Getter.ELevel] + (ADScaling * Getter.TotalAD + (Getter.TotalAP * APScaling));
                 damage += (AdditionalDamage[Getter.ELevel] + (AdditionalScaling[Getter.ELevel] * Getter.TotalAD) + (AdditionalAPScaling * Getter.TotalAP)) * (stacks - 1);
-                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage);
+                damage = DamageCalculator.CalculateActualDamage(Getter.Me(), target, damage) - 10;
             }
             return damage;
         }
@@ -99,24 +99,25 @@ namespace SWRevamped.Champions
 
             LineSpell qSpell = new LineSpell(
                 Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 qCalc,
                 QWidth,
                 QRange,
                 QSpeed,
-                QRange,
-                QCastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance <= QRange,
                 x => Getter.Me().Position,
                 Color.Blue,
                 80,
+                new CollisionCheck(true, new() { new(0, CollisionModes.HeroMinion, CollLogic.Max)}),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 true,
                 false,
-                new CollisionCheck(true, 1, 0));
+                QCastTime,
+                false,
+                5,
+                false,
+                SpellCastMode.AfterAutoAttack);
 
             WGroup.AddItem(WEnabled);
             MainTab.AddGroup(WGroup);

@@ -120,24 +120,22 @@ namespace SWRevamped.Champions
             EffectDrawer.Init();
             LineSpell qSpell = new LineSpell(
                 Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 QCalc,
                 QWidth,
                 QRange,
                 QSpeed,
-                QRange,
-                QCastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.OrangeRed,
                 QEnergy,
+                new CollisionCheck(true, new() { new(0, CollisionModes.HeroMinion, CollLogic.Max)}),
                 Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 true,
                 false,
-                new CollisionCheck(true, 0, 0),
+                QCastTime,
+                false,
                 9
                 );
             BuffSpell wSpell = new BuffSpell(
@@ -155,24 +153,21 @@ namespace SWRevamped.Champions
                 60);
             CircleSpell eSpell = new CircleSpell(
                 Oasys.SDK.SpellCasting.CastSlot.E,
-                Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
                 ERadius,
                 ERadius,
                 100000,
-                ERadius,
-                ECastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance < ERadius,
                 x => Getter.Me().Position,
                 Color.Red,
                 EEnergy,
+                new CollisionCheck(false, new()),
                 Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
                 true,
                 true,
                 true,
-                new CollisionCheck(true, 9999, 0)
+                ECastTime
                 );
             PointAndClickSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
                 SpellSlot.R,

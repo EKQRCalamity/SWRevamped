@@ -13,6 +13,7 @@ using SWRevamped.Base;
 using SWRevamped.Spells;
 using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -132,25 +133,25 @@ namespace SWRevamped.Champions
             EffectDrawer.Init();
             LineSpell qSpell = new LineSpell(
                 Oasys.SDK.SpellCasting.CastSlot.Q,
-                Oasys.Common.Enums.GameEnums.SpellSlot.Q,
                 qCalc,
                 QWidth,
                 QRange,
                 QSpeed,
-                QRange,
-                QCastTime,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance <= QRange,
                 x => Getter.Me().Position,
                 Color.Blue,
                 80,
+                new CollisionCheck(true, new() { new(0, CollisionModes.HeroMinion, CollLogic.Max)}),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 true,
                 false,
-                new CollisionCheck(true, 0, 0),
-                7);
+                QCastTime,
+                false,
+                7,
+                false,
+                SpellCastMode.AfterAutoAttack);
             SelfCastingSpell wSpell = new SelfCastingSpell(Oasys.SDK.SpellCasting.CastSlot.W,
                 Oasys.Common.Enums.GameEnums.SpellSlot.W,
                 wCalc,
@@ -168,47 +169,45 @@ namespace SWRevamped.Champions
                 );
             LineSpell eSpell = new LineSpell(
                 Oasys.SDK.SpellCasting.CastSlot.E,
-                Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 eCalc,
                 EWidth,
                 ERange,
                 ESpeed,
-                ERange,
-                ECastTime, 
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive && x.Distance <= ERange,
                 x => Getter.Me().Position,
                 Color.Red,
                 80,
+                new CollisionCheck(false, new()),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 true,
                 true,
-                new CollisionCheck(true, 99),
-                8
+                ECastTime,
+                false,
+                6
                 );
             r = new CircleSpell(
                 Oasys.SDK.SpellCasting.CastSlot.R,
-                Oasys.Common.Enums.GameEnums.SpellSlot.R,
                 rCalc,
                 RRadius,
                 10000,
                 3000,
-                10000,
-                RCastTime + 0.4F,
-                true,
                 x => x.IsAlive,
-                x => x.IsAlive && x.Distance < RTargetRange[Getter.RLevel],
+                x => x.IsAlive && x.Distance < RTargetRange[Getter.RLevel] && x.Distance > 400,
                 x => Getter.Me().Position,
                 Color.OrangeRed,
                 160,
+                new CollisionCheck(false, new()),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 999),
-                10
+                RCastTime,
+                true,
+                10,
+                false,
+                SpellCastMode.AfterAutoAttack
                 );
             Tab drawingsTab = MenuManagerProvider.GetTab("Drawings");
             drawingsTab.AddItem(DrawRangeCircle);
@@ -217,7 +216,6 @@ namespace SWRevamped.Champions
 
         private void Render()
         {
-            r.CastRange = RTargetRange[Getter.RLevel];
             r.Range = RTargetRange[Getter.RLevel];
             if (DrawRangeCircle.IsOn)
                 RenderFactory.DrawNativeCircle(Getter.Me().Position, CalculateRangeWithW(), new Color(Color.Red.R, Color.Red.G, Color.Red.B, 0.3F), 2, false);

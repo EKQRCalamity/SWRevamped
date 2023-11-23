@@ -47,7 +47,6 @@ namespace SWRevamped.Spells
             Width = 0;
             Range = range;
             Speed = 1000000;
-            CastRange = range;
             CastTime = casttime;
 
             effectCalc = eCalc;
@@ -69,11 +68,11 @@ namespace SWRevamped.Spells
         private Task ComboInput()
         {
 
-            GameObjectBase target = AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < CastRange);
+            GameObjectBase target = AllyTargetSelector.GetLowestHealthTarget(x => TargetCheck(x) && x.Distance < Range);
 
             if (prios != null)
             {
-                target = AllyTargetSelector.GetLowestHealthPrioTarget(x => TargetCheck(x) && x.Distance < CastRange, prios);
+                target = AllyTargetSelector.GetLowestHealthPrioTarget(x => TargetCheck(x) && x.Distance < Range, prios);
                 if (target == null)
                     return Task.CompletedTask;
                 if (prios.PriorityValues[target.Name] == -1 || prios.PriorityValues[target.Name] == 0)

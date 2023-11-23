@@ -2,6 +2,7 @@
 using Oasys.SDK.Tools;
 using SWRevamped.Miscellaneous;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,13 +39,16 @@ namespace SWRevamped.Base
             {
                 module.Init();
             }
-            if (LoadDebugger)
+            InitDebug();
+        }
+            
+        [Conditional("DEBUG")]
+        internal static void InitDebug()
+        {
+            MainTab.AddGroup(DebuggerGroup);
+            foreach (UtilityModule module in debuggerModules)
             {
-                MainTab.AddGroup(DebuggerGroup);
-                foreach (UtilityModule module in debuggerModules)
-                {
-                    module.Init();
-                }
+                module.Init();
             }
         }
     }

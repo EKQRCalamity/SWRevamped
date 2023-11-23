@@ -121,48 +121,44 @@ namespace SWRevamped.Champions
                 false,
                 0);
             LineSpell eSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.E,
-                Oasys.Common.Enums.GameEnums.SpellSlot.E,
                 ECalc,
                 260,
                 1100,
                 1400,
-                1100,
-                0.25F,
-                false,
                 x => x.IsAlive,
                 x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Blue,
                 70,
+                new CollisionCheck(false, new()),
                 Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 true,
                 false,
-                new CollisionCheck(true, 99999, 0),
-                4
+                0.25F,
+                false,
+                4,
+                false,
+                SpellCastMode.AfterAutoAttack
                 );
             LineSpell rSpell = new LineSpell(Oasys.SDK.SpellCasting.CastSlot.R,
-                Oasys.Common.Enums.GameEnums.SpellSlot.R,
                 RCalc,
                 320,
                 10000,
                 2000,
-                10000,
-                0.25F,
-                true,
                 x => x.IsAlive,
-                x => x.IsAlive && x.Distance > RRangeCounter.Value,
+                x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.OrangeRed,
                 100,
+                new(false, new()),
                 Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 false,
                 false,
-                new CollisionCheck(true, 99999, 0),
+                0.25F,
+                true,
                 5);
-            rSpell.SpellGroup.AddItem(RRangeCounter);
-            RRangeCounter.ValueFrequency = 50;
         }
     }
 }

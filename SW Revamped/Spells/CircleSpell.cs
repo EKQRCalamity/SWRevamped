@@ -1,18 +1,23 @@
-﻿using Oasys.Common.Enums.GameEnums;
-using Oasys.Common.GameObject;
-using Oasys.Common.Menu.ItemComponents;
-using Oasys.SDK.SpellCasting;
-using Oasys.SDK;
-using SWRevamped.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using SharpDX;
+using System.Windows.Forms;
+using Oasys.Common.Enums.GameEnums;
 using Oasys.Common.Extensions;
-using Oasys.SDK.Events;
+using Oasys.Common.GameObject;
 using Oasys.Common.Menu;
+using Oasys.Common.Menu.ItemComponents;
+using Oasys.SDK;
+using Oasys.SDK.Events;
+using Oasys.SDK.Rendering;
+using Oasys.SDK.SpellCasting;
+using Oasys.SDK.InputProviders;
+using Oasys.Common.Tools.Devices;
+using SharpDX;
+using SWRevamped.Base;
+using SWRevamped.Utility;
+
 using static Oasys.SDK.Prediction.MenuSelected;
 using Oasys.SDK.Tools;
 
@@ -20,201 +25,353 @@ namespace SWRevamped.Spells
 {
     internal class CircleSpell : SpellBase
     {
-        internal bool UseCanKill = false;
-        internal bool useMinCollisions = false;
+        internal bool Execute = false;
+        internal bool Friendly = false;
+        internal EffectCalc Calculator;
+        internal SpellCastMode SpellCastMode;
 
-        internal ModeDisplay _HitChance;
-        internal Counter MinMana;
-        internal bool IsFriendly;
+        internal bool InCombo = false;
 
-        internal CollisionCheck defaultCollisionCheck = new CollisionCheck(true, 999);
+        internal ModeDisplay hitChanceDisplay;
+        internal Counter minMana;
+        internal Switch useHarass;
+        internal Switch useLaneclear;
+        internal Switch useLasthit;
+        internal Switch drawRange;
+        internal ModeDisplay drawColorDisplay;
+        internal Group rangeDrawGroup = new Group("Range Drawings");
 
-        internal Switch HarassIsOn;
-        internal Switch LaneclearIsOn;
-        internal Switch LasthitIsOn;
+        internal Color color => Colors.NameToColor(drawColorDisplay.SelectedModeName);
+        internal HitChance hitChance => GetHitchanceFromName(hitChanceDisplay.SelectedModeName);
+
+        internal CollisionCheck collisionCheck;
         internal Func<GameObjectBase, Vector3> SourcePosition;
+        internal bool SourcePosDepend = false;
+        internal Func<GameObjectBase, bool> SelfCheck;
+        internal Func<GameObjectBase, bool> TargetCheck;
 
-        internal CircleSpell(CastSlot castSlot, SpellSlot spellSlot, EffectCalc eCalc, int width, int range, int speed, int castrange, float casttime, bool useCanKill, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, Color drawColor, int minMana, HitChance minHitChance, bool laneclear, bool harass, bool lasthit, CollisionCheck collisionCheck, int drawprio = 5, bool isFriendly = false)
+
+        internal CircleSpell(CastSlot castSlot, EffectCalc calculator, int radius, int range, int speed, Func<GameObjectBase, bool> selfCheck, Func<GameObjectBase, bool> targetCheck, Func<GameObjectBase, Vector3> sourcePosition, SharpDX.Color drawColor, int minmana, CollisionCheck collCheck, HitChance minHitChance, bool laneclear = false, bool lasthit = false, bool harass = false, float casttime = 0.0f, bool execute = false, int drawPrio = 5, bool friendlySpell = false, SpellCastMode spellCastMode = SpellCastMode.Spam, bool sourcePositionDepend = false)
         {
-            defaultCollisionCheck = collisionCheck;
-
-            if (defaultCollisionCheck.MinCollisionObjects > 0)
-            {
-                useMinCollisions = true;
-            }
-
-            IsFriendly = isFriendly;
-            Color drawcolor = (Color)drawColor;
-            MainTab = Getter.MainTab;
-            Slot = spellSlot;
-            SpellCastSlot = castSlot;
-            SpellGroup = new Group($"{SpellSlotToString()} Settings");
-
+            collisionCheck = collCheck;
+            Friendly = friendlySpell;
             SourcePosition = sourcePosition;
-            MainTab.AddGroup(SpellGroup);
-            SpellGroup.AddItem(IsOnSwitch);
-            _HitChance = new ModeDisplay() { Title = "Hitchance", ModeNames = new() { "Impossible", "Unknown", "OutOfRange", "Dashing", "Low", "Medium", "High", "VeryHigh", "Immobile" }, SelectedModeName = GetNameFromHitchance(minHitChance) };
-            SpellGroup.AddItem(_HitChance);
-            MinMana = new Counter("Min Mana", minMana, 0, 10000);
-            SpellGroup.AddItem(MinMana);
-            if (useMinCollisions)
-                SpellGroup.AddItem(defaultCollisionCheck.MinCollisionObjectsCounter);
-            HarassIsOn = new Switch() { Title = "Harass", IsOn = false };
-            LaneclearIsOn = new Switch() { Title = "Laneclear", IsOn = false };
-            LasthitIsOn = new Switch() { Title = "Lasthit", IsOn = false };
-            
-            Width = width;
+            SelfCheck = selfCheck;
+            TargetCheck = targetCheck;
+            Slot = Utility.Slots.CastSlotToSpellSlot(castSlot);
+            SpellCastSlot = castSlot;
+            Width = radius;
             Range = range;
             Speed = speed;
-            CastRange = castrange;
             CastTime = casttime;
-            UseCanKill = useCanKill;
-            effectCalc = eCalc;
+            Execute = execute;
+            Calculator = calculator;
+            SpellCastMode = spellCastMode;
+
+            // Menu stuff
+            MainTab = Getter.MainTab;
+            SpellGroup = new Group($"{SpellSlotToString()} Settings");
+            drawColorDisplay = new ModeDisplay() { Title = "Color", ModeNames = Oasys.SDK.ColorConverter.GetColors(), SelectedModeName = $"{Colors.ColorToName(drawColor)}" };
+            hitChanceDisplay = new ModeDisplay() { Title = "Hitchance", ModeNames = new() { "Impossible", "Unknown", "OutOfRange", "Dashing", "Low", "Medium", "High", "VeryHigh", "Immobile" }, SelectedModeName = GetNameFromHitchance(minHitChance) };
+            minMana = new Counter("Min Mana", minmana, 0, 1000);
+            drawRange = new Switch("Draw Range", true);
+
+            MainTab.AddGroup(SpellGroup);
+            SpellGroup.AddItem(IsOnSwitch);
+            SpellGroup.AddItem(hitChanceDisplay);
+            SpellGroup.AddItem(minMana);
+
+            if (collisionCheck.MinCollisionObjectsCounter.Value > 0)
+                SpellGroup.AddItem(collisionCheck.MinCollisionObjectsCounter);
+
+            useLaneclear = new Switch("Laneclear", laneclear);
+            useLasthit = new Switch("Lasthit", lasthit);
+            useHarass = new Switch("Harass", harass);
 
             if (laneclear)
             {
-                SpellGroup.AddItem(LaneclearIsOn);
-                LaneclearIsOn.IsOn = true;
+                SpellGroup.AddItem(useLaneclear);
             }
             if (lasthit)
             {
-                SpellGroup.AddItem(LasthitIsOn);
-                LasthitIsOn.IsOn = true;
+                SpellGroup.AddItem(useLasthit);
             }
             if (harass)
             {
-                SpellGroup.AddItem(HarassIsOn);
-                HarassIsOn.IsOn = true;
+                SpellGroup.AddItem(useHarass);
             }
-            Effect effect = new Effect($"{SpellSlotToString()}", true, drawprio, Range, MainTab, SpellGroup, effectCalc, drawColor);
-            EffectDrawer.Add(effect, IsFriendly);
-            SelfCheck = selfCheck;
-            TargetCheck = targetCheck;
+            if (Range < 3000)
+            {
+                rangeDrawGroup.AddItem(drawRange);
+                rangeDrawGroup.AddItem(drawColorDisplay);
+                SpellGroup.AddItem(rangeDrawGroup);
+            }
 
+            Effect effect = new Effect($"{SpellSlotToString()}", true, drawPrio, Range, MainTab, SpellGroup, Calculator, drawColor);
+            EffectDrawer.Add(effect, Friendly);
 
-
-            Init();
-        }
-
-        private void Init()
-        {
             CoreEvents.OnCoreMainInputAsync += ComboInput;
-            if (LasthitIsOn.IsOn)
+            CoreEvents.OnCoreLasthitInputAsync += LasthitInput;
+            CoreEvents.OnCoreHarassInputAsync += HarassInput;
+            CoreEvents.OnCoreLaneclearInputAsync += LaneclearInput;
+            CoreEvents.OnCoreRender += Render;
+            KeyboardProvider.OnKeyPress += OnPress;
+
+        }
+
+        private PredOut PredictSpell(GameObjectBase target, int minHits, int maxHits, CollisionModes mainTargetMode = CollisionModes.Hero)
+        {
+            Prediction.MenuSelected.PredictionOutput pred = GetPrediction(
+                    PredictionType.Circle,
+                    target,
+                    Range,
+                    Width,
+                    CastTime,
+                    Speed,
+                    (mainTargetMode == CollisionModes.None) ? false : true
+                );
+            if (mainTargetMode != CollisionModes.None)
             {
-                CoreEvents.OnCoreLasthitInputAsync += LasthitInput;
+                if (mainTargetMode == CollisionModes.Hero)
+                {
+                    return new PredOut(
+                            pred,
+                            target,
+                            (pred.HitChance >= hitChance
+                            && pred.CollisionObjects.Where(
+                                x => x.IsObject(ObjectTypeFlag.AIHeroClient)
+                                ).Count() >= minHits
+                            && pred.CollisionObjects.Where(
+                                x => x.IsObject(ObjectTypeFlag.AIHeroClient)
+                                ).Count() <= maxHits
+                            ) ? false : true
+                        );
+                }
+                else if (mainTargetMode == CollisionModes.Minion)
+                {
+                    return new PredOut(
+                            pred,
+                            target,
+                            (pred.HitChance >= hitChance
+                            && pred.CollisionObjects.Where(
+                                x => x.IsObject(ObjectTypeFlag.AIMinionClient)
+                                ).Count() >= minHits
+                            && pred.CollisionObjects.Where(
+                                x => x.IsObject(ObjectTypeFlag.AIMinionClient)
+                                ).Count() <= maxHits
+                            ) ? false : true
+                        );
+                }
+                else
+                {
+
+                    return new PredOut(
+                            pred,
+                            target,
+                            (pred.HitChance >= hitChance
+                            && pred.CollisionObjects.Count() >= minHits
+                            && pred.CollisionObjects.Count() <= maxHits
+                            ) ? false : true
+                        );
+                }
             }
-            if (HarassIsOn.IsOn)
+            else
             {
-                CoreEvents.OnCoreHarassInputAsync += HarassInput;
-            }
-            if (LaneclearIsOn.IsOn)
-            {
-                CoreEvents.OnCoreLaneclearInputAsync += LaneclearInput;
+                return new PredOut(
+                        pred,
+                        target,
+                        (pred.HitChance >= hitChance) ? false : true
+                    );
             }
         }
 
-        private Task LaneclearInput()
+        private int GetPoints(GameObjectBase target)
         {
-            List<GameObjectBase> targets = UnitManager.EnemyMinions.ToList<GameObjectBase>();
-            targets.AddRange(UnitManager.EnemyJungleMobs.ToList<GameObjectBase>());
-            targets.AddRange(UnitManager.AllyJungleMobs.ToList<GameObjectBase>());
-            targets = targets.OrderBy(x => x.Health).ToList<GameObjectBase>();
+            if (target == null || (!target.IsAlive || !target.IsZombie)) return 0;
+            int points = 0;
+            if (Calculator.CanKill(target)) points += 50;
+            points += (int)(Math.Floor(Calculator.GetValue(target) / target.Health) * 10);
+            points += (int)(Math.Min(25, Math.Floor((Range / SourcePosition(Getter.Me()).Distance(target.Position)) * 10)));
+            return points;
+        }
 
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange).FirstOrDefault();
+        private PredOut? PredictSpellAll(CollisionModes mainCollMode = CollisionModes.HeroMinion, TargetModes mainTargetMode = TargetModes.Hero)
+        {
 
-            if (target == null || !IsOn || !LaneclearIsOn.IsOn)
-                return Task.CompletedTask;
-            Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
-            if (defaultCollisionCheck.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
-                    return Task.CompletedTask;
-            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
+            List<PredOut> preds = new List<PredOut>();
+            if (mainTargetMode == TargetModes.Hero
+                || mainTargetMode == TargetModes.HeroMinion)
             {
-                if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target))  < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
+                foreach (GameObjectBase obj in (Friendly) ? UnitManager.AllyChampions : UnitManager.EnemyChampions)
                 {
-                    Vector3 pos = pred.CastPosition;
-                    Vector2 v2Pos = pos.ToW2S();
-                    if (!pos.IsOnScreen() && target.DistanceTo(SourcePosition(Getter.Me())) < Range)
-                        v2Pos = pos.ToWorldToMap();
-                    SpellCastProvider.CastSpell(SpellCastSlot, v2Pos, CastTime);
+                    Coll? MinColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Min && x.Mode == CollisionModes.Hero).FirstOrDefault();
+                    Coll? MaxColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Max && x.Mode == CollisionModes.Hero).FirstOrDefault();
+                    preds.Add(PredictSpell(obj, (MinColl != null) ? MinColl.Num : 0, (MaxColl != null) ? MaxColl.Num : 0));
+                }
+            }
+            if (mainTargetMode == TargetModes.Minion
+                || mainTargetMode == TargetModes.HeroMinion)
+            {
+                foreach (GameObjectBase obj in (Friendly) ? UnitManager.AllyMinions : UnitManager.EnemyMinions)
+                {
+                    Coll? MinColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Min && x.Mode == CollisionModes.Minion).FirstOrDefault();
+                    Coll? MaxColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Max && x.Mode == CollisionModes.Minion).FirstOrDefault();
+                    preds.Add(PredictSpell(obj, (MinColl != null) ? MinColl.Num : 0, (MaxColl != null) ? MaxColl.Num : 0));
+
+                }
+            }
+            HitChance highestHitChance = HitChance.Impossible;
+            foreach (PredOut prediction in preds)
+            {
+                if (!prediction.Failed && prediction.Prediction.HitChance > highestHitChance)
+                {
+                    highestHitChance = prediction.Prediction.HitChance;
+                }
+            }
+            return preds.Where(x => !x.Failed && x.Prediction.HitChance == highestHitChance && TargetCheck(x.Target) && x.Target.IsVisible).OrderBy(x => GetPoints(x.Target)).FirstOrDefault();
+        }
+
+        private void AfterAuto(float gameTime, GameObjectBase target)
+        {
+            if (SpellCastMode != SpellCastMode.AfterAutoAttack
+                || !SpellIsReady()
+                || !InCombo
+                || !IsOn)
+                return;
+
+            PredOut? bestTarget = PredictSpellAll();
+            if (bestTarget != null
+                && !bestTarget.Failed
+                && bestTarget.Prediction.HitChance >= hitChance
+                && SpellIsReady()
+                && SelfCheck(Getter.Me())
+                && Getter.Me().Distance(bestTarget.Target) < Getter.AARange)
+            {
+                // Handle execute spells
+                if ((!Execute) ? true : Calculator.CanKill(bestTarget.Target))
+                {
+                    SpellCastProvider.CastSpell(SpellCastSlot, bestTarget.Prediction.CastPosition, CastTime);
+                }
+            }
+        }
+
+        private Task BeforeAuto()
+        {
+            if (SpellCastMode != SpellCastMode.BeforeAutoAttack
+                || !SpellIsReady()
+                || !InCombo
+                || !IsOn)
+                return Task.CompletedTask;
+
+            PredOut? bestTarget = PredictSpellAll();
+            if (bestTarget != null
+                && !bestTarget.Failed
+                && bestTarget.Prediction.HitChance >= hitChance
+                && SpellIsReady()
+                && SelfCheck(Getter.Me())
+                && Getter.Me().Distance(bestTarget.Target) < Getter.AARange)
+            {
+                // Handle execute spells
+                if ((!Execute) ? true : Calculator.CanKill(bestTarget.Target))
+                {
+                    SpellCastProvider.CastSpell(SpellCastSlot, bestTarget.Prediction.CastPosition, CastTime);
                 }
             }
             return Task.CompletedTask;
         }
 
-        private Task HarassInput()
+        private void OnPress(Keys keyBeingPressed, Keyboard.KeyPressState pressState)
         {
-            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
-            if (target == null || !IsOn || HarassIsOn.IsOn)
-                return Task.CompletedTask;
-            Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
-            if (defaultCollisionCheck.Collision)
+            if (pressState == Keyboard.KeyPressState.Down && keyBeingPressed == Oasys.Common.Settings.Orbwalker.GetComboKey() && !InCombo)
             {
-                if ((pred.Collision) ? pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects : false || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
-                    return Task.CompletedTask;
+                InCombo = true;
             }
-            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
+            else if (pressState == Keyboard.KeyPressState.Up && keyBeingPressed == Oasys.Common.Settings.Orbwalker.GetComboKey() && InCombo)
             {
-                if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
-                {
-                    Vector3 pos = pred.CastPosition;
-                    Vector2 v2Pos = pos.ToW2S();
-                    if (!pos.IsOnScreen() && target.DistanceTo(SourcePosition(Getter.Me())) < Range)
-                        v2Pos = pos.ToWorldToMap();
-                    SpellCastProvider.CastSpell(SpellCastSlot, v2Pos, CastTime);
-                }
+                InCombo = false;
             }
-            return Task.CompletedTask;
         }
 
-        private Task LasthitInput()
+        private void Render()
         {
-            List<GameObjectBase> targets = UnitManager.EnemyMinions.ToList<GameObjectBase>();
-            targets.AddRange(UnitManager.EnemyJungleMobs.ToList<GameObjectBase>());
-            targets.AddRange(UnitManager.AllyJungleMobs.ToList<GameObjectBase>());
-            targets = targets.OrderBy(x => x.Health).ToList<GameObjectBase>();
-
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange).FirstOrDefault();
-
-            if (target == null || !IsOn || !LasthitIsOn.IsOn)
-                return Task.CompletedTask;
-            Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
-            if (defaultCollisionCheck.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || (useMinCollisions) ? pred.CollisionObjects.Count < defaultCollisionCheck.MinCollisionObjects : false)
-                    return Task.CompletedTask;
-            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
-            {
-                if (target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 && SelfCheck(Getter.Me()) && TargetCheck(target))
-                {
-                    Vector3 pos = pred.CastPosition;
-                    Vector2 v2Pos = pos.ToW2S();
-                    if (!pos.IsOnScreen() && target.DistanceTo(SourcePosition(Getter.Me())) < Range)
-                        v2Pos = pos.ToWorldToMap();
-                    SpellCastProvider.CastSpell(SpellCastSlot, v2Pos, CastTime);
-                }
-            }
-            return Task.CompletedTask;
+            if (!Getter.Me().IsAlive || !drawRange.IsOn || Range >= 3000) return;
+            RenderFactory.DrawNativeCircle(Getter.Me().Position, Range, color, 2);
         }
 
         private Task ComboInput()
         {
-            GameObjectBase target = (!IsFriendly) ? Oasys.Common.Logic.TargetSelector.GetBestHeroTarget(null, (x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange)) : AllyTargetSelector.GetLowestHealthTarget(x => x.DistanceTo(SourcePosition(Getter.Me())) < CastRange);
-            if (target == null || !IsOn)
+            if (!IsOn)
                 return Task.CompletedTask;
-            Oasys.SDK.Prediction.MenuSelected.PredictionOutput pred = Oasys.SDK.Prediction.MenuSelected.GetPrediction(PredictionType.Circle, target, Range, Width, CastTime, Speed, SourcePosition(Getter.Me()), defaultCollisionCheck.Collision);
-            if (defaultCollisionCheck.Collision)
-                if (pred.CollisionObjects.Count > defaultCollisionCheck.MaxCollisionObjects || ((useMinCollisions) ? pred.CollisionObjects.Where(x => x.IsObject(ObjectTypeFlag.AIHeroClient)).ToList().Count < defaultCollisionCheck.MinCollisionObjects : false))
-                    return Task.CompletedTask;
-            if (pred.HitChance >= GetHitchanceFromName(_HitChance.SelectedModeName) && SpellIsReady() && Getter.Me().Mana >= MinMana.Value)
+            PredOut? bestTarget = PredictSpellAll();
+            if (bestTarget != null
+                && !bestTarget.Failed
+                && bestTarget.Prediction.HitChance >= hitChance
+                && SpellIsReady()
+                && SelfCheck(Getter.Me())
+                && (SpellCastMode == SpellCastMode.Spam || (
+                    Getter.Me().Distance(bestTarget.Target) >= Getter.AARange
+                )))
             {
-                if (UseCanKill ? target.Health - (effectCalc.GetValue(target) + Utility.CalculatorEx.Collector(target)) < 0 : true && SelfCheck(Getter.Me()) && TargetCheck(target))
+                // Handle execute spells
+                if ((!Execute) ? true : Calculator.CanKill(bestTarget.Target))
                 {
-                    Vector3 pos = pred.CastPosition;
-                    Vector2 v2Pos = pos.ToW2S();
-                    if (!pos.IsOnScreen() && target.DistanceTo(SourcePosition(Getter.Me())) < Range)
-                        v2Pos = pos.ToWorldToMap();
-                    SpellCastProvider.CastSpell(SpellCastSlot, v2Pos, CastTime);
+                    SpellCastProvider.CastSpell(SpellCastSlot, bestTarget.Prediction.CastPosition, CastTime);
                 }
+            }
+            return Task.CompletedTask;
+        }
+        private Task HarassInput()
+        {
+            if (!IsOn || !useHarass.IsOn)
+                return Task.CompletedTask;
+            PredOut? bestTarget = PredictSpellAll();
+            if (bestTarget != null
+                && !bestTarget.Failed
+                && bestTarget.Prediction.HitChance >= hitChance
+                && SelfCheck(Getter.Me())
+                && SpellIsReady())
+            {
+                // Handle execute spells
+                if ((!Execute) ? true : Calculator.CanKill(bestTarget.Target))
+                {
+                    SpellCastProvider.CastSpell(SpellCastSlot, bestTarget.Prediction.CastPosition, CastTime);
+                }
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task LaneclearInput()
+        {
+            if (!IsOn || !useLaneclear.IsOn)
+                return Task.CompletedTask;
+            PredOut? bestTarget = PredictSpellAll(CollisionModes.HeroMinion, TargetModes.Minion);
+            if (bestTarget != null
+                && !bestTarget.Failed
+                && bestTarget.Prediction.HitChance >= hitChance
+                && SpellIsReady()
+                && SelfCheck(Getter.Me())
+                && !Execute)
+            {
+                SpellCastProvider.CastSpell(SpellCastSlot, bestTarget.Prediction.CastPosition, CastTime);
+            }
+            return Task.CompletedTask;
+        }
+
+
+        private Task LasthitInput()
+        {
+            if (!IsOn || !useLasthit.IsOn)
+                return Task.CompletedTask;
+            PredOut? bestTarget = PredictSpellAll(CollisionModes.HeroMinion, TargetModes.Minion);
+            if (bestTarget != null
+                && !bestTarget.Failed
+                && bestTarget.Prediction.HitChance >= hitChance
+                && SpellIsReady()
+                && SelfCheck(Getter.Me())
+                && !Execute)
+            {
+                if (Calculator.CanKill(bestTarget.Target))
+                    SpellCastProvider.CastSpell(SpellCastSlot, bestTarget.Prediction.CastPosition, CastTime);
             }
             return Task.CompletedTask;
         }
