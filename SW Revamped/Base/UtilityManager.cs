@@ -22,7 +22,8 @@ namespace SWRevamped.Base
             new MoveViewer(),
             new WardHelper(),
             new WardPing(),
-            new CollectorDrawings()
+            new CollectorDrawings(),
+            new ScripterDetector(),
         };
         internal static List<UtilityModule> debuggerModules = new List<UtilityModule>()
         {

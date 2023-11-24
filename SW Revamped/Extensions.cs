@@ -18,6 +18,17 @@ namespace SWRevamped
             return list;
         }
 
+        internal static bool ListEquals<T>(this List<T> first, List<T> second)
+        {
+            if (first.Count() != second.Count()) return false;
+            for (int i = 0; i < first.Count(); i++)
+            {
+                if (!first[i].Equals(second[i]))
+                    return false;
+            }
+            return true;
+        }
+
         internal static bool Equals(this Color color, Color otherColor)
         {
             return color.A == otherColor.A && color.B == otherColor.B && color.G == otherColor.G && color.A == otherColor.A;
