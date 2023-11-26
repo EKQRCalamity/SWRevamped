@@ -95,7 +95,7 @@ namespace SWRevamped.Miscellaneous
             } else if (change < 6)
             {
                 return SLevel.Good;
-            } else if (change < 9)
+            } else if (change < 8)
             {
                 return SLevel.Pro;
             } else if (change < 14)
@@ -109,7 +109,6 @@ namespace SWRevamped.Miscellaneous
 
         private static Task Tick()
         {
-            Logger.Log(GameEngine.GameTime);
             tick++;
             for (int i = 0; i < enemies.Count; i++)
             {

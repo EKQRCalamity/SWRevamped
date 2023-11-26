@@ -129,8 +129,9 @@ namespace SWRevamped.Spells
 
         }
 
-        private PredOut PredictSpell(GameObjectBase target, int minHits, int maxHits, CollisionModes mainTargetMode = CollisionModes.Hero)
+        private PredOut PredictSpell(GameObjectBase target, int minHits, int maxHits, CollisionModes mainTargetMode = CollisionModes.HeroMinion)
         {
+
             Prediction.MenuSelected.PredictionOutput pred = GetPrediction(
                     PredictionType.Line,
                     target,
@@ -140,58 +141,78 @@ namespace SWRevamped.Spells
                     Speed,
                     (mainTargetMode == CollisionModes.None)? false : true
                 );
+            if (maxHits == 0)
+                maxHits = 1;
             if (mainTargetMode != CollisionModes.None)
             {
                 if (mainTargetMode == CollisionModes.Hero)
                 {
-                    return new PredOut(
+                    PredOut output = new PredOut(
                             pred,
                             target,
-                            (pred.HitChance >= hitChance 
-                            && pred.CollisionObjects.Where(
-                                x => x.IsObject(ObjectTypeFlag.AIHeroClient)
-                                ).Count() + 1 >= minHits
-                            && pred.CollisionObjects.Where(
-                                x => x.IsObject(ObjectTypeFlag.AIHeroClient)
-                                ).Count() <= maxHits
-                            && (Range >= 3000) ? target.Distance > MinUsageDist.Value : true
-                            ) ? false : true
+                            true
                         );
-                } else if (mainTargetMode == CollisionModes.Minion)
+                    if ((pred.HitChance >= hitChance)
+                        && ((collisionCheck.Collision) ? (pred.CollisionObjects.Where(x => x.IsObject(ObjectTypeFlag.AIHeroClient)).Count() + 1 > minHits) : true)
+                        && ((collisionCheck.Collision) ? (pred.CollisionObjects.Where(x => x.IsObject(ObjectTypeFlag.AIHeroClient)).Count() + 1 <= maxHits) : true)
+                        && ((Range >= 3000) ? target.Distance >= MinUsageDist.Value : true))
+                    {
+                        output.Failed = false;
+                    }
+                    else
+                    {
+                        output.Failed = true;
+                    }
+                    return output;
+                }
+                else if (mainTargetMode == CollisionModes.Minion)
                 {
-                    return new PredOut(
+                    PredOut output = new PredOut(
                             pred,
                             target,
-                            (pred.HitChance >= hitChance
-                            && pred.CollisionObjects.Where(
-                                x => x.IsObject(ObjectTypeFlag.AIMinionClient)
-                                ).Count() + 1 >= minHits
-                            && pred.CollisionObjects.Where(
-                                x => x.IsObject(ObjectTypeFlag.AIMinionClient)
-                                ).Count() <= maxHits
-                            && (Range >= 3000) ? target.Distance > MinUsageDist.Value : true
-                            ) ? false : true
+                            true
                         );
-                } else
+                    if ((pred.HitChance >= hitChance)
+                        && ((collisionCheck.Collision) ? (pred.CollisionObjects.Where(x => x.IsObject(ObjectTypeFlag.AIMinionClient)).Count() + 1 > minHits) : true)
+                        && ((collisionCheck.Collision) ? (pred.CollisionObjects.Where(x => x.IsObject(ObjectTypeFlag.AIMinionClient)).Count() + 1 <= maxHits) : true)
+                        && ((Range >= 3000) ? target.Distance >= MinUsageDist.Value : true))
+                    {
+                        output.Failed = false;
+                    }
+                    else
+                    {
+                        output.Failed = true;
+                    }
+                    return output;
+                }
+                else
                 {
 
-                    return new PredOut(
+                    PredOut output = new PredOut(
                             pred,
                             target,
-                            (pred.HitChance >= hitChance
-                            && pred.CollisionObjects.Count() + 1 >= minHits
-                            && pred.CollisionObjects.Count() <= maxHits
-                            && (Range >= 3000) ? target.Distance > MinUsageDist.Value : true
-                            ) ? false : true
+                            true
                         );
+                    if ((pred.HitChance >= hitChance)
+                        && ((collisionCheck.Collision) ? (pred.CollisionObjects.Count() + 1 > minHits) : true)
+                        && ((collisionCheck.Collision) ? (pred.CollisionObjects.Count() + 1 <= maxHits) : true)
+                        && ((Range >= 3000) ? target.Distance >= MinUsageDist.Value : true))
+                    {
+                        output.Failed = false;
+                    }
+                    else
+                    {
+                        output.Failed = true;
+                    }
+                    return output;
                 }
-            } 
+            }
             else
             {
                 return new PredOut(
                         pred,
                         target,
-                        (pred.HitChance >= hitChance)? false : true
+                        (pred.HitChance >= hitChance) ? false : true
                     );
             }
         }
@@ -221,7 +242,6 @@ namespace SWRevamped.Spells
                         Coll? MinColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Min && x.Mode == CollisionModes.Hero).FirstOrDefault();
                         Coll? MaxColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Max && x.Mode == CollisionModes.Hero).FirstOrDefault();
                         preds.Add(PredictSpell(obj, (MinColl != null) ? MinColl.Num : 0, (MaxColl != null) ? MaxColl.Num : 0, mainCollMode));
-
                     }
                 }
             }
@@ -321,6 +341,8 @@ namespace SWRevamped.Spells
             if (!IsOn)
                 return Task.CompletedTask;
             PredOut? bestTarget = PredictSpellAll();
+            Logger.Log(bestTarget);
+            Logger.Log(bestTarget.Failed);
             if (bestTarget != null 
                 && !bestTarget.Failed
                 && bestTarget.Prediction.HitChance >= hitChance

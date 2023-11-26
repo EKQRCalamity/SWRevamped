@@ -151,23 +151,20 @@ namespace SWRevamped.Champions
                 WEnergy,
                 6,
                 60);
-            CircleSpell eSpell = new CircleSpell(
-                Oasys.SDK.SpellCasting.CastSlot.E,
+            PositionCenteredSpell eSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
                 ECalc,
                 ERadius,
-                ERadius,
-                100000,
                 x => x.IsAlive,
-                x => x.IsAlive && x.Distance < ERadius,
+                x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Red,
-                EEnergy,
+                100,
                 new CollisionCheck(false, new()),
-                Oasys.SDK.Prediction.MenuSelected.HitChance.VeryHigh,
                 true,
                 true,
                 true,
-                ECastTime
+                0.25f,
+                false
                 );
             PointAndClickSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
                 SpellSlot.R,

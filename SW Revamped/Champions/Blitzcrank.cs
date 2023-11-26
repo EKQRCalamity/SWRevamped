@@ -122,22 +122,19 @@ namespace SWRevamped.Champions
                 true,
                 false,
                 3);
-            CircleSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
+            PositionCenteredSpell rSpell = new(Oasys.SDK.SpellCasting.CastSlot.R,
                 RCalc,
                 RRadius,
-                RRadius,
-                100000,
                 x => x.IsAlive,
-                x => x.IsAlive && x.Distance < RRadius,
+                x => x.IsAlive,
                 x => Getter.Me().Position,
                 Color.Orange,
                 100,
-                new CollisionCheck(true, new() { new(1, CollisionModes.Hero, CollLogic.Min)}),
-                Prediction.MenuSelected.HitChance.VeryHigh,
+                new CollisionCheck(true, new() { new(2, CollisionModes.Hero, CollLogic.Min) }),
                 false,
                 false,
                 false,
-                RCastTime,
+                0.25f,
                 false
                 );
 

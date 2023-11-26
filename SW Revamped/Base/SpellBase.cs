@@ -78,12 +78,20 @@ namespace SWRevamped.Base
         internal List<Coll> CollisionObjects { get; set; }
         internal Counter MinCollisionObjectsCounter { get; private set; }
 
+        internal Counter MaxCollisionObjectsCounter { get; private set; }
+
         internal CollisionCheck(bool collision, List<Coll> collisions)
         {
             Collision = collision;
             CollisionObjects = collisions;
             Coll? minColl = collisions.Where(x => x.Logic == CollLogic.Min).FirstOrDefault();
+            Coll? maxColl = collisions.Where(x => x.Logic == CollLogic.Max).FirstOrDefault();
             MinCollisionObjectsCounter = new Counter("Min Collisions", (minColl != null)? minColl._initn : 0, 0, 5);
+            MaxCollisionObjectsCounter = new Counter("Max Collisions", (maxColl != null) ? maxColl._initn : 0, 0, 5);
+            if (minColl != null) 
+                minColl.CollisionCounter = MinCollisionObjectsCounter;
+            if (maxColl != null)
+                maxColl.CollisionCounter = MaxCollisionObjectsCounter;
         }
     }
 
