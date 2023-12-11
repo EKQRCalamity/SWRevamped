@@ -65,10 +65,10 @@ namespace SWRevamped.Champions
             float damage = 0;
             if (Getter.RLevel > 0 && target.IsAlive && target.IsValidTarget())
             {
-                damage = BaseDamage[Getter.RLevel] + (Getter.TotalAP * APScaling) + (Getter.Stats.BonusArmor * BADScaling);
+                damage = BaseDamage[Getter.RLevel] + (Getter.TotalAP * APScaling) + (Getter.Stats.BonusAttackDamage * BADScaling);
                 if (target.HealthPercent > 40)
                 {
-                    damage = damage + (damage * (target.HealthPercent * 0.883F) / 100);
+                    damage = damage + (damage * (target.HealthPercent * 0.833F) / 100);
                 }
                 else
                 {

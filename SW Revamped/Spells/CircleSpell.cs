@@ -119,9 +119,9 @@ namespace SWRevamped.Spells
 
         }
 
-        private PredOut PredictSpell(GameObjectBase target, int minHits, int maxHits, CollisionModes mainTargetMode = CollisionModes.Hero)
+        private PredOut? PredictSpell(GameObjectBase target, int minHits, int maxHits, CollisionModes mainTargetMode = CollisionModes.Hero)
         {
-            Logger.Log($"\nSpell: {SpellSlotToString()}\nT: {target}\nR: {Range}\nW: {Width}\nC: {CastTime}\nS: {Speed}\nMinHits: {minHits}\nMaxHits: {maxHits}\n-: {collisionCheck.MinCollisionObjectsCounter.Value}");
+            if (target == null || !target.IsVisible) return null;
             Prediction.MenuSelected.PredictionOutput pred = GetPrediction(
                     PredictionType.Circle,
                     target,
@@ -203,18 +203,18 @@ namespace SWRevamped.Spells
                     );
             }
         }
-
         private int GetPoints(GameObjectBase target)
         {
             if (target == null || (!target.IsAlive || !target.IsZombie)) return 0;
             int points = 0;
             if (Calculator.CanKill(target)) points += 50;
-            points += (int)(Math.Floor(Calculator.GetValue(target) / target.Health) * 10);
-            points += (int)(Math.Min(25, Math.Floor((Range / SourcePosition(Getter.Me()).Distance(target.Position)) * 10)));
+            points += (int)(Math.Floor(Calculator.GetValue(target) / target.Health) * 25);
+            points += (int)(Math.Min(25, Math.Floor((SourcePosition(Getter.Me()).Distance(target.Position) / Range) * 15)));
             return points;
         }
 
-        private PredOut? PredictSpellAll(CollisionModes mainCollMode = CollisionModes.HeroMinion, TargetModes mainTargetMode = TargetModes.Hero)
+
+        private List<PredOut> PredictSpellAllList(CollisionModes mainCollMode = CollisionModes.HeroMinion, TargetModes mainTargetMode = TargetModes.Hero)
         {
 
             List<PredOut> preds = new List<PredOut>();
@@ -225,7 +225,9 @@ namespace SWRevamped.Spells
                 {
                     Coll? MinColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Min).FirstOrDefault();
                     Coll? MaxColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Max).FirstOrDefault();
-                    preds.Add(PredictSpell(obj, (MinColl != null) ? MinColl.Num : 0, (MaxColl != null) ? MaxColl.Num : 0));
+                    PredOut? predOut = PredictSpell(obj, (MinColl != null) ? MinColl.CollisionCounter.Value : 0, (MaxColl != null) ? MaxColl.CollisionCounter.Value : 0, mainCollMode);
+                    if (predOut != null)
+                        preds.Add(predOut);
                 }
             }
             if (mainTargetMode == TargetModes.Minion
@@ -235,8 +237,9 @@ namespace SWRevamped.Spells
                 {
                     Coll? MinColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Min).FirstOrDefault();
                     Coll? MaxColl = collisionCheck.CollisionObjects.Where(x => x.Logic == CollLogic.Max).FirstOrDefault();
-                    preds.Add(PredictSpell(obj, (MinColl != null) ? MinColl.Num : 0, (MaxColl != null) ? MaxColl.Num : 0));
-
+                    PredOut? predOut = PredictSpell(obj, (MinColl != null) ? MinColl.CollisionCounter.Value : 0, (MaxColl != null) ? MaxColl.Num : 0, mainCollMode);
+                    if (predOut != null)
+                        preds.Add(predOut);
                 }
             }
             HitChance highestHitChance = HitChance.Impossible;
@@ -247,7 +250,21 @@ namespace SWRevamped.Spells
                     highestHitChance = prediction.Prediction.HitChance;
                 }
             }
-            return preds.Where(x => !x.Failed && x.Prediction.HitChance == highestHitChance && TargetCheck(x.Target) && x.Target.IsVisible).OrderBy(x => GetPoints(x.Target)).FirstOrDefault();
+            return preds.Where(x => !x.Failed).ToList();
+        }
+
+        private PredOut? PredictSpellAll(CollisionModes mainCollMode = CollisionModes.HeroMinion, TargetModes mainTargetMode = TargetModes.Hero)
+        {
+            List<PredOut> preds = PredictSpellAllList(mainCollMode, mainTargetMode);
+            HitChance highestHitChance = HitChance.Impossible;
+            foreach (PredOut prediction in preds)
+            {
+                if (!prediction.Failed && prediction.Prediction.HitChance > highestHitChance)
+                {
+                    highestHitChance = prediction.Prediction.HitChance;
+                }
+            }
+            return preds.Where(x => !x.Failed && (GetPoints(x.Target) > 70 ? (int)x.Prediction.HitChance - 2 >= (int)highestHitChance : x.Prediction.HitChance == highestHitChance) && TargetCheck(x.Target) && x.Target.IsVisible).OrderByDescending(x => GetPoints(x.Target)).FirstOrDefault();
         }
 
         private void AfterAuto(float gameTime, GameObjectBase target)
@@ -322,8 +339,8 @@ namespace SWRevamped.Spells
             if (!IsOn)
                 return Task.CompletedTask;
             PredOut? bestTarget = PredictSpellAll();
-            if (bestTarget != null)
-                Logger.Log($"Pred: [{bestTarget.Target}, {bestTarget.Failed}, {bestTarget.Prediction.CollisionObjects.Count()}]");
+            //if (bestTarget != null)
+            //    Logger.Log($"Pred: [{bestTarget.Target}, {bestTarget.Failed}, {bestTarget.Prediction.CollisionObjects.Count()}]");
             if (bestTarget != null
                 && !bestTarget.Failed
                 && bestTarget.Prediction.HitChance >= hitChance
