@@ -38,12 +38,12 @@ namespace SWRevamped.Utility
 
         internal static bool InTowerRange(Vector3 pos)
         {
-            return UnitManager.EnemyTowers.Any(x => x.IsAlive && x.Health > 1 && x.DistanceTo(pos) < 750);
+            return UnitManager.EnemyTowers.Any(x => x.IsAlive && x.IsTargetable && x.Health > 1 && x.DistanceTo(pos) < 750);
         }
 
         internal static bool InAllyTowerRange(Vector3 pos)
         {
-            return UnitManager.AllyTowers.Any(x => x.IsAlive && x.Health > 1 && x.DistanceTo(pos) < 750);
+            return UnitManager.AllyTowers.Any(x => x.IsAlive && x.IsTargetable && x.Health > 1 && x.DistanceTo(pos) < 750);
         }
 
         internal static bool InTowerOrNexusRange(GameObjectBase target)
@@ -57,16 +57,16 @@ namespace SWRevamped.Utility
                 return false;
             if (target.IsAlly)
             {
-                Turret? targetTower = UnitManager.EnemyTowers.Where(x => x.IsAlive && x.Health > 1 && x.DistanceTo(target.Position) < 750).ToList().FirstOrDefault();
+                Turret? targetTower = UnitManager.EnemyTowers.Where(x => x.IsAlive && x.IsTargetable && x.Health > 1 && x.DistanceTo(target.Position) < 750).ToList().FirstOrDefault();
                 if (targetTower == null)
                     return false;
-                return targetTower.GetCurrentCastingSpell().Targets.Contains(target.As<AIHeroClient>());
+                return targetTower.GetCurrentCastingSpell().Targets.Contains(target);
             } else
             {
-                Turret? targetTower = UnitManager.AllyTowers.Where(x => x.IsAlive && x.Health > 1 && x.DistanceTo(target.Position) < 750).ToList().FirstOrDefault();
+                Turret? targetTower = UnitManager.AllyTowers.Where(x => x.IsAlive && x.IsTargetable && x.Health > 1 && x.DistanceTo(target.Position) < 750).ToList().FirstOrDefault();
                 if (targetTower == null)
                     return false;
-                return targetTower.GetCurrentCastingSpell().Targets.Contains(target.As<AIHeroClient>());
+                return targetTower.GetCurrentCastingSpell().Targets.Contains(target);
             }
         }
     }
