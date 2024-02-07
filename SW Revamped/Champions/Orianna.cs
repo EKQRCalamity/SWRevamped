@@ -226,9 +226,9 @@ namespace SWRevamped.Champions
                 Color.OrangeRed,
                 100,
                 new CollisionCheck(true, new() { new(2, CollisionModes.Hero, CollLogic.Min) }),
+                true,
                 false,
-                false,
-                false,
+                true,
                 0.25f,
                 false,
                 4);

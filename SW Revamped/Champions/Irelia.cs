@@ -100,6 +100,7 @@ namespace SWRevamped.Champions
         internal Switch QAllowTower = new Switch("Allow Under Tower", false);
         internal Switch QSkipCheck = new Switch("Skip Check", false);
         internal Switch QHPGapClose = new Switch("Low HP Gap Close", true);
+        internal Switch QUseForHeal = new Switch("Use Q to heal", true);
         internal Group QHealGroup = new Group("Heal");
         internal Group QLaneClearGroup = new Group("Laneclear");
         internal Switch LaneclearIsOn = new Switch("Enabled", true);
@@ -144,14 +145,14 @@ namespace SWRevamped.Champions
         IreliaECalc ECalc = new IreliaECalc();
         IreliaRCalc RCalc = new IreliaRCalc();
 
-        internal bool EnemyInAARange()
+        internal bool EnemyInAARange(int offset = 0)
         {
-            return NEnemiesInAARange() > 0;
+            return NEnemiesInAARange(offset) > 0;
         }
 
-        internal int NEnemiesInAARange()
+        internal int NEnemiesInAARange(int offset = 0)
         {
-            return UnitManager.EnemyChampions.Where(x => x.Distance < Getter.AARange).Count();
+            return UnitManager.EnemyChampions.Where(x => x.Distance < Getter.AARange + offset).Count();
         }
 
         internal bool HasMark(GameObjectBase target)
@@ -168,6 +169,7 @@ namespace SWRevamped.Champions
             QGroup.AddItem(QAllowTower);
             QGroup.AddItem(QSkipCheck);
             QGroup.AddItem(QHPGapClose);
+            QGroup.AddItem(QUseForHeal);
             QGroup.AddItem(QLaneClearGroup);
             QGroup.AddItem(QHealGroup);
             QGroup.AddItem(DrawingsGroup);
@@ -383,7 +385,28 @@ namespace SWRevamped.Champions
             {
                 if (currentPath.Count > 0 && currentPath[1].IsAlive)
                 {
-                    if ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient)) ? (QLaneClearMaxStacks.IsOn? true : !HasMaxStacks()) && !EnemyInAARange() && (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1])) : (QAllowTower.IsOn ? true : !InTowerRange(currentPath[1])) && !InNexusRange(currentPath[1]) && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) || QCalc.CanKill(currentPath[1]) || (NEnemiesInAARange() > 1 ? false : (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) && currentPath[1].Distance > Getter.AARange : false))))
+                    /* If Is Object Minion check if Menu Option MaxStacks is on if so return true, otherways test for HasMaxStacks => true = false; false = true;
+                     * Not Enemy In AA Range // Should change
+                     * Under Tower & Nexus check with menu option
+                     * QSkip Check option handle and enemy with mark
+                     * QCanKill handle
+                     * END OF MINION HANDLING
+                     * 
+                     * 
+                     */
+                    if (
+                        ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient))
+                        ? (QLaneClearMaxStacks.IsOn
+                        ? true : !HasMaxStacks())
+                        && (QUseForHeal.IsOn ? !EnemyInAARange(50) ? true : QCalc.CanKill(currentPath[1]) && currentPath[1].DistanceTo(UnitManager.EnemyChampions.Where(x => x.IsAlive && x.IsTargetable && x.IsValidTarget()).OrderBy(x => x.DistanceTo(Getter.Me().Position)).ToList().FirstOrDefault().Position) > Getter.Me().TrueAttackRange + 50 : false)
+                        && (QAllowTower.IsOn? true : !General.InTowerRange(currentPath[1])) 
+                        && !General.InNexusRange(currentPath[1]) 
+                        && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) 
+                        || QCalc.CanKill(currentPath[1])) : false)
+                        || ((QSkipCheck.IsOn ? true : HasMark(currentPath[1]) 
+                        || QCalc.CanKill(currentPath[1]) 
+                        || (NEnemiesInAARange() > 1 ? false : (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) 
+                        && currentPath[1].Distance > Getter.AARange : false)))))
                     {
                         SpellCastProvider.CastSpell(CastSlot.Q, currentPath[1].Position, 0);
                     }
@@ -410,11 +433,11 @@ namespace SWRevamped.Champions
             }
             if (target.UnitComponentInfo.SkinName.Contains("_P_TentacleAvatarActivex"))
                 return false;
-            if (!QAllowTower.IsOn && InNexusRange(target))
+            if (!QAllowTower.IsOn &&General.InNexusRange(target))
                 return false;
             if (!QAllowTower.IsOn)
             {
-                if (InTowerRange(target) || InNexusRange(target))
+                if (General.InTowerRange(target) || General.InNexusRange(target))
                     return false;
             }
             if (Getter.Me().Mana < ((Getter.QLevel >= 1) ? 20 : 0))
@@ -434,22 +457,6 @@ namespace SWRevamped.Champions
             return HasMark(target);
         }
 
-        internal bool InNexusRange(GameObjectBase target)
-        {
-            return InNexusRange(target.Position);
-        }
-        internal bool InNexusRange(Vector3 pos)
-        {
-            Vector3 BlueNexus = new Vector3(405, 95, 425);
-            Vector3 RedNexus = new Vector3(14300, 90, 14400);
-            return pos.Distance(BlueNexus) <= 1000 || pos.Distance(RedNexus) <= 1000;
-        }
-
-        internal bool InTowerRange(GameObjectBase target)
-        {
-            return InTowerRange(target.Position);
-        }
-
         internal GameObjectBase GetLaneclearTarget()
         {
             GameObjectBase? resetMinion = UnitManager.EnemyMinions.FirstOrDefault(x => x.IsAlive && x.Health > 1 && x.Distance <= QRange && ShouldCastQ(x, false));
@@ -463,11 +470,6 @@ namespace SWRevamped.Champions
                 return resetMob;
             }
             return null;
-        }
-
-        internal bool InTowerRange(Vector3 pos)
-        {
-            return UnitManager.EnemyTowers.Any(x => x.IsAlive && x.Health >= 1 && x.DistanceTo(pos) < 750);
         }
 
         private void LaneClearExecute()
@@ -486,10 +488,10 @@ namespace SWRevamped.Champions
         {
             if (Getter.QLooseReady)
             {
-                List<GameObjectBase> list = UnitManager.EnemyChampions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !InTowerRange(x)) && !InNexusRange(x) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x) || (QHPGapClose.IsOn ? ((x.Health - (QCalc.GetValue(x) * 2)) < 0) : false))).ToList();
-                //Logger.Log(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !InTowerRange(x) && !InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))).Count());
+                List<GameObjectBase> list = UnitManager.EnemyChampions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !General.InTowerRange(x)) && !General.InNexusRange(x) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x) || (QHPGapClose.IsOn ? ((x.Health - (QCalc.GetValue(x) * 2)) < 0) : false))).ToList();
+                //Logger.Log(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !GenGeneral.InTowerRange(x) && !General.InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))).Count());
                 //Logger.Log(UnitManager.EnemyMinions.Count());
-                list.AddRange(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !InTowerRange(x) && !InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))));
+                list.AddRange(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.Distance < QRange * 4 && (QAllowTower.IsOn ? true : !General.InTowerRange(x) && !General.InNexusRange(x)) && (QSkipCheck.IsOn ? true : HasMark(x) || QCalc.CanKill(x))));
                 List<GameObjectBase> validTargets = new() { Getter.Me() };
                 GameObjectBase mainTarget = null;
 
@@ -505,7 +507,7 @@ namespace SWRevamped.Champions
                             validTargets.Add(item);
                         }
                     }
-                    else if (item.Distance < QRange * 7 && item.IsVisible && item.IsValidTarget())
+                    else if (item.Distance < QRange * 5 && item.IsVisible && item.IsValidTarget())
                     {
                         if (mainTarget == null)
                         {

@@ -2,6 +2,7 @@
 using Oasys.Common.GameObject;
 using Oasys.Common.GameObject.Clients.ExtendedInstances;
 using Oasys.Common.Menu;
+using Oasys.Common.Menu.ItemComponents;
 using Oasys.SDK;
 using SharpDX;
 using SWRevamped.Base;
@@ -107,8 +108,16 @@ namespace SWRevamped.Champions
         }
     }
 
+    
+
     internal sealed class Cassiopeia : ChampionModule
     {
+        private bool IsPoisoned(GameObjectBase target)
+        {
+            return target.BuffManager.ActiveBuffs.Any(buff => buff.Stacks >= 1 &&
+                    (buff.Name.Contains("cassiopeiaqdebuff", StringComparison.OrdinalIgnoreCase) || buff.Name.Contains("cassiopeiawpoison", StringComparison.OrdinalIgnoreCase)));
+        }
+
         internal Tab MainTab = new Tab("SW - Cassiopeia");
 
         internal static readonly int QRange = 850;
@@ -128,6 +137,8 @@ namespace SWRevamped.Champions
         internal static readonly int RAngle = 80;
         internal static readonly float RCastTime = 0.5F;
 
+        internal Switch ESwitch = new Switch("Use E Poisoned", true);
+
         CassioQCalc QCalc = new CassioQCalc();
         CassioWCalc WCalc = new CassioWCalc();
         CassioECalc ECalc = new CassioECalc();
@@ -135,6 +146,7 @@ namespace SWRevamped.Champions
         internal override void Init()
         {
             MenuManagerProvider.AddTab(MainTab);
+            MainTab.AddItem(ESwitch);
             EffectDrawer.Init();
             CircleSpell qSpell = new CircleSpell(Oasys.SDK.SpellCasting.CastSlot.Q,
                 QCalc,
@@ -172,7 +184,8 @@ namespace SWRevamped.Champions
                 false,
                 WCastTime,
                 false,
-                8
+                8,
+                false
                 );
             PointAndClickSpell eSpell = new PointAndClickSpell(Oasys.SDK.SpellCasting.CastSlot.E,
                 Oasys.Common.Enums.GameEnums.SpellSlot.E,
@@ -183,7 +196,7 @@ namespace SWRevamped.Champions
                 ECastTime,
                 false,
                 x => x.IsAlive,
-                x => x.IsAlive,
+                x => x.IsAlive && (x.IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIHeroClient) && ESwitch.IsOn)? IsPoisoned(x) : true,
                 x => Getter.Me().Position,
                 Color.Yellow,
                 40,
@@ -202,7 +215,7 @@ namespace SWRevamped.Champions
                 x => Getter.Me().Position,
                 Color.Red,
                 100,
-                new CollisionCheck(true, new() { new Coll(2, CollisionModes.Hero, CollLogic.Min)}),
+                new CollisionCheck(true, new() { new Coll(2, CollisionModes.Hero, CollLogic.Min) }),
                 Prediction.MenuSelected.HitChance.VeryHigh,
                 false,
                 true,

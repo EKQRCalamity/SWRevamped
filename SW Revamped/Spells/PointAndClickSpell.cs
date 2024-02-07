@@ -50,7 +50,7 @@ namespace SWRevamped.Spells
             LasthitIsOn = new Switch() { Title = "Lasthit", IsOn = false };
 
             Width = 0;
-            Range = range;
+            Range = range - 5;
             Speed = speed;
             CastTime = casttime;
             UseCanKill = useCanKill;
@@ -106,7 +106,7 @@ namespace SWRevamped.Spells
             targets.AddRange(UnitManager.AllyJungleMobs.ToList<GameObjectBase>());
             targets = targets.OrderBy(x => x.Health).ToList<GameObjectBase>();
 
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => TargetCheck(x)).FirstOrDefault();
+            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => TargetCheck(x) && x.Distance < Range).FirstOrDefault();
 
             if (target == null || !IsOn || !LaneclearIsOn.IsOn )
                 return Task.CompletedTask;
@@ -143,7 +143,7 @@ namespace SWRevamped.Spells
             targets.AddRange(UnitManager.EnemyJungleMobs.ToList<GameObjectBase>());
             targets.AddRange(UnitManager.AllyJungleMobs.ToList<GameObjectBase>());
             targets = targets.OrderBy(x => x.Health).ToList<GameObjectBase>();
-            GameObjectBase target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => TargetCheck(x)).FirstOrDefault();
+            GameObjectBase? target = Oasys.Common.Logic.TargetSelector.GetMixedTargets(targets, x => TargetCheck(x) && x.Distance < Range).FirstOrDefault();
 
             if (target == null || !IsOn || !LasthitIsOn.IsOn)
                 return Task.CompletedTask;

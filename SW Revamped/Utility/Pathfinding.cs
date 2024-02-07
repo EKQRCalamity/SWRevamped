@@ -4,6 +4,7 @@ using Oasys.SDK.Tools;
 using SharpDX;
 using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,67 @@ namespace SWRevamped.Utility
 
     public class Pathfinding
     {
+        public List<GameObjectBase> FindShortestPathOutOfTower(List<GameObjectBase> gameObjects, GameObjectBase start, int maxRange = 600)
+        {
+            PriorityQueue<Node> openNodes = new PriorityQueue<Node>();
+            openNodes.Enqueue(new Node(start, 0, 0, null));
+            Dictionary<GameObjectBase, int> visited = new Dictionary<GameObjectBase, int>();
+            visited[start] = 0;
+            while (openNodes.Count > 0)
+            {
+                var currentNode = openNodes.Dequeue();
+                if (!General.InNexusRange(currentNode.GameObject) && !General.InTowerRange(currentNode.GameObject))
+                {
+                    return ConstructPath(currentNode);
+                }
+
+                foreach (var neighbor in GetNeighbors(currentNode.GameObject, maxRange, gameObjects))
+                {
+                    var newCost = currentNode.Cost + 1;
+
+                    if (!visited.ContainsKey(neighbor) || newCost < visited[neighbor])
+                    {
+                        visited[neighbor] = newCost;
+                        var priority = newCost + Heuristic(neighbor, currentNode.GameObject);
+                        openNodes.Enqueue(new Node(neighbor, newCost, priority, currentNode));
+                    }
+                }
+            }
+
+            // No path found
+            return null;
+        }
+
+        public List<GameObjectBase> FindShortestPathToVector(List<GameObjectBase> gameObjects, GameObjectBase start, Vector3 end, int maxRange = 600, int tolerance = 50)
+        {
+            PriorityQueue<Node> openNodes = new PriorityQueue<Node>();
+            openNodes.Enqueue(new Node(start, 0, 0, null));
+            Dictionary<GameObjectBase, int> visited = new Dictionary<GameObjectBase, int>();
+            visited[start] = 0;
+            while (openNodes.Count > 0)
+            {
+                var currentNode = openNodes.Dequeue();
+                if (currentNode.GameObject.Position.Distance(end) < tolerance)
+                {
+                    return ConstructPath(currentNode);
+                }
+
+                foreach (var neighbor in GetNeighbors(currentNode.GameObject, maxRange, gameObjects))
+                {
+                    var newCost = currentNode.Cost + 1;
+
+                    if (!visited.ContainsKey(neighbor) || newCost < visited[neighbor])
+                    {
+                        visited[neighbor] = newCost;
+                        var priority = newCost + Heuristic(neighbor, currentNode.GameObject);
+                        openNodes.Enqueue(new Node(neighbor, newCost, priority, currentNode));
+                    }
+                }
+            }
+
+            // No path found
+            return null;
+        }
         public List<GameObjectBase> FindShortestPath(List<GameObjectBase> gameObjects, GameObjectBase start, GameObjectBase end, int maxRange = 600)
         {
             // Create a priority queue for open nodes
@@ -38,9 +100,8 @@ namespace SWRevamped.Utility
             openNodes.Enqueue(new Node(start, 0, 0, null));
 
             // Create a dictionary to track visited nodes and their best cost
-            var visited = new Dictionary<GameObjectBase, int>();
+            Dictionary<GameObjectBase, int> visited = new Dictionary<GameObjectBase, int>();
             visited[start] = 0;
-
             while (openNodes.Count > 0)
             {
                 var currentNode = openNodes.Dequeue();

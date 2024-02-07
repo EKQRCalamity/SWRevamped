@@ -47,9 +47,8 @@ namespace SWRevamped.Miscellaneous
             return objPos;
         }
 
-        public bool OnPath()
+        public bool OnPath(double tolerance = 35)
         {
-            double tolerance = 17;
             double minX = Math.Min(first.X, last.X) - tolerance;
             double maxX = Math.Max(first.X, last.X) + tolerance;
             double minY = Math.Min(first.Y, last.Y) - tolerance;

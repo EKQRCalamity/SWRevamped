@@ -213,12 +213,7 @@ namespace SWRevamped.Spells
 
         private int GetPoints(GameObjectBase target)
         {
-            if (target == null || (!target.IsAlive || !target.IsZombie)) return 0;
-            int points = 0;
-            if (Calculator.CanKill(target)) points += 50;
-            points += (int)(Math.Floor(Calculator.GetValue(target) / target.Health) * 25);
-            points += (int)(Math.Min(25, Math.Floor((SourcePosition(Getter.Me()).Distance(target.Position) / Range) * 15)));
-            return points;
+            return Utility.ChampValueCalc.GetEnemyPointsExtended(target, Calculator, Range, SourcePosition);
         }
 
         private List<PredOut> PredictSpellAllList(CollisionModes mainCollMode = CollisionModes.HeroMinion, TargetModes mainTargetMode = TargetModes.Hero)

@@ -146,7 +146,8 @@ namespace SWRevamped.Base
                 {
                     foreach (var champ in UnitManager.EnemyChampions)
                     {
-                        if (!IsOnTargetCheck(champ))
+                        if (!IsOnTargetCheck(champ) || !champ.IsValidTarget() 
+                            || !champ.IsTargetable)
                             continue;
                         DrawingsExtended.DrawExecuteBar(champ, Calculator.GetValue(champ), GetColor(), LineMode.IsOn);
                     }
