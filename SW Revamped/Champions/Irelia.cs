@@ -2,6 +2,7 @@
 using Oasys.Common.EventsProvider;
 using Oasys.Common.Extensions;
 using Oasys.Common.GameObject;
+using Oasys.Common.GameObject.Clients;
 using Oasys.Common.Menu;
 using Oasys.Common.Menu.ItemComponents;
 using Oasys.SDK;
@@ -101,14 +102,16 @@ namespace SWRevamped.Champions
         internal Switch QSkipCheck = new Switch("Skip Check", false);
         internal Switch QHPGapClose = new Switch("Low HP Gap Close", true);
         internal Switch QUseForHeal = new Switch("Use Q to heal", true);
+        internal Switch QGetOutOfTower = new Switch("Escape Tower w/ Laneclear", true);
         internal Group QHealGroup = new Group("Heal");
         internal Group QLaneClearGroup = new Group("Laneclear");
         internal Switch LaneclearIsOn = new Switch("Enabled", true);
         internal Switch QLaneClearCombo = new Switch("Combo", true);
-        internal Switch QLaneClearMaxStacks = new Switch("W/ Max Stacks", true);
+        internal Switch QLaneClearMaxStacks = new Switch("Use Q w/ Max Stacks", true);
 
         internal Group DrawingsGroup = new Group("Drawings");
         internal Switch QPathIsOn = new Switch("Show Q Path", true);
+        internal Switch QEscapeIsOn = new Switch("Show Q Escape Path", true);
         internal Group EDrawingsGroup = new Group("Drawings");
         internal Group RDrawingsGroup = new Group("Drawings");
 
@@ -139,6 +142,7 @@ namespace SWRevamped.Champions
         internal static int RWidth = 320;
 
         internal List<GameObjectBase> currentPath = new();
+        internal List<GameObjectBase> escapePath = new();
 
         IreliaQDamageCalc QCalc = new IreliaQDamageCalc();
         IreliaQHealCalc QHealCalc = new IreliaQHealCalc();
@@ -170,10 +174,12 @@ namespace SWRevamped.Champions
             QGroup.AddItem(QSkipCheck);
             QGroup.AddItem(QHPGapClose);
             QGroup.AddItem(QUseForHeal);
+            QGroup.AddItem(QGetOutOfTower);
             QGroup.AddItem(QLaneClearGroup);
             QGroup.AddItem(QHealGroup);
             QGroup.AddItem(DrawingsGroup);
             DrawingsGroup.AddItem(QPathIsOn);
+            DrawingsGroup.AddItem(QEscapeIsOn);
             QLaneClearGroup.AddItem(LaneclearIsOn);
             QLaneClearGroup.AddItem(QLaneClearCombo);
             QLaneClearGroup.AddItem(QLaneClearMaxStacks);
@@ -250,10 +256,15 @@ namespace SWRevamped.Champions
 
         private Task Tick()
         {
-            if (tick == 0 || tick % 3 == 0)
+            if (tick == 0 || tick % 2 == 0)
             {
                 List<GameObjectBase> path = QPathFinder();
                 currentPath = path;
+                if (General.IsTowerTarget(Getter.Me()))
+                {
+                    List<GameObjectBase> path2 = QEscapeFinder();
+                    escapePath = path2;
+                }
             }
             tick++;
             return Task.CompletedTask;
@@ -459,6 +470,10 @@ namespace SWRevamped.Champions
 
         internal GameObjectBase GetLaneclearTarget()
         {
+            if (QGetOutOfTower.IsOn && General.IsTowerTarget(Getter.Me()))
+            {
+                return escapePath[1];
+            }
             GameObjectBase? resetMinion = UnitManager.EnemyMinions.FirstOrDefault(x => x.IsAlive && x.Health > 1 && x.Distance <= QRange && ShouldCastQ(x, false));
             if (resetMinion != null)
             {
@@ -482,6 +497,47 @@ namespace SWRevamped.Champions
                     SpellCastProvider.CastSpell(CastSlot.Q, target.Position, 0);
                 }
             }
+        }
+
+        internal List<GameObjectBase> QEscapeFinder()
+        {
+            if (Getter.QLooseReady)
+            {
+                List<GameObjectBase> list = new();
+                list.AddRange(UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.IsVisible && x.Distance < QRange * 3 && ShouldCastQ(x, false)).ToList());
+                List<GameObjectBase> validTargets = new() { Getter.Me() };
+
+
+                GameObjectBase? mainTarget = UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.IsVisible && x.IsAlive && x.Distance <= QRange * 3 && !General.InTowerOrNexusRange(x)).ToList().FirstOrDefault();
+
+                if (!list.Any(x => x.Distance < QRange))
+                {
+                    return new();
+                }
+
+                foreach (var item in list)
+                {
+                    if (item.UnitComponentInfo.SkinName.Contains("Minion", StringComparison.OrdinalIgnoreCase) && item.Distance < QRange * 3 && item.IsAlive && item.IsTargetable)
+                    {
+                        validTargets.Add(item);
+                    }
+                }
+                validTargets = validTargets.OrderBy(x => x.Distance).ToList();
+                if (mainTarget == null && validTargets.Count > 1)
+                {
+                    mainTarget = validTargets[validTargets.Count - 1];
+                }
+                if (validTargets.Count > 1)
+                {
+                    List<GameObjectBase> shortestPath = pathfinder.FindShortestPath(validTargets, Getter.Me(), mainTarget, QRange);
+                    if (shortestPath != null)
+                    {
+                        return shortestPath;
+                    }
+                }
+
+            }
+            return new();
         }
 
         internal List<GameObjectBase> QPathFinder()
@@ -543,7 +599,7 @@ namespace SWRevamped.Champions
             Oasys.Common.Settings.Orbwalker.HoldTargetChampsOnly = false;
             if (QPathIsOn.IsOn)
             {
-                List<GameObjectBase> path = currentPath;
+                List<GameObjectBase> path = currentPath.deepCopy();
                 if (path.Count > 0)
                 {
                     for (int i = 0; i < path.Count; i++)
@@ -556,6 +612,25 @@ namespace SWRevamped.Champions
                         else
                         {
                             RenderFactory.DrawLine(LeagueNativeRendererManager.WorldToScreenSpell(path[i].Position).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i].Position).Y, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1].Position).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1].Position).Y, 2, Color.White);
+                        }
+                    }
+                }
+            }
+            if (QEscapeIsOn.IsOn)
+            {
+                List<GameObjectBase> path = currentPath.deepCopy();
+                if (path.Count > 0)
+                {
+                    for (int i = 0; i < path.Count; i++)
+                    {
+                        if (i + 1 == path.Count) break;
+                        if (i == 0)
+                        {
+                            RenderFactory.DrawLine(Oasys.Common.LeagueNativeRendererManager.WorldToScreenSpell(Getter.Me().Position).X, Oasys.Common.LeagueNativeRendererManager.WorldToScreenSpell(Getter.Me().Position).Y, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1].Position).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1].Position).Y, 2, Color.Orange);
+                        }
+                        else
+                        {
+                            RenderFactory.DrawLine(LeagueNativeRendererManager.WorldToScreenSpell(path[i].Position).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i].Position).Y, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1].Position).X, LeagueNativeRendererManager.WorldToScreenSpell(path[i + 1].Position).Y, 2, Color.Orange);
                         }
                     }
                 }
