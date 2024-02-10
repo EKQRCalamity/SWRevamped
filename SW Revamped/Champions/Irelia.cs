@@ -102,6 +102,8 @@ namespace SWRevamped.Champions
         internal Switch QSkipCheck = new Switch("Skip Check", false);
         internal Switch QHPGapClose = new Switch("Low HP Gap Close", true);
         internal Switch QUseForHeal = new Switch("Use Q to heal", true);
+        internal Counter HealthCounterHeal = new Counter("Under X% Health", 50, 0, 100);
+        internal Counter HealRangeOffset = new Counter("AA Range Offset", 90, -50, 600);
         internal Switch QGetOutOfTower = new Switch("Escape Tower w/ Laneclear", true);
         internal Group QHealGroup = new Group("Heal");
         internal Group QLaneClearGroup = new Group("Laneclear");
@@ -174,6 +176,8 @@ namespace SWRevamped.Champions
             QGroup.AddItem(QSkipCheck);
             QGroup.AddItem(QHPGapClose);
             QGroup.AddItem(QUseForHeal);
+            QGroup.AddItem(HealthCounterHeal);
+            QGroup.AddItem(HealRangeOffset);
             QGroup.AddItem(QGetOutOfTower);
             QGroup.AddItem(QLaneClearGroup);
             QGroup.AddItem(QHealGroup);
@@ -409,15 +413,15 @@ namespace SWRevamped.Champions
                         ((currentPath[1].IsObject(Oasys.Common.Enums.GameEnums.ObjectTypeFlag.AIMinionClient))
                         ? (QLaneClearMaxStacks.IsOn
                         ? true : !HasMaxStacks())
-                        && (QUseForHeal.IsOn ? !EnemyInAARange(50) ? true : QCalc.CanKill(currentPath[1]) && currentPath[1].DistanceTo(UnitManager.EnemyChampions.Where(x => x.IsAlive && x.IsTargetable && x.IsValidTarget()).OrderBy(x => x.DistanceTo(Getter.Me().Position)).ToList().FirstOrDefault().Position) > Getter.Me().TrueAttackRange + 50 : false)
+                        && (QUseForHeal.IsOn ? !EnemyInAARange(50) ? true : currentPath[1] != null && QCalc.CanKill(currentPath[1]) && currentPath[1].DistanceTo(UnitManager.EnemyChampions.Where(x => x.IsAlive && x.IsTargetable && x.IsValidTarget() && Getter.Me().HealthPercent < HealthCounterHeal.Value).OrderBy(x => x.DistanceTo(Getter.Me().Position)).ToList().FirstOrDefault().Position) > Getter.Me().TrueAttackRange + HealRangeOffset.Value : false)
                         && (QAllowTower.IsOn? true : !General.InTowerRange(currentPath[1])) 
                         && !General.InNexusRange(currentPath[1]) 
                         && (QSkipCheck.IsOn ? true : HasMark(currentPath[1]) 
                         || QCalc.CanKill(currentPath[1])) : false)
                         || ((QSkipCheck.IsOn ? true : HasMark(currentPath[1]) 
                         || QCalc.CanKill(currentPath[1]) 
-                        || (NEnemiesInAARange() > 1 ? false : (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) 
-                        && currentPath[1].Distance > Getter.AARange : false)))))
+                        || (NEnemiesInAARange() > 1 ? false : (QHPGapClose.IsOn ? ((currentPath[1].Health - (QCalc.GetValue(currentPath[1]) * 2)) < 0) && currentPath[1].Distance > Getter.AARange : false))))
+                        )
                     {
                         SpellCastProvider.CastSpell(CastSlot.Q, currentPath[1].Position, 0);
                     }
@@ -444,7 +448,7 @@ namespace SWRevamped.Champions
             }
             if (target.UnitComponentInfo.SkinName.Contains("_P_TentacleAvatarActivex"))
                 return false;
-            if (!QAllowTower.IsOn &&General.InNexusRange(target))
+            if (!QAllowTower.IsOn && General.InNexusRange(target))
                 return false;
             if (!QAllowTower.IsOn)
             {
@@ -508,8 +512,6 @@ namespace SWRevamped.Champions
                 List<GameObjectBase> validTargets = new() { Getter.Me() };
 
 
-                GameObjectBase? mainTarget = UnitManager.EnemyMinions.ConvertAll(x => (GameObjectBase)x).Where(x => x.IsVisible && x.IsAlive && x.Distance <= QRange * 3 && !General.InTowerOrNexusRange(x)).ToList().FirstOrDefault();
-
                 if (!list.Any(x => x.Distance < QRange))
                 {
                     return new();
@@ -522,14 +524,9 @@ namespace SWRevamped.Champions
                         validTargets.Add(item);
                     }
                 }
-                validTargets = validTargets.OrderBy(x => x.Distance).ToList();
-                if (mainTarget == null && validTargets.Count > 1)
-                {
-                    mainTarget = validTargets[validTargets.Count - 1];
-                }
                 if (validTargets.Count > 1)
                 {
-                    List<GameObjectBase> shortestPath = pathfinder.FindShortestPath(validTargets, Getter.Me(), mainTarget, QRange);
+                    List<GameObjectBase> shortestPath = pathfinder.FindShortestPathOutOfTower(validTargets, Getter.Me(), QRange);
                     if (shortestPath != null)
                     {
                         return shortestPath;

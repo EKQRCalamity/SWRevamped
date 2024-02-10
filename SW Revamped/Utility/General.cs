@@ -53,21 +53,20 @@ namespace SWRevamped.Utility
 
         internal static bool IsTowerTarget(GameObjectBase target)
         {
-            if (!target.IsAlive)
+            if (target == null || !target.IsAlive)
                 return false;
             if (target.IsAlly)
             {
-                Turret? targetTower = UnitManager.EnemyTowers.Where(x => x.IsAlive && x.IsTargetable && x.Health > 1 && x.DistanceTo(target.Position) < 750).ToList().FirstOrDefault();
-                if (targetTower == null)
-                    return false;
-                return targetTower.GetCurrentCastingSpell().Targets.Contains(target);
+                Turret targetTower = UnitManager.EnemyTowers.Where(x => x.IsAlive && x.IsTargetable && x.Health > 1 && x.DistanceTo(target.Position) < 750).ToList().FirstOrDefault();
+                if (targetTower != null)
+                    return targetTower.GetCurrentCastingSpell().Targets.Contains(target);
             } else
             {
-                Turret? targetTower = UnitManager.AllyTowers.Where(x => x.IsAlive && x.IsTargetable && x.Health > 1 && x.DistanceTo(target.Position) < 750).ToList().FirstOrDefault();
-                if (targetTower == null)
-                    return false;
-                return targetTower.GetCurrentCastingSpell().Targets.Contains(target);
+                Turret targetTower = UnitManager.AllyTowers.Where(x => x.IsAlive && x.IsTargetable && x.Health > 1 && x.DistanceTo(target.Position) < 750).ToList().FirstOrDefault();
+                if (targetTower != null)
+                    return targetTower.GetCurrentCastingSpell().Targets.Contains(target);
             }
+            return false;
         }
     }
 }
