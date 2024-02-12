@@ -152,7 +152,7 @@ namespace SWRevamped.Spells
         }
         private Task HarassInput()
         {
-            if (!IsOn)
+            if (!IsOn || !useHarass.IsOn)
                 return Task.CompletedTask;
             List<GameObjectBase> enemies = GetNearbyUnits(Range);
             if ((collisionCheck.MinCollisionObjectsCounter.Value > 0) ? enemies.Count >= collisionCheck.MinCollisionObjectsCounter.Value : enemies.Count >= 1
@@ -165,7 +165,7 @@ namespace SWRevamped.Spells
 
         private Task LaneclearInput()
         {
-            if (!IsOn)
+            if (!IsOn || !useLaneclear.IsOn)
                 return Task.CompletedTask;
             List<GameObjectBase> enemies = GetNearbyUnits(Range, TargetModes.HeroMinion);
             if ((collisionCheck.MinCollisionObjectsCounter.Value > 0) ? enemies.Count >= collisionCheck.MinCollisionObjectsCounter.Value : enemies.Count >= 1
@@ -179,7 +179,7 @@ namespace SWRevamped.Spells
 
         private Task LasthitInput()
         {
-            if (!IsOn)
+            if (!IsOn || !useLasthit.IsOn)
                 return Task.CompletedTask;
             List<GameObjectBase> enemies = GetNearbyUnits(Range, TargetModes.HeroMinion);
             if ((collisionCheck.MinCollisionObjectsCounter.Value > 0) ? enemies.Count >= collisionCheck.MinCollisionObjectsCounter.Value : enemies.Count >= 1
