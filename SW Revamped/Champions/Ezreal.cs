@@ -40,7 +40,7 @@ namespace SWRevamped.Champions
     {
 
         internal static int[] WBonusDamage = new int[] { 0, 80, 135, 190, 245, 300 };
-        internal static float WADScaling = 0.6F;
+        internal static float WADScaling = 1F;
         internal static float[] WAPScaling = new float[] { 0, 0.7F, 0.75F, 0.8F, 0.85F, 0.9F };
 
         internal static bool WOnEnemy(GameObjectBase target)
@@ -84,7 +84,7 @@ namespace SWRevamped.Champions
 
     internal sealed class EzrealRCalc : EffectCalc
     {
-        internal static int[] BaseDamage = { 0, 350, 500, 650 };
+        internal static int[] BaseDamage = { 0, 325, 500, 675 };
         internal static float ADScaling = 1;
         internal static float APScaling = 0.9F;
 

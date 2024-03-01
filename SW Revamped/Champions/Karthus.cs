@@ -14,7 +14,7 @@ namespace SWRevamped.Champions
 {
     internal sealed class KarthusQCalc : EffectCalc
     {
-        internal float[] BaseDamage = { 0, 45, 62.5F, 80, 97.5F, 115 };
+        internal float[] BaseDamage = { 0, 45, 65, 85, 105F, 125 };
         internal float APScaling = 0.35F;
 
         internal override float GetValue(GameObjectBase target)
@@ -102,7 +102,7 @@ namespace SWRevamped.Champions
                 true,
                 true,
                 true,
-                0.375f,
+                0.5f,
                 false);
             
             CircleSpell wSpell = new(Oasys.SDK.SpellCasting.CastSlot.W,

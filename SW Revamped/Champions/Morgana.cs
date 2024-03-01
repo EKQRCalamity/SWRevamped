@@ -67,8 +67,8 @@ namespace SWRevamped.Champions
 
     internal sealed class MorganaRCalc : EffectCalc
     {
-        internal int[] BaseDamage = { 0, 150, 225, 300 };
-        internal float APScaling = 0.7F;
+        internal int[] BaseDamage = { 0, 175, 250, 325 };
+        internal float APScaling = 0.8F;
 
         internal override float GetValue(GameObjectBase target)
         {

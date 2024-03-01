@@ -65,7 +65,7 @@ namespace SWRevamped.Champions
 
     internal sealed class JinxRCalc : EffectCalc
     {
-        internal int[] BaseDamage = { 0, 300, 450, 600 };
+        internal int[] BaseDamage = { 0, 320, 470, 620 };
         internal float ADScaling = 1.2F;
         internal float[] MissHPScaling = { 0, 0.25F, 0.3F, 0.35F };
         internal override float GetValue(GameObjectBase target)

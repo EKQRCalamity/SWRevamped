@@ -18,6 +18,7 @@ namespace SWRevamped.Base
         internal static List<UtilityModule> utilityModules = new List<UtilityModule>()
         {
             new Activator(),
+            new ItemManager(),
             new CSHelper(),
             new MoveViewer(),
             new WardHelper(),

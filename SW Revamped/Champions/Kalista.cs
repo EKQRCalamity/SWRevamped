@@ -38,13 +38,13 @@ namespace SWRevamped.Champions
 
     internal sealed class KalistaEEffectCalc : EffectCalc
     {
-        internal static int[] BaseDamage = new int[] { 0, 20, 30, 40, 50, 60 };
+        internal static int[] BaseDamage = new int[] { 0, 10, 20, 30, 40, 50 };
         internal float ADScaling = 0.7F;
         internal static float APScaling = 0.2F;
 
         internal static int[] AdditionalDamage = new int[] { 0, 8, 12, 16, 20, 24 };
         internal static float[] AdditionalScaling = new float[] { 0, 0.25F, 0.3F, 0.35F, 0.4F, 0.45F };
-        internal static float AdditionalAPScaling = 0.25F;
+        internal static float AdditionalAPScaling = 0.2F;
 
         internal float GetEStacks(GameObjectBase target)
         {

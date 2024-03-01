@@ -16,7 +16,7 @@ namespace SWRevamped.Champions
 {
     internal sealed class VexQCalc : EffectCalc
     {
-        internal static int[] Base = { 0, 60, 105, 150, 195, 240 };
+        internal static int[] Base = { 0, 70, 115, 160, 205, 250 };
         internal static float APScaling = 0.7F;
 
         internal override float GetValue(GameObjectBase target)
@@ -71,7 +71,7 @@ namespace SWRevamped.Champions
 
     internal sealed class VexRLineCalc : EffectCalc
     {
-        internal static int[] Base = { 0, 70, 125, 175 };
+        internal static int[] Base = { 0, 75, 125, 175 };
         internal static int[] Base2 = { 0, 150, 250, 350 };
         internal static float APScaling = 0.2F;
         internal static float APScaling2 = 0.5F;

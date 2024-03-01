@@ -34,7 +34,7 @@ namespace SWRevamped.Champions
     internal sealed class LuxWCalc : EffectCalc
     {
         internal static int[] BaseShield = { 0, 40, 55, 70, 85, 100 };
-        internal static float APScaling = 0.35F;
+        internal static float APScaling = 0.4F;
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -50,7 +50,7 @@ namespace SWRevamped.Champions
 
     internal sealed class LuxECalc : EffectCalc
     {
-        internal static int[] BaseDamage = { 0, 70, 120, 170, 220, 270 };
+        internal static int[] BaseDamage = { 0, 65, 115, 165, 215, 265 };
         internal static float APScaling = 0.8F;
 
         internal override float GetValue(GameObjectBase target)

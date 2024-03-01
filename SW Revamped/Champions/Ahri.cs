@@ -15,7 +15,7 @@ namespace SWRevamped.Champions
     internal sealed class AhriQCalc : EffectCalc
     {
         internal int[] BaseDamage = new int[] { 0, 40, 65, 90, 115, 140 };
-        internal float APScaling = 0.45F;
+        internal float APScaling = 0.5F;
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -83,7 +83,6 @@ namespace SWRevamped.Champions
             return damage;
         }
     }
-
 
     internal class Ahri : ChampionModule
     {

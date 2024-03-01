@@ -14,8 +14,8 @@ namespace SWRevamped.Champions
 {
     internal sealed class BrandQEffectCalc : EffectCalc
     {
-        internal int[] BaseDamage = new int[] { 0, 80, 110, 140, 170, 200 };
-        internal float APScaling = 0.55F;
+        internal int[] BaseDamage = new int[] { 0, 70, 100, 130, 160, 190 };
+        internal float APScaling = 0.65F;
 
         internal override float GetValue(GameObjectBase target)
         {
@@ -50,8 +50,8 @@ namespace SWRevamped.Champions
 
     internal sealed class BrandEEffectCalc : EffectCalc
     {
-        internal int[] EBaseDamage = new int[] { 0, 70, 95, 120, 145, 170 };
-        internal float EAPScaling = 0.45F;
+        internal int[] EBaseDamage = new int[] { 0, 60, 90, 120, 150, 180 };
+        internal float EAPScaling = 0.6F;
 
         internal override float GetValue(GameObjectBase target)
         {

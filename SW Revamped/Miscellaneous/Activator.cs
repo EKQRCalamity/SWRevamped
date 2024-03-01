@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Oasys.Common.GameObject.Clients.ExtendedInstances.HeroInventory;
+using SWRevamped.Utility;
 
 namespace SWRevamped.Miscellaneous
 {
@@ -118,21 +119,7 @@ namespace SWRevamped.Miscellaneous
             return false;
         }
 
-        internal CastSlot SpellToCastSlot(SpellCastSlot slot)
-        {
-            if (SpellCastSlot.Q == slot) return CastSlot.Q;
-            if (SpellCastSlot.W == slot) return CastSlot.W;
-            if (SpellCastSlot.E == slot) return CastSlot.E;
-            if (SpellCastSlot.R == slot) return CastSlot.R;
-            if (SpellCastSlot.Item1 == slot) return CastSlot.Item1;
-            if (SpellCastSlot.Item2 == slot) return CastSlot.Item2;
-            if (SpellCastSlot.Item3 == slot) return CastSlot.Item3;
-            if (SpellCastSlot.Item4 == slot) return CastSlot.Item4;
-            if (SpellCastSlot.Item5 == slot) return CastSlot.Item5;
-            if (SpellCastSlot.Item6 == slot) return CastSlot.Item6;
-            if (SpellCastSlot.Summoner1 == slot) return CastSlot.Summoner1;
-            return CastSlot.Summoner2;
-        }
+        
 
         internal CastSlot GetPotsSlot()
         {
@@ -140,7 +127,7 @@ namespace SWRevamped.Miscellaneous
             {
                 if (item.ID == ItemID.Health_Potion || item.ID == ItemID.Corrupting_Potion || item.ID == ItemID.Refillable_Potion)
                 {
-                    return SpellToCastSlot(item.SpellCastSlot);
+                    return General.SpellToCastSlot(item.SpellCastSlot);
                 }
             }
             return CastSlot.Item1;

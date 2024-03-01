@@ -38,7 +38,7 @@ namespace SWRevamped.Champions
 
     internal sealed class OriWCalc : EffectCalc
     {
-        internal int[] BaseDamage = { 0, 60, 105, 150, 195, 240 };
+        internal int[] BaseDamage = { 0, 70, 120, 170, 220, 270 };
         internal float APScaling = 0.7F;
 
         internal override float GetValue(GameObjectBase target)

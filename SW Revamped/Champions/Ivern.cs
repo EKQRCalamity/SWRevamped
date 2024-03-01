@@ -37,8 +37,8 @@ namespace SWRevamped.Champions
 
     internal sealed class IvernECalc : EffectCalc
     {
-        internal static int[] BaseShield = { 0, 80, 115, 150, 185, 220 };
-        internal static float APScaling = 0.75F;
+        internal static int[] BaseShield = { 0, 85, 125, 165, 205, 245 };
+        internal static float APScaling = 0.8F;
 
         internal override float GetValue(GameObjectBase target)
         {

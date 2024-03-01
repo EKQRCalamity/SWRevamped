@@ -54,7 +54,7 @@ namespace SWRevamped.Champions
     internal sealed class CaitRCalc : EffectCalc
     {
         internal int[] BaseDamage = new int[] { 0, 300, 525, 750 };
-        internal float ADScaling = 2F;
+        internal float ADScaling = 1.7F;
 
         internal override float GetValue(GameObjectBase target)
         {

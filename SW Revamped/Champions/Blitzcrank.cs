@@ -28,7 +28,7 @@ namespace SWRevamped.Champions
 
     internal sealed class BlitzECalc : EffectCalc
     {
-        internal static float BonusADScaling = 0.75F;
+        internal static float BonusADScaling = 0.8F;
         internal static float APScaling = 0.25F;
 
         internal override float GetValue(GameObjectBase target)
